@@ -1,0 +1,93 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 459856,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "some name",
+        "intersectionID": "21653",
+        "msgCount": "2",
+        "masterLaneWidth": "366",
+        "referenceLat": 42.33698878270116,
+        "referenceLon": -83.05083861342344,
+        "referenceElevation": 123
+      },
+      "referencePointChild": {
+      	"speedLimitType": []
+      },
+      "verifiedPoint": {
+        "verifiedMapLat": 42.33729411458877,
+        "verifiedMapLon": -83.05041482439808,
+        "verifiedMapElevation": "125",
+        "verifiedSurveyedLat": "42.33729411458877",
+        "verifiedSurveyedLon": "-83.05041482439808",
+        "verifiedSurveyedElevation": "123"
+      },
+      "laneList": {
+        "approach": [
+          {
+            "layerID": "1",
+            "approachType": "Egress",
+            "approachID": "01",
+            "laneDirection": "(2) Northwestbound",
+            "drivingLanes": [
+              {
+                "laneID": "01",
+                "laneType": "Vehicle",
+                "typeAttributes": [
+                  "0",
+                  "1"
+                ],
+                "sharedWith": [],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.336832646504256,
+                    "nodeLong": -83.05076351156981,
+                    "nodeElev": "125.5",
+                    "laneWidthDelta": "10"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.33673152952156,
+                    "nodeLong": -83.05069913855348,
+                    "nodeElev": "125.5",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 2,
+                    "nodeLat": 42.3366423085197,
+                    "nodeLong": -83.05063744774577,
+                    "nodeElev": "126",
+                    "laneWidthDelta": "20"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": [
+          {
+            "laneSet": "0102",
+            "spatRevision": "1",
+            "signalGroupID": "1",
+            "signalPhase": "(2) Stop-Then-Proceed",
+            "startTime": "1000",
+            "minEndTime": "500",
+            "maxEndTime": "3000",
+            "likelyTime": "1000",
+            "stateConfidence": "3",
+            "nextTime": "1200"
+          }
+        ]
+      }
+    }
+  },
+  "message": "Map"
+}

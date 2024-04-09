@@ -1,0 +1,13 @@
+[{
+    "systemName": "SDC 2.3",
+    "websocketURL": "wss://ec2-54-80-143-114.compute-1.amazonaws.com:8443",
+    "keystoreFile": "@keystores/keystore.with_go_daddy_certs@",
+    "keystorePassword": "@message-builder/keystore.password@"
+},
+{
+    "systemName": "SDW 2.3",
+    "websocketURL": "wss://ec2-54-198-152-161.compute-1.amazonaws.com:8443",
+    "keystoreFile": "@keystores/keystore.with_go_daddy_certs@",
+    "keystorePassword": "@message-builder/keystore.password@"
+}]
+

@@ -1,0 +1,116 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 428667,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "intersection name",
+        "intersectionID": "12345",
+        "layerID": "1",
+        "msgCount": "2",
+        "masterLaneWidth": "366",
+        "referenceLat": 42.33697168208875,
+        "referenceLon": -83.05086409441046,
+        "referenceElevation": 200
+      },
+      "verifiedPoint": {
+        "verifiedMapLat": 42.3372195165945,
+        "verifiedMapLon": -83.05052345386463,
+        "verifiedMapElevation": "200",
+        "verifiedSurveyedLat": "42.3372195165945",
+        "verifiedSurveyedLon": "-83.05052345386373",
+        "verifiedSurveyedElevation": "200.33"
+      },
+      "laneList": {
+        "approach": [
+          {
+            "approachType": "Egress",
+            "approachID": "01",
+            "laneDirection": "(2) Northwestbound",
+            "drivingLanes": [
+              {
+                "laneID": "01",
+                "laneWidth": "366",
+                "laneType": "Vehicle",
+                "typeAttributes": [
+                  "1",
+                  "3",
+                  "6"
+                ],
+                "sharedWith": [
+                  "1",
+                  "3",
+                  "6"
+                ],
+                "laneManeuvers": [
+                  1,
+                  3,
+                  8
+                ],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.336848755811715,
+                    "nodeLong": -83.05076753488413,
+                    "nodeElev":  202           
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.3367575522898,
+                    "nodeLong": -83.05071657291278,
+                    "nodeElev":  203 
+                  },
+                  {
+                    "nodeNumber": 2,
+                    "nodeLat": 42.336646521736846,
+                    "nodeLong": -83.0506441532687,
+                    "nodeElev":  204                     
+                  }
+                ]
+              },
+              {
+                "laneID": "02",
+                "laneType": "Vehicle",
+                "typeAttributes": [],
+                "sharedWith": [],
+                "laneManeuvers": [
+                  2,
+                  8
+                ],
+                "isComputed": true,
+                "computedLane": {
+                  "computedLaneID": "wbimqollw",
+                  "referenceLaneID": "01",
+                  "offsetX": "200",
+                  "offsetY": "200",
+                  "rotation": "90",
+                  "scaleX": "-50",
+                  "scaleY": "-50"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": [
+          {
+            "laneSet": "01",
+            "spatRevision": "1",
+            "signalGroupID": "2",
+            "signalPhase": "(2) Stop-Then-Proceed",
+            "startTime": "200",
+            "minEndTime": "0",
+            "maxEndTime": "1000",
+            "likelyTime": "10000",
+            "stateConfidence": "1",
+            "nextTime": "10000"
+          }
+        ]
+      }
+    }
+  }
+}

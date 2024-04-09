@@ -1,0 +1,83 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 460415,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "E Adams St & Woodward Ave",
+        "intersectionID": "39753",
+        "msgCount": "1",
+        "masterLaneWidth": "366",
+        "referenceLat": 42.33697440827397,
+        "referenceLon": -83.05085202446843,
+        "referenceElevation": 184
+      },
+      "referencePointChild": {},
+      "verifiedPoint": {
+        "verifiedMapLat": 42.33722422544072,
+        "verifiedMapLon": -83.05052211275897,
+        "verifiedMapElevation": 184,
+        "verifiedSurveyedLat": "42.33722422544072",
+        "verifiedSurveyedLon": "-83.05052211275897",
+        "verifiedSurveyedElevation": "185"
+      },
+      "laneList": {
+        "approach": [
+          {
+            "drivingLanes": [
+              {
+                "laneID": "01",
+                "laneType": "Vehicle",
+                "typeAttributes": [],
+                "sharedWith": [],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33683363784593,
+                    "nodeLong": -83.050768875988,
+                    "nodeElev": "185",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.3367424343021,
+                    "nodeLong": -83.05070718518029,
+                    "nodeElev": "185",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 2,
+                    "nodeLat": 42.3365897672043,
+                    "nodeLong": -83.0506133078653,
+                    "nodeElev": "185",
+                    "laneWidthDelta": "0"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": [
+          {
+            "laneSet": "01",
+            "spatRevision": "1",
+            "signalGroupID": "1",
+            "signalPhase": "(2) Stop-Then-Proceed",
+            "startTime": "",
+            "minEndTime": "",
+            "maxEndTime": "",
+            "likelyTime": "",
+            "stateConfidence": "2",
+            "nextTime": ""
+          }
+        ]
+      }
+    }
+  }
+}

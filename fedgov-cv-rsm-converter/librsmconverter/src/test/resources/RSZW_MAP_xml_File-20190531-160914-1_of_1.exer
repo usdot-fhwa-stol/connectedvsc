@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	 CAMP xml file for RSZW/LC Mapping Project
+	 Message segment file 1 of 1...
+
+	 Version 1.5 - June, 2018
+	 for RSMv5.1 ASN
+	 File Name: ./WZ_MapMsg/RSZW_MAP_xml_File-20190531-160914-1_of_1.exer
+	 Created: 05/31/2019 - 16:09:06
+
+-->
+<MessageFrame>
+  <messageId>33</messageId>
+  <value>
+    <RoadsideSafetyMessage>
+      <version>1</version>
+
+      <commonContainer>
+<!--
+		 ...Event ID...(no Message ID)
+-->
+        <eventInfo>
+          <eventID>000039f7</eventID>
+<!--
+		 ...Message segmentation... 
+-->
+          <msgSegmentInfo>
+            <totalMsgSegments>1</totalMsgSegments>
+            <thisSegmentNum>1</thisSegmentNum>
+          </msgSegmentInfo>
+<!--
+		 ...Event start Date & Time...
+-->
+          <startDateTime>
+            <year>2019</year>
+            <month>5</month>
+            <day>31</day>
+            <hour>07</hour>
+            <minute>0</minute>
+            <offset>-300</offset>
+          </startDateTime>
+<!--
+		 ...Event end Date and Time...
+-->
+          <endDateTime>
+            <year>2019</year>
+            <month>6</month>
+            <day>10</day>
+            <hour>21</hour>
+            <minute>59</minute>
+          </endDateTime>
+<!--
+		 ...Cause/Sub cause codes...
+-->
+          <causeCode>3</causeCode>
+          <subCauseCode>0</subCauseCode>
+        </eventInfo>
+<!--
+		 ...Region Info Section...
+-->
+        <regionInfo>
+<!--
+		 ...Applicable Heading / Tolerance...
+-->
+          <applicableHeading>
+            <heading>241</heading>
+            <tolerance>20</tolerance>
+          </applicableHeading>
+<!--
+		 ...Reference Point - Lat/Long in Micro Degrees...
+-->
+          <referencePoint>
+            <lat>389563590</lat>
+            <long>-771503946</long>
+            <elevation>74</elevation>
+          </referencePoint>
+<!--
+		 ...Reference Point Type...
+-->
+          <referencePointType><startOfEvent/></referencePointType>
+          <descriptiveName>TFHRC trial</descriptiveName>
+
+<!--
+		  ...Speed Limit at the Ref. Point...
+-->
+          <speedLimit>
+            <type><vehicleMaxSpeed/></type>
+            <speed>60</speed>
+            <speedUnits><mph/></speedUnits>
+          </speedLimit>
+
+<!--
+		...Event Length...
+-->
+          <eventLength>630</eventLength>
+
+<!--
+		...Start of Approach Region...
+-->
+<!--    ...APPROACH LANES: Map Waypoints...
+            Total nodes per lane - 4
+-->
+          <approachRegion>
+            <roadwayGeometry>
+              <scale>1</scale>
+              <rsmLanes>
+<!--
+		    Approach Lane #1    
+-->
+                <RSMLane>
+                  <laneID>1</laneID>
+                  <lanePosition>1</lanePosition>
+                  <laneName>Lane #1</laneName>
+                  <laneGeometry>
+                    <nodeSet>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 1/1  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389563615</lat>
+                            <long>-771503885</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 1/2  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389563948</lat>
+                            <long>-771503290</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 1/3  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389564366</lat>
+                            <long>-771502855</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 1/4  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389564826</lat>
+                            <long>-771502561</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                    </nodeSet>
+                  </laneGeometry>
+                </RSMLane>
+<!--
+		    Approach Lane #2    
+-->
+                <RSMLane>
+                  <laneID>2</laneID>
+                  <lanePosition>2</lanePosition>
+                  <laneName>Lane #2</laneName>
+                  <laneGeometry>
+                    <nodeSet>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 2/1  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389563893</lat>
+                            <long>-771504097</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 2/2  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389564180</lat>
+                            <long>-771503580</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 2/3  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389564525</lat>
+                            <long>-771503218</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                      <NodeLLE>					<!--  Approach Lane#/Node# - 2/4  -->
+                        <nodePoint>
+                          <node-3Dabsolute>
+                            <lat>389564952</lat>
+                            <long>-771502945</long>
+                            <elevation>74</elevation>
+                          </node-3Dabsolute>
+                        </nodePoint>
+                      </NodeLLE>
+                    </nodeSet>
+                  </laneGeometry>
+                </RSMLane>
+              </rsmLanes>
+            </roadwayGeometry>
+          </approachRegion>
+        </regionInfo>
+      </commonContainer>
+
+<!--
+		...END of COMMON CONTAINER...		-->
+
+<!--   ...Work Zone Lanes: Map waypoints...   -->
+
+      <rszContainer>
+        <speedLimit>
+          <type><vehicleMaxSpeed/></type>
+          <speed>60</speed>
+          <speedUnits><mph/></speedUnits>
+        </speedLimit>
+
+<!--	 ...S T A R T   of   L A N E   G E O M E T R Y...
+                Total node points per lane - 42
+-->
+        <rszRegion>
+          <roadwayGeometry>
+            <scale>10</scale>
+            <rsmLanes>
+<!--
+	    ...Work Zone Lane #1...
+-->
+              <RSMLane>
+                <laneID>1</laneID>
+                <lanePosition>1</lanePosition>
+                <laneName>Left Lane: Lane #1</laneName>
+                <laneWidth>360</laneWidth>
+                <laneGeometry>
+                  <nodeSet>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/1  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389563590</lat>
+                          <long>-771503946</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/2  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389561491</lat>
+                          <long>-771509226</long>
+                          <elevation>76</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/3  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389560961</lat>
+                          <long>-771510156</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/4  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389560164</lat>
+                          <long>-771511190</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/5  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389559595</lat>
+                          <long>-771511750</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/6  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389559225</lat>
+                          <long>-771511911</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/7  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558906</lat>
+                          <long>-771511888</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/8  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558580</lat>
+                          <long>-771511690</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/9  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558364</lat>
+                          <long>-771511381</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/10  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558231</lat>
+                          <long>-771510936</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/11  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558175</lat>
+                          <long>-771510346</long>
+                          <elevation>76</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/12  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558093</lat>
+                          <long>-771508401</long>
+                          <elevation>76</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/13  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557873</lat>
+                          <long>-771507445</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/14  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557511</lat>
+                          <long>-771506563</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/15  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557036</lat>
+                          <long>-771505818</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/16  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389556370</lat>
+                          <long>-771505070</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/17  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389554281</lat>
+                          <long>-771503055</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/18  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389553150</lat>
+                          <long>-771501683</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/19  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389552260</lat>
+                          <long>-771500329</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/20  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389551538</lat>
+                          <long>-771498945</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/21  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550900</lat>
+                          <long>-771497325</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/22  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550243</lat>
+                          <long>-771495106</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/23  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549820</lat>
+                          <long>-771493253</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/24  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549378</lat>
+                          <long>-771490598</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/25  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549143</lat>
+                          <long>-771488331</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/26  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549031</lat>
+                          <long>-771485803</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/27 ... Workers Present ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549031</lat>
+                          <long>-771484475</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                      <nodeAttributes>
+                        <speedLimit>
+                          <type><vehicleMaxSpeed/></type>
+                            <speed>45</speed>
+                            <speedUnits><mph/></speedUnits>
+                        </speedLimit>
+                        <peoplePresent><true/></peoplePresent>
+                      </nodeAttributes>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/28 ... Workers Present ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549146</lat>
+                          <long>-771482125</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/29 ... Workers Present ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549513</lat>
+                          <long>-771478829</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/30  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549745</lat>
+                          <long>-771477246</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                      <nodeAttributes>
+                        <speedLimit>
+                          <type><vehicleMaxSpeed/></type>
+                            <speed>60</speed>
+                            <speedUnits><mph/></speedUnits>
+                        </speedLimit>
+                        <peoplePresent><false/></peoplePresent>
+                      </nodeAttributes>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/31  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550111</lat>
+                          <long>-771475061</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/32  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550281</lat>
+                          <long>-771474480</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/33  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550546</lat>
+                          <long>-771474081</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/34  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550863</lat>
+                          <long>-771473868</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/35  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389551343</lat>
+                          <long>-771473771</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/36  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389551931</lat>
+                          <long>-771473838</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/37  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389552626</lat>
+                          <long>-771474078</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/38  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389553213</lat>
+                          <long>-771474470</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/39  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389553641</lat>
+                          <long>-771474920</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/40  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389554045</lat>
+                          <long>-771475605</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/41  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389554486</lat>
+                          <long>-771476708</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 1/42  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558761</lat>
+                          <long>-771489030</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                  </nodeSet>
+                </laneGeometry>
+              </RSMLane>
+<!--
+	    ...Work Zone Lane #2...
+-->
+              <RSMLane>
+                <laneID>2</laneID>
+                <lanePosition>2</lanePosition>
+                <laneName>Right Lane: Lane #2</laneName>
+                <laneWidth>360</laneWidth>
+                <laneGeometry>
+                  <nodeSet>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/1  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389563872</lat>
+                          <long>-771504150</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/2  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389561768</lat>
+                          <long>-771509442</long>
+                          <elevation>76</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/3  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389561208</lat>
+                          <long>-771510425</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/4  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389560382</lat>
+                          <long>-771511498</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/5  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389559754</lat>
+                          <long>-771512112</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/6  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389559278</lat>
+                          <long>-771512322</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/7  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558835</lat>
+                          <long>-771512294</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/8  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558394</lat>
+                          <long>-771512031</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/9  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389558090</lat>
+                          <long>-771511602</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/10  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557916</lat>
+                          <long>-771511028</long>
+                          <elevation>77</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/11 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557851</lat>
+                          <long>-771510372</long>
+                          <elevation>76</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                      <nodeAttributes>
+                        <taperLeft><false/></taperLeft>
+                        <taperRight><true/></taperRight>
+                        <laneClosed><true/></laneClosed>
+                      </nodeAttributes>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/12 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557774</lat>
+                          <long>-771508470</long>
+                          <elevation>76</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/13 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557571</lat>
+                          <long>-771507595</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/14 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389557237</lat>
+                          <long>-771506784</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/15 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389556800</lat>
+                          <long>-771506102</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/16 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389556172</lat>
+                          <long>-771505399</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/17 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389554069</lat>
+                          <long>-771503368</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/18 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389552914</lat>
+                          <long>-771501968</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/19 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389552001</lat>
+                          <long>-771500581</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/20 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389551259</lat>
+                          <long>-771499156</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/21 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550604</lat>
+                          <long>-771497495</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/22 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549939</lat>
+                          <long>-771495250</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/23 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549506</lat>
+                          <long>-771493358</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/24 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549060</lat>
+                          <long>-771490674</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/25 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389548821</lat>
+                          <long>-771488373</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/26 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389548708</lat>
+                          <long>-771485812</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/27 ... Lane is closed ... ... Workers Present ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389548708</lat>
+                          <long>-771484465</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                      <nodeAttributes>
+                        <speedLimit>
+                          <type><vehicleMaxSpeed/></type>
+                            <speed>45</speed>
+                            <speedUnits><mph/></speedUnits>
+                        </speedLimit>
+                        <peoplePresent><true/></peoplePresent>
+                      </nodeAttributes>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/28 ... Lane is closed ... ... Workers Present ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389548824</lat>
+                          <long>-771482082</long>
+                          <elevation>75</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/29 ... Lane is closed ... ... Workers Present ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549193</lat>
+                          <long>-771478763</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/30 ... Lane is closed ...  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549427</lat>
+                          <long>-771477165</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                      <nodeAttributes>
+                        <speedLimit>
+                          <type><vehicleMaxSpeed/></type>
+                            <speed>60</speed>
+                            <speedUnits><mph/></speedUnits>
+                        </speedLimit>
+                        <peoplePresent><false/></peoplePresent>
+                      </nodeAttributes>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/31  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389549798</lat>
+                          <long>-771474957</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                      <nodeAttributes>
+                        <taperLeft><true/></taperLeft>
+                        <taperRight><false/></taperRight>
+                        <laneClosed><false/></laneClosed>
+                      </nodeAttributes>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/32  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550001</lat>
+                          <long>-771474271</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/33  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550337</lat>
+                          <long>-771473764</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/34  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389550743</lat>
+                          <long>-771473481</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/35  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389551318</lat>
+                          <long>-771473356</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/36  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389551980</lat>
+                          <long>-771473426</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/37  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389552732</lat>
+                          <long>-771473685</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/38  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389553386</lat>
+                          <long>-771474118</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/39  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389553868</lat>
+                          <long>-771474622</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/40  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389554318</lat>
+                          <long>-771475381</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/41  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389554783</lat>
+                          <long>-771476541</long>
+                          <elevation>74</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                    <NodeLLE>					<!--  WZ Lane#/Node# - 2/42  -->
+                      <nodePoint>
+                        <node-3Dabsolute>
+                          <lat>389559061</lat>
+                          <long>-771488872</long>
+                          <elevation>73</elevation>
+                        </node-3Dabsolute>
+                      </nodePoint>
+                    </NodeLLE>
+                  </nodeSet>
+                </laneGeometry>
+                <connectsTo>
+                  <LaneID>2</LaneID>
+                  <LaneID>1</LaneID>
+                </connectsTo>
+              </RSMLane>
+            </rsmLanes>
+          </roadwayGeometry>
+        </rszRegion>
+      </rszContainer>
+    </RoadsideSafetyMessage>
+  </value>
+</MessageFrame>

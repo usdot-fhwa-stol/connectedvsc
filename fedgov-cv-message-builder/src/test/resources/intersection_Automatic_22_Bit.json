@@ -1,0 +1,94 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 428667,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "Lake in Florida",
+        "intersectionID": "09897",
+        "msgCount": "1",
+        "masterLaneWidth": "366",
+        "referenceLat": 26.933433646258298,
+        "referenceLon": -80.81592818489797,
+        "referenceElevation": 4
+      },
+      "referencePointChild": {},
+      "verifiedPoint": {
+        "verifiedMapLat": 26.971993594687614,
+        "verifiedMapLon": -80.75138350716274,
+        "verifiedMapElevation": 4,
+        "verifiedSurveyedLat": "26.97199359468843",
+        "verifiedSurveyedLon": "-80.75138350716274",
+        "verifiedSurveyedElevation": "4"
+      },
+      "laneList": {
+        "approach": [
+          {
+            "approachType": "Egress",
+            "approachID": "01",
+            "laneDirection": "(2) Northwestbound",
+            "drivingLanes": [
+              {
+                "laneID": "01",
+                "laneWidth": "366",
+                "laneType": "Vehicle",
+                "typeAttributes": [
+                  "1",
+                  "3",
+                  "6"
+                ],
+                "sharedWith": [
+                  "1",
+                  "3",
+                  "6"
+                ],
+                "laneManeuvers": [
+                  1,
+                  3,
+                  8
+                ],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 26.93340255962859,
+                    "nodeLong": -80.81595903030048
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 26.93335114710798,
+                    "nodeLong": -80.81597780576365
+                  },
+                  {
+                    "nodeNumber": 2,
+                    "nodeLat": 26.933288973795342,
+                    "nodeLong": -80.81596975913682
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": [
+          {
+            "laneSet": "01",
+            "spatRevision": "1",
+            "signalGroupID": "2",
+            "signalPhase": "(2) Stop-Then-Proceed",
+            "startTime": "200",
+            "minEndTime": "0",
+            "maxEndTime": "1000",
+            "likelyTime": "10000",
+            "stateConfidence": "1",
+            "nextTime": "10000"
+          }
+        ]
+      }
+    }
+  },
+  "nodeOffsets": "Compact"
+}

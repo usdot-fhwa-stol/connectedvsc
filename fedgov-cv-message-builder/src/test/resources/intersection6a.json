@@ -1,0 +1,128 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 307593,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "Siemens Lot 1",
+        "layerID": "1",
+        "intersectionID": "18442",
+        "msgCount": "1",
+        "masterLaneWidth": "366",
+        "referenceLat": 30.315527853821884,
+        "referenceLon": -97.86954768863242,
+        "referenceElevation": 277
+      },
+      "referencePointChild": {
+        "speedLimitType": [
+          {
+            "speedLimitType": "Speed Limit Type",
+            "velocity": ""
+          }
+        ]
+      },
+      "verifiedPoint": {
+        "verifiedMapLat": 30.31547517753657,
+        "verifiedMapLon": -97.86972739663199,
+        "verifiedSurveyedLat": 30.31547517753657,
+        "verifiedSurveyedLon": -97.86972739663199
+      },
+      "laneList": {
+        "approach": [
+          {
+            "approachType": "Ingress",
+            "approachID": "01",
+            "drivingLanes": [
+              {
+                "laneID": "01",
+                "laneType": "Vehicle",
+                "typeAttributes": [
+                  "0",
+                  "5"
+                ],
+                "sharedWith": [],
+                "connections": [
+                  {
+                    "fromLane": "01",
+                    "toLane": "",
+                    "signal_id": "",
+                    "maneuvers": []
+                  }
+                ],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 30.315581398369314,
+                    "nodeLong": -97.86949940886612,
+                    "nodeElev": "276",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 30.31575158300421,
+                    "nodeLong": -97.86923521127777,
+                    "nodeElev": 277
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "approachType": "Ingress",
+            "approachID": "02",
+            "drivingLanes": [
+              {
+                "laneID": "02",
+                "laneType": "Vehicle",
+                "typeAttributes": [
+                  "0",
+                  "2",
+                  "7"
+                ],
+                "sharedWith": [],
+                "connections": [
+                  {
+                    "fromLane": "02",
+                    "toLane": "",
+                    "signal_id": "",
+                    "maneuvers": []
+                  }
+                ],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 30.315504988844683,
+                    "nodeLong": -97.86951751378186,
+                    "nodeElev": "278",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 30.31541352888098,
+                    "nodeLong": -97.86945582297685,
+                    "nodeElev": 281
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "approachType": "Crosswalk",
+            "approachID": -1,
+            "crosswalkLanes": []
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": []
+      }
+    }
+  },
+  "message": "Map",
+  "nodeOffsets": "Tight"
+}

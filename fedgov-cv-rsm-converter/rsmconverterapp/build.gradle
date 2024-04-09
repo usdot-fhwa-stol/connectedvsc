@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+dependencies {
+    implementation project(":librsmconverter")
+    implementation 'info.picocli:picocli:3.9.5'
+}
+
+mainClassName = "gov.usdot.cv.msg.RsmConverter"
+
+compileJava {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+}
+
+jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    manifest {
+        attributes "Main-Class": "gov.usdot.cv.msg.RsmConverter"
+    }
+ 
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

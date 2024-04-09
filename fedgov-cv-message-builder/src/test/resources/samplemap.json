@@ -1,0 +1,120 @@
+{
+    "mapData": {
+      "minuteOfTheYear": 385179,
+      "layerType": "intersectionData",
+      "intersectionGeometry": {
+        "referencePoint": {
+          "descriptiveIntersctionName": "Potomac School Rd & Dolley Madison Blvd",
+          "layerID": "1",
+          "intersectionID": "45571",
+          "msgCount": "105",
+          "masterLaneWidth": "366",
+          "referenceLat": 38.94346938863933,
+          "referenceLon": -77.15159208520186,
+          "referenceElevation": "45"
+        },
+        "referencePointChild": {},
+        "verifiedPoint": {
+          "verifiedMapLat": 38.94355700614207,
+          "verifiedMapLon": -77.15138823731643,
+          "verifiedMapElevation": "45",
+          "verifiedSurveyedLat": "38.94355700614207",
+          "verifiedSurveyedLon": "-77.15138823731643",
+          "verifiedSurveyedElevation": "45"
+        },
+        "laneList": {
+          "approach": [
+            {
+              "approachType": "Ingress",
+              "approachID": "01",
+              "drivingLanes": [
+                {
+                  "laneID": "01",
+                  "descriptiveName": "Lane 1",
+                  "laneType": "Vehicle",
+                  "typeAttributes": [],
+                  "sharedWith": [],
+                  "connections": [
+                    {
+                      "connectionId": "",
+                      "remoteID": "",
+                      "fromLane": "01",
+                      "toLane": "",
+                      "signal_id": "",
+                      "maneuvers": []
+                    }
+                  ],
+                  "laneManeuvers": [],
+                  "laneNodes": [
+                    {
+                      "nodeNumber": 0,
+                      "nodeLat": 38.943601510219,
+                      "nodeLong": -77.15135292155033,
+                      "nodeElev": 45,
+                      "laneWidthDelta": "0"
+                    },
+                    {
+                      "nodeNumber": 1,
+                      "nodeLat": 38.94365609723584,
+                      "nodeLong": -77.15108246548922,
+                      "nodeElev": 46,
+                      "laneWidthDelta": 0
+                    },
+                    {
+                      "nodeNumber": 2,
+                      "nodeLat": 38.94371450876231,
+                      "nodeLong": -77.15069086297294,
+                      "nodeElev": 46,
+                      "laneWidthDelta": 0
+                    },
+                    {
+                      "nodeNumber": 3,
+                      "nodeLat": 38.94378960922692,
+                      "nodeLong": -77.1502617095303,
+                      "nodeElev": 45,
+                      "laneWidthDelta": 0
+                    },
+                    {
+                      "nodeNumber": 4,
+                      "nodeLat": 38.94385845124843,
+                      "nodeLong": -77.14987547143218,
+                      "nodeElev": 46,
+                      "laneWidthDelta": 0
+                    },
+                    {
+                      "nodeNumber": 5,
+                      "nodeLat": 38.94391477648998,
+                      "nodeLong": -77.14948655112545,
+                      "nodeElev": 47,
+                      "laneWidthDelta": 0
+                    },
+                    {
+                      "nodeNumber": 6,
+                      "nodeLat": 38.94391894872772,
+                      "nodeLong": -77.14938999160091,
+                      "nodeElev": 47,
+                      "laneWidthDelta": 0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "approachType": "Crosswalk",
+              "approachID": -1,
+              "crosswalkLanes": []
+            }
+          ]
+        }
+      },
+      "spatData": {
+        "intersections": {
+          "status": "00",
+          "states": []
+        }
+      }
+    },
+    "messageType": "Frame+Map",
+    "nodeOffsets": "Tight",
+    "enableElevation": true
+}

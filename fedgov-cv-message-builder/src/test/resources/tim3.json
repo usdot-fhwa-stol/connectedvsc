@@ -1,0 +1,98 @@
+{
+  "regions": [
+    {
+      "regionType": "region",
+      "laneNodes": [
+        {
+          "nodeNumber": 0,
+          "nodeLat": 42.33669980651367,
+          "nodeLong": -83.05051205447545,
+          "nodeElevation": "122"
+        },
+        {
+          "nodeNumber": 1,
+          "nodeLat": 42.33667204886814,
+          "nodeLong": -83.0505978851636,
+          "nodeElevation": "123"
+        },
+        {
+          "nodeNumber": 2,
+          "nodeLat": 42.33683859455679,
+          "nodeLong": -83.0507132201513,
+          "nodeElevation": "125"
+        },
+        {
+          "nodeNumber": 3,
+          "nodeLat": 42.336872300178165,
+          "nodeLong": -83.05061666062679,
+          "nodeElevation": "121"
+        },
+        {
+          "nodeNumber": 4,
+          "nodeLat": 42.33669980651367,
+          "nodeLong": -83.05051205447545,
+          "nodeElevation": "121"
+        }
+      ]
+    }
+  ],
+  "anchorPoint": {
+    "name": "Advisory",
+    "referenceLat": 42.3365927412428,
+    "referenceLon": -83.05046913913088,
+    "referenceElevation": "123",
+    "masterLaneWidth": "366",
+    "sspTimRights": "1",
+    "packetID": "680871839",
+    "content": [
+      {
+        "codes": [
+          "13609",
+          "268",
+          "n35"
+        ],
+        "text": ""
+      },
+      {
+         "text": "Speed limit to follow, n30"
+      },
+      {
+        "codes": [
+          "12545"
+        ]
+      },
+      {
+        "codes": [],
+        "text": "st"
+      },
+      {
+        "codes": [
+          "13436"
+        ],
+        "text": ""
+      }
+    ],
+    "sspTypeRights": "4",
+    "sspContentRights": "3",
+    "sspLocationRights": "2",
+    "direction": "2",
+    "mutcd": "1",
+    "infoType": "1",
+    "priority": "2",
+    "startTime": "12/02/2016 7:15 AM",
+    "endTime": "12/03/2016 7:15 AM",
+    "heading": [
+      0,
+      7,
+      8,
+      15
+    ]
+  },
+  "verifiedPoint": {
+    "verifiedMapLat": 42.336806871602924,
+    "verifiedMapLon": -83.05047182133954,
+    "verifiedMapElevation": "",
+    "verifiedSurveyedLat": 42.336806871602924,
+    "verifiedSurveyedLon": -83.05047182133954
+  }
+}
