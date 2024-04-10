@@ -12,7 +12,7 @@ repositories used for ConnectedVCS Tools development.
 5. Run `mvn install -DskipTests=true` for  fedgov-cv-ISDcreator-webapp and fedgov-cv-TIMcreator-webapp
 
 ## Deployment
-1. Locate `isd.war` and `tim.war` in fedgov-cv-ISDcreator-webapp/target and fedgov-cv-TIMcreator-webapp/target respectively
-2. Deploy as servlets in conjunction with Apache Tomcat
+1. Locate `isd.war` and `tim.war` in fedgov-cv-ISDcreator-webapp/target and fedgov-cv-TIMcreator-webapp/target respectively.
+2. Deploy as servlets in conjunction with Apache Tomcat.
 
 
