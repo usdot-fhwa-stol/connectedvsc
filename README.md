@@ -1,7 +1,7 @@
-# USDOT FHWA ISD Creator Tool
+# USDOT FHWA ConnectedVCS Tools
 Developed by Leidos initially in support of USDOT Safety Pilot Program
 This repository is a monorepo combining the repository histories of each of the 
-ConnectedVCS Tools packages. Each subfolder corresponds to one of the original 
+ConnectedVCS Tool packages. Each subfolder corresponds to one of the original 
 repositories used for ConnectedVCS Tools development.
 
 ## Build Instructions
