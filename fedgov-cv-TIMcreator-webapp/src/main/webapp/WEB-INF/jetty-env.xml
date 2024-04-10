@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
+<!-- Explicitly add the jetty util classes to the System level classes and remove it from the Server level classes. -->
+<!-- This resolved linkage errors that were occurring when started using Jetty's WebSocket API for our own. -->
+<!-- https://groups.google.com/forum/m/#!msg/kurento/D8Cqga-7tlg/tPcWJRafAAAJ -->
+<!-- http://www.eclipse.org/jetty/documentation/9.3.x/jetty-classloading.html -->
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+        <Call name="prependSystemClass">
+                <Arg>org.eclipse.jetty.util.</Arg>
+        </Call>
+        <Call name="prependServerClass">
+                <Arg>-org.eclipse.jetty.util.</Arg>
+        </Call>
+</Configure>

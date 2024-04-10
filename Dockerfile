@@ -1,19 +1,9 @@
 FROM gradle:7.4.2-jdk8 AS gradle-build
-# Build the only gradle dependency
-ADD fedgov-cv-rsm-converter .
-RUN mkdir -p /home/gradle/.m2/repository
-RUN gradle :librsmconverter:publishAllPublicationsToMavenLocalRepository --no-daemon
 ARG TOKEN
 RUN git clone https://$TOKEN@github.com/usdot-fhwa-stol/CARMASensitive.git 
 RUN ls -la && pwd
 FROM maven:3.8.5-jdk-8-slim AS mvn-build
 ADD . /root
-COPY --from=gradle-build /home/gradle/.m2/repository/ /root/.m2/repository
-
-# Work around a discrepancy between how the gradle build above generates a
-# Maven repo and how the maven build actually needs it to be structured
-RUN mv /root/.m2/repository/gov/usdot/fedgov-cv-rsm-converter/1.0.0-SNAPSHOT/fedgov-cv-rsm-converter-*.jar /root/.m2/repository/gov/usdot/fedgov-cv-rsm-converter/1.0.0-SNAPSHOT/fedgov-cv-rsm-converter-1.0.0-SNAPSHOT.jar
-RUN mv /root/.m2/repository/gov/usdot/fedgov-cv-rsm-converter/1.0.0-SNAPSHOT/fedgov-cv-rsm-converter-*.pom /root/.m2/repository/gov/usdot/fedgov-cv-rsm-converter/1.0.0-SNAPSHOT/fedgov-cv-rsm-converter-1.0.0-SNAPSHOT.pom
 
 # Run the Maven build
 RUN cd /root/fedgov-cv-parent \

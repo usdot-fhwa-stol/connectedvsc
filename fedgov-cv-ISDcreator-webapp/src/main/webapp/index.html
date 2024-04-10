@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Connected Vehicle ISD Message Creator</title>
+
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="external/font-awesome-4.3.0/css/font-awesome.css">
+	
+	<!-- FROM OPENLAYERS 2 -->
+	<link rel="stylesheet" href="external/openlayers2/theme/default/style.css" type="text/css">
+	<link rel="stylesheet" href="external/openlayers2/theme/default/google.css" type="text/css">
+	<link rel="stylesheet" href="external/openlayers2/examples/style.css" type="text/css">
+	
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="external/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="external/bootstrap/css/bootstrap-theme.css">
+	<link rel="stylesheet" href="external/bootstrap-multiselect/css/bootstrap-multiselect.css">
+
+	<!-- CUSTOM MAP CODE -->
+	<link rel="stylesheet" href="css/mapping.css" type="text/css">
+
+	<!-- OTHER -->
+	<link rel="stylesheet" href="css/navbar.css" type="text/css">
+	<link rel="stylesheet" href="css/sidebar.css" type="text/css">
+	<link rel="stylesheet" href="css/jquery-ui.css" type="text/css">
+	<link href="external/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
+
+</head>
+
+<body onload="init()">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header pull-left">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img id="logoimg" src="img/usdot.png">&nbsp;Connected Vehicles</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<div class="col-sm-3 col-md-3">
+					<form class="navbar-form">
+						<div class="input-group">
+							<input id="address-search" type="text" class="form-control" placeholder="Address, City, State">
+							<div class="input-group-btn">
+								<button id="address-search-btn" type='button' class="btn btn-default" disabled><i class="fa fa-search"></i></button>
+							</div>
+						</div>
+					</form>
+				</div>
+                <ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">File <span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" onclick="newParentMap()">New Parent Map</a></li>
+					    <li><a href="#" onclick="newChildMap()">New Child Map</a></li>
+						<li><a href="#" onclick="updateChildParent()">Update Child Markers</a></li>
+                        <li class="divider"></li>
+                        <li id="openChild"><a href="#" onclick="openChildMap();">Open Child Map</a></li>
+						<li id="openParent"><a href="#" onclick="openParentMap();">Open Parent Map</a></li>
+			            <li><a href="#" onclick="saveMap();">Save</a></li>
+			            <li><input type="file" id="fileToLoad"></li>
+						<li class="divider"></li>
+                        <li><a href="#" onclick="loadKMLTrace();">Open KML Stencil</a></li>
+                        <li><a href="#" onclick="loadRSMTrace();">Open RSM Stencil</a></li>
+                        <li><a href="#" onclick="deleteTrace();">Delete Stencil</a></li>
+                        <li><input type="file" id="kmlToLoad"></li>
+                        <li><input type="file" id="rsmToLoad" multiple></li>
+			          </ul>
+			        </li>
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tools <span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+						  <li class="encoder"><a href="#message_deposit_modal" data-toggle="modal" data-target="#message_deposit_modal">Encoder</a></li>
+						  <li><a href="#" onclick="Clear();">Clear Map</a></li>
+			          </ul>
+			        </li>
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Show <span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+						  <li class="builder"><a href="#" onclick="toggle(); return false;"><i class="fa fa-list"></i>&nbsp;&nbsp;Builder</a></li>
+						  <li class="divider"></li>
+						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="ToggleLanes(); return false;"><i id="laneIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Lanes</a></li>
+						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="ToggleBars(); return false;"><i id="boxIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Approaches</a></li>
+						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="TogglePoints(); return false;"><i id="pointIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Reference Points</a></li>
+						  <li class="divider"></li>
+						  <li><a href="#" onclick="toggleWidthArray();">Toggle Lane Widths</a></li>
+			          </ul>
+			        </li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#instructions_modal" data-toggle="modal" data-target="#instructions_modal">Instructions</a></li>
+							<li class="divider"></li>
+							<li><a href="#" onclick="alert('To request support or report problems please email\nthe CAV Support Services at: CAVSupportServices@dot.gov.');">Support</a></li>
+							<li><a href="#" data-toggle="modal" data-target="#" onclick="alert('ISD Builder Tool for J2735 3/2016 (UPER encoding)\n\n\t  Version 2.2.8, Released on 5/2/2019');">About</a></li>
+						</ul>
+					</li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<!-- MAP -->
+	<div id="map" class="smallmap">
+        <div id="map-type"></div>
+		<div id="tileAge">Tile Age:
+			<span class="start"></span> - <span class="end"></span>
+		</div>
+		<div id="zoomLevel">Zoom Level:
+			<span class="zoom"></span>
+		</div>
+		<div id="measure">
+			<span class="measurement"></span>
+		</div>
+		<div id="customZoom">
+			<a class="btn btn-default" href="#customZoomOut" id="customZoomOut"><strong>-</strong></a>
+			<a class="btn btn-default" href="#customZoomIn" id="customZoomIn"><strong>+</strong></a>
+		</div>
+	</div>
+	<div id="hidden-drag" class="hidden"></div>
+
+    <!-- Builder Tools -->
+	<div id="sidebar" class="nano">
+		<div class="close" onclick="toggle();">x</div>
+		<h4>Builder</h4>
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" id="poi-tabs">
+			<li id="intersection-tab-header" class="active"><a href="#intersection-tab" onclick="$('#poi-tabs a[href=\'#intersection-tab\']').tab('show'); return false;">Intersection</a></li>
+			<li id="lane-tab-header" class=""><a href="#lane-tab" onclick="$('#poi-tabs a[href=\'#lane-tab\']').tab('show'); return false;">Lane</a></li>
+		</ul>
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div class="tab-pane active" id="intersection-tab">
+				<p class="help-block">Drag and drop these intersection features onto the map</p>
+				<div id="intersection-tab-contents"></div>
+			</div>
+			<div class="tab-pane" id="lane-tab">
+				<p class="help-block">Drag and drop these lane features onto the map</p>
+				<div id="lane-tab-contents"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default" id="attributes" style="display: none;" data-parsley-validate="" data-parsley-excluded=":hidden">
+		<div class="panel-heading">
+			<h5 class="selection-panel panel-title">TITLE
+			</h5>
+		</div>
+        <ul class="nav nav-tabs" id="attribute-tabs">
+            <li class="lane-info-tab active"><a href="#lane-info-tab" onclick="$('#attribute-tabs a[href=\'#lane-info-tab\']').tab('show'); return false;">Lane Info</a></li>
+            <li class="spat-info-tab"><a href="#spat-info-tab" onclick="$('#attribute-tabs a[href=\'#spat-info-tab\']').tab('show'); return false;">SPaT</a></li>
+            <li class="intersection-info-tab"><a href="#intersection-info-tab" onclick="$('#attribute-tabs a[href=\'#intersection-info-tab\']').tab('show'); return false;">Intersection Info</a></li>
+            <li class="connection-tab"><a href="#connection-tab" onclick="$('#attribute-tabs a[href=\'#connection-tab\']').tab('show'); return false;">Connections</a></li>
+            <li class="computed-tab"><a href="#computed-tab" onclick="$('#attribute-tabs a[href=\'#computed-tab\']').tab('show'); return false;">Computed</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="lane-info-tab">
+                <div class="panel-body">
+                    <div id="lane_attributes">
+                        <ul class="list-group">
+                            <li class="list-group-item" id="attr_droppable" >
+                                <h4 class="list-group-item-heading">Allowed Lane Attributes</h4>
+                                <p class="help-block text-center">drop content here</p>
+                            </li>
+                            <li class="list-group-item list-group-item-danger hidden trash_droppable" id="trash_droppable">
+                                <div class="text-center center-block">
+                                    <i class="fa fa-trash-o fa-2x"></i>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                    
+                     <div class="row approach_type">
+                   		<div class="col-sm-4"><label for="approach_type">Approach Type:</label></div>
+                        <div class="col-sm-7"><div id="approach_type" class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select an Approach Type <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Ingress</a></li>
+                                <li><a href="#">Egress</a></li>
+								<li><a href="#">Both</a></li>
+								<li><a href="#">None</a></li>
+                            </ul>
+                        </div></div>
+                        <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="approach_type"></i></div>
+                     </div>
+                     
+					<div class="row descriptive_name" data-toggle="tooltip" title="Short Descriptive Name">
+					  <div class="col-sm-4"><label for="descriptive_name">Descriptive Name:</label></div>
+					  <div class="col-sm-7"><input class="form-control" id="descriptive_name" placeholder="" data-parsley-required="false" data-parsley-maxlength="63" data-parsley-maxlength-message="This value must be no longer than 63 characters."></div>
+					  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="descriptive_name"></i></div>
+					</div>
+							
+                        <div class="row lane_type">
+	                        <div class="col-sm-4"><label for="lane_type">Lane Type:</label></div>
+	                        <div class="col-sm-7"><div id="lane_type" class="btn-group"><a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select a Lane Type <span class="caret"></span></a>
+	                            <ul class="dropdown-menu">
+	                                <li><a href="#">Vehicle</a></li>
+	                                <li><a href="#">Crosswalk</a></li>
+	                                <li><a href="#">Bike</a></li>
+	                                <li><a href="#">Sidewalk</a></li>
+	                                <li><a href="#">Parking</a></li>
+	                            </ul>
+	                        </div>
+	                            <ul id="lane_type_check" class="parsley-errors-list">
+		                        	<li>This value is required.</li>
+		                        </ul>
+	                        </div>
+	                        <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_type"></i></div>
+	                     </div>
+	                     
+                   	    <div class="row lane_type_attributes">
+                        	<div class="col-sm-4"><label for="lane_type_attributes">Type Attributes:</label></div>
+                        	<div class="col-sm-7">
+	                     	<select id="Vehicle_type_attributes" multiple="multiple">
+		                        <option value="0">(0) Vehicle Revocable Lane</option>
+		                        <option value="1">(1) Vehicle FlyOver Lane</option>
+		                        <option value="2">(2) HOV Lane Use Only</option>
+		                        <option value="3">(3) Restricted To Bus Use</option>
+		                        <option value="4">(4) Restricted To Taxi Use</option>
+		                        <option value="5">(5) Restricted From Public Use</option>
+		                        <option value="6">(6) Has IR Beacon Coverage</option>
+		                        <option value="7">(7) Permission On Request</option>
+	                    	</select>
+	                     	<select id="Crosswalk_type_attributes" multiple="multiple">
+		                        <option value="0">(0) Crosswalk Revocable Lane</option>
+		                        <option value="1">(1) Bicycle Use Allowed</option>
+		                        <option value="2">(2) Crosswalk FlyOver Lane</option>
+		                        <option value="3">(3) Fixed Cycle Time</option>
+		                        <option value="4">(4) Bi-Directional Cycle Time</option>
+		                        <option value="5">(5) Has Push To Walk Button</option>
+		                        <option value="6">(6) Audio Support</option>
+		                        <option value="7">(7) RF Signal Request Present</option>
+		                        <option value="8">(8) Unsignalized Request</option>
+	                    	</select>
+       		                <select id="Bike_type_attributes" multiple="multiple">
+		                        <option value="0">(0) Bike Revocable Lane</option>
+		                        <option value="1">(1) Pedestrian Use Allowed</option>
+		                        <option value="2">(2) Bike FlyOver Lane</option>
+		                        <option value="3">(3) Fixed Cycle Time</option>
+		                        <option value="4">(4) Bi-Directional Cycle Times</option>
+		                        <option value="5">(5) Isolated By Barrier</option>
+		                        <option value="6">(6) Unsignalized Segments</option>
+	                    	</select>
+       		                <select id="Sidewalk_type_attributes" multiple="multiple">
+		                        <option value="0">(0) Sidewalk Revocable Lane</option>
+		                        <option value="1">(1) Bicycle Use Allowed</option>
+		                        <option value="2">(2) Sidewalk FlyOver Lane</option>
+		                        <option value="3">(3) Walk Bikes</option>
+	                    	</select>
+       		                <select id="Parking_type_attributes" multiple="multiple">
+		                        <option value="0">(0) Parking Revocable Lane</option>
+		                        <option value="1">(1) Parallel Parking In Use</option>
+		                        <option value="2">(2) Head-In Parking In Use</option>
+		                        <option value="3">(3) Do Not Park Zone</option>
+		                        <option value="4">(4) Parking For Bus Use</option>
+		                        <option value="5">(5) Parking For Taxi Use</option>
+		                        <option value="6">(6) No Public Parking Use</option>
+	                    	</select>
+                        	</div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_type_attributes"></i></div>
+                       	</div>
+                                         	                       	
+                 	    <div class="row shared_with">
+                        	<div class="col-sm-4"><label for="shared_with">Shared With:</label></div>
+                        	<div class="col-sm-7">
+	                     	<select id="shared_with" multiple="multiple">
+		                        <option value="0">(0) Overlapping</option>
+		                        <option value="1">(1) Multiple Lanes</option>
+		                        <option value="2">(2) Other</option>
+		                        <option value="3">(3) Individual Motorized</option>
+		                        <option value="4">(4) Bus</option>
+		                        <option value="5">(5) Taxi</option>
+		                        <option value="6">(6) Pedestrians</option>
+		                        <option value="7">(7) Cyclist</option>
+		                        <option value="8">(8) Track Vehicle</option>
+		                        <option value="9">(9) Pedestrian</option>
+	                    	</select>
+                        	</div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="shared_with"></i></div>
+                       	</div>
+
+                        <div class="row lane_number">
+                            <div class="col-sm-4"><label for="lane_number">Lane Number:</label></div>
+                            <div class="col-sm-7"><div id="lane_number" class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select A Lane Number <span class="caret"></span></a>
+                                <ul class="dropdown-menu scrollable-menu" role="menu">
+	                                <li><a href="#">01</a></li> <li><a href="#">02</a></li> <li><a href="#">03</a></li> <li><a href="#">04</a></li> <li><a href="#">05</a></li> <li><a href="#">06</a></li> <li><a href="#">07</a></li> <li><a href="#">08</a></li> 
+									<li><a href="#">09</a></li> <li><a href="#">10</a></li> <li><a href="#">11</a></li> <li><a href="#">12</a></li> <li><a href="#">13</a></li> <li><a href="#">14</a></li> <li><a href="#">15</a></li> <li><a href="#">16</a></li> 
+									<li><a href="#">17</a></li> <li><a href="#">18</a></li> <li><a href="#">19</a></li> <li><a href="#">20</a></li> <li><a href="#">21</a></li> <li><a href="#">22</a></li> <li><a href="#">23</a></li> <li><a href="#">24</a></li> 
+									<li><a href="#">25</a></li> <li><a href="#">26</a></li> <li><a href="#">27</a></li> <li><a href="#">28</a></li> <li><a href="#">29</a></li> <li><a href="#">30</a></li> <li><a href="#">31</a></li> <li><a href="#">32</a></li> 
+									<li><a href="#">33</a></li> <li><a href="#">34</a></li> <li><a href="#">35</a></li> <li><a href="#">36</a></li> <li><a href="#">37</a></li> <li><a href="#">38</a></li> <li><a href="#">39</a></li> <li><a href="#">40</a></li> 
+									<li><a href="#">41</a></li> <li><a href="#">42</a></li> <li><a href="#">43</a></li> <li><a href="#">44</a></li> <li><a href="#">45</a></li> <li><a href="#">46</a></li> <li><a href="#">47</a></li> <li><a href="#">48</a></li> 
+									<li><a href="#">49</a></li> <li><a href="#">50</a></li> <li><a href="#">51</a></li> <li><a href="#">52</a></li> <li><a href="#">53</a></li> <li><a href="#">54</a></li> <li><a href="#">55</a></li> <li><a href="#">56</a></li> 
+									<li><a href="#">57</a></li> <li><a href="#">58</a></li> <li><a href="#">59</a></li> <li><a href="#">60</a></li> <li><a href="#">61</a></li> <li><a href="#">62</a></li> <li><a href="#">63</a></li> <li><a href="#">64</a></li> 
+									<li><a href="#">65</a></li> <li><a href="#">66</a></li> <li><a href="#">67</a></li> <li><a href="#">68</a></li> <li><a href="#">69</a></li> <li><a href="#">70</a></li> <li><a href="#">71</a></li> <li><a href="#">72</a></li> 
+									<li><a href="#">73</a></li> <li><a href="#">74</a></li> <li><a href="#">75</a></li> <li><a href="#">76</a></li> <li><a href="#">77</a></li> <li><a href="#">78</a></li> <li><a href="#">79</a></li> <li><a href="#">80</a></li> 
+									<li><a href="#">81</a></li> <li><a href="#">82</a></li> <li><a href="#">83</a></li> <li><a href="#">84</a></li> <li><a href="#">85</a></li> <li><a href="#">86</a></li> <li><a href="#">87</a></li> <li><a href="#">88</a></li> 
+									<li><a href="#">89</a></li> <li><a href="#">90</a></li> <li><a href="#">91</a></li> <li><a href="#">92</a></li> <li><a href="#">93</a></li> <li><a href="#">94</a></li> <li><a href="#">95</a></li> <li><a href="#">96</a></li> 
+									<li><a href="#">97</a></li> <li><a href="#">98</a></li> <li><a href="#">99</a></li> <li><a href="#">100</a></li> <li><a href="#">101</a></li> <li><a href="#">102</a></li> <li><a href="#">103</a></li> <li><a href="#">104</a></li> 
+									<li><a href="#">105</a></li> <li><a href="#">106</a></li> <li><a href="#">107</a></li> <li><a href="#">108</a></li> <li><a href="#">109</a></li> <li><a href="#">110</a></li> <li><a href="#">111</a></li> <li><a href="#">112</a></li> 
+									<li><a href="#">113</a></li> <li><a href="#">114</a></li> <li><a href="#">115</a></li> <li><a href="#">116</a></li> <li><a href="#">117</a></li> <li><a href="#">118</a></li> <li><a href="#">119</a></li> <li><a href="#">120</a></li> 
+									<li><a href="#">121</a></li> <li><a href="#">122</a></li> <li><a href="#">123</a></li> <li><a href="#">124</a></li> <li><a href="#">125</a></li> <li><a href="#">126</a></li> <li><a href="#">127</a></li> <li><a href="#">128</a></li> 
+									<li><a href="#">129</a></li> <li><a href="#">130</a></li> <li><a href="#">131</a></li> <li><a href="#">132</a></li> <li><a href="#">133</a></li> <li><a href="#">134</a></li> <li><a href="#">135</a></li> <li><a href="#">136</a></li> 
+									<li><a href="#">137</a></li> <li><a href="#">138</a></li> <li><a href="#">139</a></li> <li><a href="#">140</a></li> <li><a href="#">141</a></li> <li><a href="#">142</a></li> <li><a href="#">143</a></li> <li><a href="#">144</a></li> 
+									<li><a href="#">145</a></li> <li><a href="#">146</a></li> <li><a href="#">147</a></li> <li><a href="#">148</a></li> <li><a href="#">149</a></li> <li><a href="#">150</a></li> <li><a href="#">151</a></li> <li><a href="#">152</a></li> 
+									<li><a href="#">153</a></li> <li><a href="#">154</a></li> <li><a href="#">155</a></li> <li><a href="#">156</a></li> <li><a href="#">157</a></li> <li><a href="#">158</a></li> <li><a href="#">159</a></li> <li><a href="#">160</a></li> 
+									<li><a href="#">161</a></li> <li><a href="#">162</a></li> <li><a href="#">163</a></li> <li><a href="#">164</a></li> <li><a href="#">165</a></li> <li><a href="#">166</a></li> <li><a href="#">167</a></li> <li><a href="#">168</a></li> 
+									<li><a href="#">169</a></li> <li><a href="#">170</a></li> <li><a href="#">171</a></li> <li><a href="#">172</a></li> <li><a href="#">173</a></li> <li><a href="#">174</a></li> <li><a href="#">175</a></li> <li><a href="#">176</a></li> 
+									<li><a href="#">177</a></li> <li><a href="#">178</a></li> <li><a href="#">179</a></li> <li><a href="#">180</a></li> <li><a href="#">181</a></li> <li><a href="#">182</a></li> <li><a href="#">183</a></li> <li><a href="#">184</a></li> 
+									<li><a href="#">185</a></li> <li><a href="#">186</a></li> <li><a href="#">187</a></li> <li><a href="#">188</a></li> <li><a href="#">189</a></li> <li><a href="#">190</a></li> <li><a href="#">191</a></li> <li><a href="#">192</a></li> 
+									<li><a href="#">193</a></li> <li><a href="#">194</a></li> <li><a href="#">195</a></li> <li><a href="#">196</a></li> <li><a href="#">197</a></li> <li><a href="#">198</a></li> <li><a href="#">199</a></li> <li><a href="#">200</a></li> 
+									<li><a href="#">201</a></li> <li><a href="#">202</a></li> <li><a href="#">203</a></li> <li><a href="#">204</a></li> <li><a href="#">205</a></li> <li><a href="#">206</a></li> <li><a href="#">207</a></li> <li><a href="#">208</a></li> 
+									<li><a href="#">209</a></li> <li><a href="#">210</a></li> <li><a href="#">211</a></li> <li><a href="#">212</a></li> <li><a href="#">213</a></li> <li><a href="#">214</a></li> <li><a href="#">215</a></li> <li><a href="#">216</a></li> 
+									<li><a href="#">217</a></li> <li><a href="#">218</a></li> <li><a href="#">219</a></li> <li><a href="#">220</a></li> <li><a href="#">221</a></li> <li><a href="#">222</a></li> <li><a href="#">223</a></li> <li><a href="#">224</a></li> 
+									<li><a href="#">225</a></li> <li><a href="#">226</a></li> <li><a href="#">227</a></li> <li><a href="#">228</a></li> <li><a href="#">229</a></li> <li><a href="#">230</a></li> <li><a href="#">231</a></li> <li><a href="#">232</a></li> 
+									<li><a href="#">233</a></li> <li><a href="#">234</a></li> <li><a href="#">235</a></li> <li><a href="#">236</a></li> <li><a href="#">237</a></li> <li><a href="#">238</a></li> <li><a href="#">239</a></li> <li><a href="#">240</a></li> 
+									<li><a href="#">241</a></li> <li><a href="#">242</a></li> <li><a href="#">243</a></li> <li><a href="#">244</a></li> <li><a href="#">245</a></li> <li><a href="#">246</a></li> <li><a href="#">247</a></li> <li><a href="#">248</a></li> 
+									<li><a href="#">249</a></li> <li><a href="#">250</a></li> <li><a href="#">251</a></li> <li><a href="#">252</a></li> <li><a href="#">253</a></li> <li><a href="#">254</a></li>
+                                </ul>
+                            </div>
+                    	        <ul id="lane_num_check" class="parsley-errors-list">
+		                        	<li>This value is required.</li>
+		                        </ul>
+                            </div>
+                            <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_number"></i></div>
+                         </div>
+                            
+                            <div class="row approach_name">
+							  <div class="col-sm-4"><label for="approach_name">Approach ID:</label></div>
+							  <div class="col-sm-7"><div id="approach_name" class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select an Approach ID <span class="caret"></span></a>
+                                <ul class="dropdown-menu scrollable-menu" role="menu">
+                                    <li><a href="#">01</a></li>
+                                    <li><a href="#">02</a></li>
+                                    <li><a href="#">03</a></li>
+                                    <li><a href="#">04</a></li>
+                                    <li><a href="#">05</a></li>
+                                    <li><a href="#">06</a></li>
+                                    <li><a href="#">07</a></li>
+                                    <li><a href="#">08</a></li>
+                                    <li><a href="#">09</a></li>
+                                    <li><a href="#">10</a></li>
+                                    <li><a href="#">11</a></li>
+                                    <li><a href="#">12</a></li>
+                                    <li><a href="#">13</a></li>
+                                    <li><a href="#">14</a></li>
+                                    <li><a href="#">15</a></li>
+                                </ul>
+                              </div></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="approach_id"></i></div>
+							</div>
+							<div class="row intersection_name">
+							  <div class="col-sm-4"><label for="intersection_name">Intersection Name:</label></div>
+							  <div class="col-sm-7"><input type="text" class="form-control" id="intersection_name"></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="intersection_name"></i></div>
+							</div>
+							<div class="row revision">
+							  <div class="col-sm-4"><label for="revision">Revision:</label></div>
+							  <div class="col-sm-7"><input type="text" class="form-control" id="revision" disabled></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="revision"></i></div>
+							</div>
+							<div class="row lat" data-toggle="tooltip" title="in decimal degrees">
+							  <div class="col-sm-4"><label for="lat">Latitude:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="lat" placeholder="-90 to 90" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-90, 90]" data-parsley-pattern-message="This value must include numbers only."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="latitude"></i></div>
+							</div>
+							<div class="row long" data-toggle="tooltip" title="in decimal degrees">
+							  <div class="col-sm-4"><label for="long">Longitude:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="long" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="longitude"></i></div>
+							</div>
+							<div class="row intersection">
+							  <div class="col-sm-4"><label for="intersection">Intersection ID:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="intersection" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="intersection_id"></i></div>
+							</div>
+							<div class="row elev" data-toggle="tooltip" title="in meters">
+							  <div class="col-sm-4"><label for="elev">Elevation:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="elev" placeholder="-409.6 to 6143.9" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-409.6, 6143.9]" data-parsley-pattern-message="This value must include numbers only."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="elevation"></i></div>
+							</div>
+							<div class="row lane_width" data-toggle="tooltip" title="in centimeters">
+							  <div class="col-sm-4"><label for="lane_width">Lane Width Delta:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="lane_width" placeholder="-512 to 511" data-parsley-pattern="^-?[0-9]+$" data-parsley-range="[-512, 511]" data-parsley-pattern-message="This value must be an integer."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_width"></i></div>
+							</div>
+							<div class="row master_lane_width" data-toggle="tooltip" title="in centimeters">
+							  <div class="col-sm-4"><label for="master_lane_width">Master Lane Width:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="master_lane_width" placeholder="0 to 32767" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 32767]" data-parsley-pattern-message="This value must be an integer."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="master_lane_width"></i></div>
+							</div>
+							<div class="row verified_lat" data-toggle="tooltip" title="in decimal degrees">
+							  <div class="col-sm-4"><label for="verified_lat">Verified Latitude:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="verified_lat" placeholder="-90 to 90" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-90, 90]" data-parsley-pattern-message="This value must include numbers only."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="verified_lat"></i></div>
+							</div>
+							<div class="row verified_long" data-toggle="tooltip" title="in decimal degrees">
+							  <div class="col-sm-4"><label for="verified_long">Verified Longitude:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="verified_long" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="verified_long"></i></div>
+							</div>
+							<div class="row verified_elev" data-toggle="tooltip" title="in meters">
+							  <div class="col-sm-4"><label for="verified_elev">Verified Elevation:</label></div>
+							  <div class="col-sm-7"><input class="form-control" id="verified_elev" placeholder="-409.6 to 6143.9" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-409.6, 6143.9]" data-parsley-pattern-message="This value must include numbers only."></div>
+							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="verified_elev"></i></div>
+							</div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btnDone btn btn-primary">Done</button>
+                            <button type="button" class="btnClose btn btn-primary">Cancel</button>
+						</div>
+						<div class="btn-group-right">
+							<button type="button" class="btnClone btn btn-primary">Create Computed Lane</button>
+						</div>
+
+                    </div>
+                </div>
+            <div class="tab-pane" id="spat-info-tab">
+            	<div class="panel-body">
+                    <form class="spat-message">
+                 
+						<div class="row spat_revision">
+						  <div class="col-sm-4"><label for="spat_revision">SPaT Revision:</label></div>
+						  <div class="col-sm-7"><input class="form-control" id="spat_revision" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 255]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="spat_revision"></i></div>
+						</div>
+						
+                        <div class="row">
+						  <div class="col-sm-4"><label class="spat_label" for="signal_group_id">Signal Group ID:</label></div>
+						  <div class="col-sm-7"><input class="form-control" id="signal_group_id" placeholder="0 to 255" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 255]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="spat_label"></i></div>
+						</div>
+						
+						<div class="row">
+                        	<div class="col-sm-4"><label class="phase" for="phase">Signal Phase:</label></div>
+							<div class="col-sm-7"><div id="phase" class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select a Signal Phase <span class="caret"></span></a>
+	                            <ul class="dropdown-menu">
+	                                <li><a href="#">(0) Unavailable</a></li>
+	                                <li><a href="#">(1) Dark</a></li>
+	                                <li><a href="#">(2) Stop-Then-Proceed</a></li>
+	                                <li><a href="#">(3) Stop-And-Remain</a></li>
+	                                <li><a href="#">(4) Pre-Movement</a></li>
+	                                <li><a href="#">(5) Permissive-Movement-Allowed</a></li>
+	                                <li><a href="#">(6) Protected-Movement-Allowed</a></li>
+	                                <li><a href="#">(7) Permissive-Clearance</a></li>
+	                                <li><a href="#">(8) Protected-Clearance</a></li>
+	                                <li><a href="#">(9) Caution-Conflicting-Traffic</a></li>
+	                            </ul>
+	                        </div></div>
+	                        <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="phase"></i></div>
+                        </div>
+                        
+                        <div class="row">
+	                        <div id="phase0" class="phases col-xs-offset-1">
+	                            <p>-- This state is used for unknown or error</p>
+	                        </div>
+	                        <div id="phase1" class="phases col-xs-offset-1">
+	                            <p>-- The signal head is dark (unlit)</p>
+	                        </div>
+	                        <div id="phase2" class="phases col-xs-offset-1">
+	                            <p>-- Often called 'flashing red' in US<br>
+	                            -- Driver Action:<br>
+	                            &nbsp;&nbsp;-&nbsp;Stop vehicle at stop line.<br>
+	                            &nbsp;&nbsp;-&nbsp;Do not proceed unless it is safe.<br>
+	                            -- Note that the right to proceed either right or left when<br>
+	                            it is safe may be contained in the lane description to<br>
+	                            handle what is called a 'right on red'</p>
+	                        </div>
+	                        <div id="phase3" class="phases col-xs-offset-1">
+	                            <p>-- e.g. called 'red light' in US<br>
+	                            -- Driver Action:<br>
+	                            &nbsp;&nbsp;-&nbsp;Stop vehicle at stop line.<br>
+	                            &nbsp;&nbsp;-&nbsp;Do not proceed.<br>
+	                            -- Note that the right to proceed either right or left when<br>
+	                            it is safe may be contained in the lane description to<br>
+	                            handle what is called a 'right on red'</p>
+	                        </div>
+	                        <div id="phase4" class="phases col-xs-offset-1">
+	                            <p>-- Not used in the US, red+yellow partly in EU<br>
+	                            -- Driver Action:<br>
+	                            &nbsp;&nbsp;-&nbsp;Stop vehicle.<br>
+	                            &nbsp;&nbsp;-&nbsp;Prepare to proceed (pending green)<br>
+	                            &nbsp;&nbsp;-&nbsp;(Prepare for transition to green/go)</p>
+	                        </div>
+	                        <div id="phase5" class="phases col-xs-offset-1">
+	                            <p>-- Often called 'permissive green' in US<br>
+	                            -- Driver Action:<br>
+	                            &nbsp;&nbsp;-&nbsp;Proceed with caution,<br>
+	                            &nbsp;&nbsp;-&nbsp;must yield to all conflicting traffic<br>
+	                            -- Conflicting traffic may be present<br>
+	                            in the intersection conflict area</p>
+	                        </div>
+	                        <div id="phase6" class="phases col-xs-offset-1">
+	                            <p>-- Often called 'protected green' in US<br>
+	                                -- Driver Action:<br>
+	                                &nbsp;&nbsp;-&nbsp;Proceed, tossing caution to the wind,<br>
+	                                &nbsp;&nbsp;-&nbsp;in indicated (allowed) direction.</p>
+	                        </div>
+	                        <div id="phase7" class="phases col-xs-offset-1">
+	                            <p>-- Often called 'permissive yellow' in US<br>
+	                                -- Driver Action:<br>
+	                                &nbsp;&nbsp;-&nbsp;Prepare to stop.<br>
+	                                &nbsp;&nbsp;-&nbsp;Proceed if unable to stop,<br>
+	                                &nbsp;&nbsp;-&nbsp;Clear Intersection.<br>
+	                                -- Conflicting traffic may be present<br>
+	                                in the intersection conflict area</p>
+	                        </div>
+	                        <div id="phase8" class="phases col-xs-offset-1">
+	                            <p>-- Often called 'protected yellow' in US<br>
+	                                -- Driver Action:<br>
+	                                -- &nbsp;&nbsp;-&nbsp;Prepare to stop.<br>
+	                                &nbsp;&nbsp;-&nbsp;Proceed if unable to stop,<br>
+	                                in indicated direction (to connected lane)<br>
+	                                &nbsp;&nbsp;-&nbsp;Clear Intersection.</p>
+	                        </div>
+	                        <div id="phase9" class="phases col-xs-offset-1">
+	                            <p>-- Often called 'flashing yellow' in US<br>
+	                                -- Often used for extended periods of time<br>
+	                                -- Driver Action:<br>
+	                                -- &nbsp;&nbsp;-&nbsp;Proceed with caution,<br>
+	                                -- Conflicting traffic may be present<br>
+	                                in the intersection conflict area</p>
+	                        </div>
+                        </div>
+                        
+						<div class="row" data-toggle="tooltip" title="in 1/10ths of a second">
+						  <div class="col-sm-4"><label class="spat_label" for="start_time">Start Time:</label></div>
+						  <div class="col-sm-7"><input type="text" class="form-control" id="start_time" placeholder="0 to 36001" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 36001]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="start_time"></i></div>
+						</div>
+						<div class="row" data-toggle="tooltip" title="in 1/10ths of a second">
+						  <div class="col-sm-4"><label class="spat_label" for="min_end_time">Minimum End Time:</label></div>
+						  <div class="col-sm-7"><input type="text" class="form-control" id="min_end_time" placeholder="0 to 36001" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 36001]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="min_end_time"></i></div>
+						</div>
+						<div class="row" data-toggle="tooltip" title="in 1/10ths of a second">
+						  <div class="col-sm-4"><label class="spat_label" for="max_end_time">Maximum End Time:</label></div>
+						  <div class="col-sm-7"><input type="text" class="form-control" id="max_end_time" placeholder="0 to 36001" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 36001]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="max_end_time"></i></div>
+						</div>
+						<div class="row" data-toggle="tooltip" title="in 1/10ths of a second">
+						  <div class="col-sm-4"><label class="spat_label" for="likely_time">Likely Time:</label></div>
+						  <div class="col-sm-7"><input type="text" class="form-control" id="likely_time" placeholder="0 to 36001" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 36001]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="likely_time"></i></div>
+						</div>
+						<div class="row">
+                        	<div class="col-sm-4"><label class="spat_label" for="confidence">Confidence:</label></div>
+                        	<div class="col-sm-7"><div id="confidence" class="btn-group"> <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select a Confidence <span class="caret"></span></a>
+	                            <ul class="dropdown-menu scrollable-menu">
+	                                <li><a href="#">(0) 21% Prob</a></li>
+	                                <li><a href="#">(1) 36% Prob</a></li>
+	                                <li><a href="#">(2) 47% Prob</a></li>
+	                                <li><a href="#">(3) 56% Prob</a></li>
+	                                <li><a href="#">(4) 62% Prob</a></li>
+	                                <li><a href="#">(5) 68% Prob</a></li>
+	                                <li><a href="#">(6) 73% Prob</a></li>
+	                                <li><a href="#">(7) 77% Prob</a></li>
+	                                <li><a href="#">(8) 81% Prob</a></li>
+	                                <li><a href="#">(9) 85% Prob</a></li>
+	                                <li><a href="#">(10) 88% Prob</a></li>
+	                                <li><a href="#">(11) 91% Prob</a></li>
+	                                <li><a href="#">(12) 94% Prob</a></li>
+	                                <li><a href="#">(13) 96% Prob</a></li>
+	                                <li><a href="#">(14) 98% Prob</a></li>
+	                                <li><a href="#">(15) 100% Prob</a></li>
+	                            </ul>
+	                     	</div></div>
+	                     	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="confidence"></i></div>
+	                    </div>
+   						<div class="row" data-toggle="tooltip" title="in 1/10ths of a second">
+						  <div class="col-sm-4"><label class="spat_label" for="next_time">Next Time:</label></div>
+						  <div class="col-sm-7"><input type="text" class="form-control" id="next_time" placeholder="0-36001" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 36001]" data-parsley-pattern-message="This value must be an integer."></div>
+						  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="next_time"></i></div>
+						</div>
+
+                    </form>
+
+                    <div class="btn-group">
+                        <button type="button" class="btnDone btn btn-primary">Done</button>
+                        <button type="button" class="btnClose btn btn-primary">Cancel</button>
+                    </div>
+
+               </div>
+            </div>
+            <div class="tab-pane" id="intersection-info-tab">
+            	<div class="panel-body">
+					<div class="row layer">
+						<div class="col-sm-4"><label for="layer">Layer ID:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="layer" placeholder="0 to 100" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 100]" data-parsley-pattern-message="This value must be an integer."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="layer_id"></i></div>
+					</div>
+
+					<!-- sheepIt Form -->
+					<div id="speedForm">
+						<div id="speedForm_template">
+
+							<hr>
+							<div class="row speed_limit_type" data-toggle="tooltip" title="in 0.02 m/s">
+								<div class="col-sm-4"><label for="speedForm_#index#_speedLimitType">
+									Speed Limit Type:</label></div>
+								<div class="col-sm-6 clearfix">
+									<select class="styled-select" id="speedForm_#index#_speedLimitType">
+										<option value="" selected="" disabled="">Speed Limit Type</option>
+										<option value="Unknown">Unknown</option>
+										<option value="Max Speed in School Zone">Max Speed in School Zone</option>
+										<option value="Max Speed in School Zone w/ Children">Max Speed in School Zone w/ Children</option>
+										<option value="Max Speed in Construction Zone">Max Speed in Construction Zone</option>
+										<option value="Vehicle Min Speed">Vehicle Min Speed</option>
+										<option value="Vehicle Max Speed">Vehicle Max Speed</option>
+										<option value="Vehicle Night Max Speed">Vehicle Night Max Speed</option>
+										<option value="Truck Min Speed">Truck Min Speed</option>
+										<option value="Truck Max Speed">Truck Max Speed</option>
+										<option value="Truck Night Max Speed">Truck Night Max Speed</option>
+										<option value="Vehicles w/ Trailers Min Speed">Vehicles w/ Trailers Min Speed</option>
+										<option value="Vehicles w/ Trailers Max Speed">Vehicles w/ Trailers Max Speed</option>
+										<option value="Vehicles w/ Trailers Night Max Speed">Vehicles w/ Trailers Night Max Speed</option>
+									</select>
+								</div>
+								<div class="col-sm-1">
+									<a id="speedForm_remove_current"><img class="delete" src="img/cross.png" width="10" height="10" border="0"></a>
+								</div>
+								<div class="col-sm-1">
+									<i class="fa fa-question-circle" aria-hidden="true" tag="speed_limit_type"></i>
+								</div>
+							</div>
+
+							<div class="row velocity" data-toggle="tooltip" title="in MPH">
+								<div class="col-sm-4"><label for="speedForm_#index#_velocity">Velocity:</label></div>
+								<div class="col-sm-7"><input type="text" class="form-control" id="speedForm_#index#_velocity"
+															 placeholder="0 to 366" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-range="[0, 366]" data-parsley-pattern-message="This value must include numbers only."></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="velocity"></i></div>
+							</div>
+
+						</div>
+
+						<div id="speedForm_noforms_template">No Speed Limit Restrictions</div>
+						<div id="speedForm_controls">
+							<div id="speedForm_add"><a>Add Row <i class="fa fa-plus"></i></a></div>
+							<br/>
+						</div>
+					</div>
+	
+	                <div class="btn-group">
+	                    <button type="button" class="btnDone btn btn-primary intersection-btn">Done</button>
+	                    <button type="button" class="btnClose btn btn-primary">Cancel</button>
+	                </div>
+
+               </div>
+            </div>
+            <div class="tab-pane" id="connection-tab">
+            	<div class="panel-body">
+            		<div class="row clearfix">
+				        <div class="col-md-12 column">
+				            <form id="nodes">
+				                <table class="table table-bordered table-hover" id="tab_intersects">
+				                    <thead>
+				                        <tr>
+											<th class="text-center">
+												Connection ID
+											</th>
+											<th class="text-center">
+												Remote Intersection ID
+											</th>
+				                            <th class="text-center">
+				                                "To" Lane Number
+				                            </th>
+				                            <th class="text-center">
+				                                Signal Group ID
+				                            </th>
+				                            <th class="text-center">
+				                                Allowed Maneuvers
+				                            </th>
+				                            <th class="text-center">
+												<a id="add_row" class="btn btn-default pull-left" alt="Add Row"><i class="fa fa-plus fa-lg" ></i></a>
+				                            </th>
+				                        </tr>
+				                    </thead>
+				                    <tbody>
+				                    </tbody>
+				                </table>
+				            </form>
+				        </div>
+				    </div>
+	                <div class="btn-group">
+	                    <button type="button" class="btnDone btn btn-primary intersection-btn">Done</button>
+	                    <button type="button" class="btnClose btn btn-primary">Cancel</button>
+	                </div>
+               </div>
+            </div>
+            <div class="tab-pane" id="computed-tab">
+				<div class="panel-body">
+					<div class="row referenceLaneID" data-toggle="tooltip" title="number">
+						<div class="col-sm-4"><label for="referenceLaneID">Reference Lane:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="referenceLaneID" placeholder="1 to 63" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[1, 63]" data-parsley-pattern-message="This value must include numbers only." disabled></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="referenceLaneID"></i></div>
+					</div>
+					<div class="row offset-X" data-toggle="tooltip" title="in centimeters">
+						<div class="col-sm-4"><label for="offset-X">Offset X:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="offset-X" placeholder="-2047 to 2047"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-2047, 2047]" data-parsley-pattern-message="This value must include numbers only."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="offsetX"></i></div>
+					</div>
+					<div class="row offset-Y" data-toggle="tooltip" title="in centimeters">
+						<div class="col-sm-4"><label for="offset-Y">Offset Y:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="offset-Y" placeholder="-2047 to 2047"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-2047, 2047]" data-parsley-pattern-message="This value must include numbers only."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="offsetY"></i></div>
+					</div>
+					<div class="row rotation" data-toggle="tooltip" title="in decimal degrees">
+						<div class="col-sm-4"><label for="rotation">Rotation:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="rotation" placeholder="0 to 359.9875"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 359.9875]" data-parsley-pattern-message="This value must include numbers only."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="rotation"></i></div>
+					</div>
+					<div class="row scale-X" data-toggle="tooltip" title="in steps of 0.05 percent">
+						<div class="col-sm-4"><label for="scale-X">Scale X:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="scale-X" placeholder="-99.95 to 102.35"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-99.95, 102.35]" data-parsley-pattern-message="This value must include numbers only."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="scaleX"></i></div>
+					</div>
+					<div class="row scale-Y" data-toggle="tooltip" title="in steps of 0.05 percent">
+						<div class="col-sm-4"><label for="scale-Y">Scale Y:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="scale-Y" placeholder="-99.95 to 102.35"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-99.95, 102.35]" data-parsley-pattern-message="This value must include numbers only."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="scaleY"></i></div>
+					</div>
+					<div class="row referenceLaneNumber" data-toggle="tooltip" title="number" hidden>
+						<div class="col-sm-4" hidden></div>
+						<div class="col-sm-7" hidden><input class="form-control" id="referenceLaneNumber" disabled></div>
+						<div class="col-sm-1" hidden></div>
+					</div>
+
+					<div class="btn-group">
+						<button type="button" class="btnDone btn btn-primary intersection-btn">Done</button>
+						<button type="button" class="btnClose btn btn-primary">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Deposit Modal -->
+	<div class="modal fade" id="message_deposit_modal" tabindex="-1" role="dialog" aria-labelledby="message_deposit_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="message_deposit_modal_label">Message Encoder</h4>
+					<p class="help-block">Check the generated map data JSON then "Encode" it as SDC/SDW ISD message.</p>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label for="message_json" class="col-sm-2 control-label">Map Data</label>
+								<div class="col-sm-10">
+									<textarea class="form-control" rows="5" id="message_json" placeholder="Message to send" readonly></textarea>
+								</div>
+							</div>
+							<div id="alert_placeholder"></div>		
+							<div class="form-group" id="message_status">
+								<label for="message_text" class="col-sm-2 control-label">ASN.1</label>
+								<div class="col-sm-10">
+									<textarea readonly class="form-control" rows="4" id="message_text" placeholder="Text Encoding"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="message_hex" class="col-sm-2 control-label">UPER Hex</label>
+								<div class="col-sm-10">
+									<textarea readonly class="form-control" rows="4" id="message_hex" placeholder="UPER Hex Encoding"></textarea>
+								</div>
+							</div>
+							<p><b>Message Size: </b><span class="message_size"></span></p>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<label for="message_type" class="pull-left">Message Type: &nbsp;&nbsp;</label>
+                   	<select id="message_type" class="pull-left">
+                       <option value="ISD">ISD</option>
+                       <option value="Map">Map</option>
+					   <option value="Frame+Map">Frame+Map</option>
+                       <option value="SPaT">SPaT</option>
+					   <option value="Frame+SPaT">Frame+SPaT</option>
+					   <option value="SpatRecord">SpatRecord</option>
+                  	</select>
+
+					<label for="node_offsets" class="pull-left">&nbsp;&nbsp;Node Offsets: &nbsp;&nbsp;</label>
+					<select id="node_offsets" class="pull-left">
+						<option value="Explicit">Explicit (64 bit)</option>
+						<option value="Standard">Standard (32 bit)</option>
+						<option value="Compact">Compact</option>
+						<option value="Tight">Tight</option>
+					</select>
+					<label for="enable_elevation" class="pull-left">&nbsp;&nbsp;Enable Elevation?: &nbsp;&nbsp;</label>
+					<input id="enable_elevation" type="checkbox" class="pull-left">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" id="message_deposit" class="btn btn-primary">Encode</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Deposit Modal -->
+
+	<!-- Open File Modal -->
+	<div class="modal fade" id="open_file_modal" tabindex="-1" role="dialog" aria-labelledby="open_file_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="open_file_modal_label">Load Map File</h4>
+					<p class="help-block">Please select the map file to load:</p>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<input type="file" id="fileToLoad2">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Open File Modal -->
+	
+	<!-- Revision -->
+	<div class="modal fade" id="revision_modal" tabindex="-1" role="dialog" aria-labelledby="revision_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="revision_modal_label">Enter a revision number:</h4>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<input type="text" class="form-control" id="revision_num" placeholder="0-255">
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Revision -->
+	
+	<!-- ? Help Modal -->
+	<div class="modal fade" id="help_modal" tabindex="-1" role="dialog" aria-labelledby="help_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header bg-warning">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="help_modal_label"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-sm-3">Minimum Value:</div>
+							<div class="col-sm-8" id="min"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">Maximum Value:</div>
+							<div class="col-sm-8" id="max"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">Units:</div>
+							<div class="col-sm-8" id="units"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">Description:</div>
+							<div class="col-sm-8" id="description"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End ? Help Modal -->
+
+	<!-- Instructions Modal -->
+	<div class="modal fade" id="instructions_modal" tabindex="-1" role="dialog" aria-labelledby="instructions_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="instructions_modal_label">Instructions</h4>
+					<p class="help-block">Guide on how to map an intersection and deposit it to the warehouse</p>
+				</div>
+				<div class="modal-body">
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#instructions_tab_1" aria-controls="getting_started" role="tab" data-toggle="tab">Getting Started</a></li>
+                        <li role="presentation"><a href="#instructions_tab_6" aria-controls="save_load" role="tab" data-toggle="tab">Save/Load</a></li>
+						<li role="presentation"><a href="#instructions_tab_2" aria-controls="approaches" role="tab" data-toggle="tab">Approaches</a></li>
+						<li role="presentation"><a href="#instructions_tab_3" aria-controls="lanes" role="tab" data-toggle="tab">Lanes</a></li>
+						<li role="presentation"><a href="#instructions_tab_4" aria-controls="attributes" role="tab" data-toggle="tab">Attributes</a></li>
+						<li role="presentation"><a href="#instructions_tab_8" aria-controls="computed_lanes" role="tab" data-toggle="tab">Computed Lanes</a></li>
+						<li role="presentation"><a href="#instructions_tab_5" aria-controls="deposit" role="tab" data-toggle="tab">Encode</a></li>
+						<li role="presentation"><a href="#instructions_tab_7" aria-controls="stencil" role="tab" data-toggle="tab">Stencil</a></li>
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="instructions_tab_1">
+							<div class="container-fluid">
+								<h4>Getting Started - Define your Intersection</h4>
+								<ol>
+                                    <li>Begin by navigating to the <strong>File</strong> drop down menu. Select <strong>New Parent Map</strong> or <strong>New Child Map</strong>.</li>
+                                    <ul>
+										<li>Parent maps only allow reference points that define an intersection location whereas child maps define the features of a given parent map. </li>
+									</ul>
+                                    <li>If you choose parent map, zoom into the intersection you wish you begin building.</li>
+									<li>From the top navbar, go to <strong>Show</strong> <i class="fa fa-arrow-right"></i> <strong>Builder</strong> to bring up the menu to begin building your intersection.</li>
+									<ul>
+										<li>In the <strong>Intersection</strong> tab, you should see the <strong>Reference Point Marker</strong> and the <strong>Verified Point Marker</strong>.</li>
+									</ul>
+									<li>Click and drag the <strong>Reference Point Marker</strong> to the center of the intersection you wish to begin building.</li>
+									<ul>
+										<li>Note that the <strong>Markers</strong> Control becomes enabled once the marker is placed.</li>
+										<li>You may drag around the marker after being placed to tweak its location</li>
+										<li>Click on the marker to open up the <strong>Configuration</strong> dialog. From here you can view and modify its information. </li>
+										<li>You may toggle the control back off once you are finished tweaking the location of the markers.</li>
+									</ul>
+									<li>Click and drag the <strong>Verified Point Marker</strong> to a known, surveyed location on the map.</li>
+									<ul>
+										<li>Click on the marker to open up the <strong>Configuration</strong> dialog.
+											You can view the location of the marker on the map, as well as view and modify the verified location of the marker.</li>
+										<li>Check the verified marker information and edit as necessary.  Click <strong>Done</strong> when finished.</li>
+									</ul>
+									<li>Close the <strong>Builder</strong> once you are finished placing the two markers.</li>
+                                    <li>Continue the process by viewing the <strong>Save/Load</strong> instruction tab.</li>
+								</ol>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_2">
+							<div class="container-fluid">
+								<h4>Defining Approaches</h4>
+								<ol>
+									<li>Click the <strong>Draw Approaches</strong> (<i class="fa fa-pencil-square-o"></i>) Control from the bottom Control Panel. The control should turn green when activated.</li>
+									<li>Drawing an Approach</li>
+									<ol type="a">
+										<li>Click and drag the mouse to create a rectangular box, symbolizing a stop bar, to define an approach.
+										  Make the box the approximate size of one of the stop bars in the intersection.</li>
+										<li>Do not worry about the exact size/shape/position of the box as it can be modified.</li>
+									</ol>
+									<li>Modifying an Approach</li>
+									<ol type="a">
+										<li>Click the <strong>Edit Approaches</strong> (<i class="fa fa-crop"></i>) Control on the bottom Control Panel.</li>
+										<li>Click the approach box you wish to modify.</li>
+										<li>Click and drag from the center dot on the approach to move the box around.</li>
+										<li>Click and drag from the outside dot to rotate and resize the box.</li>
+										<li>Modify the box as to best fit the stop bar of the intersection.</li>
+									</ol>
+									<li>Configuring an Approach</li>
+									<ol type="a">
+										<li>Verify that all of the Controls on the bottom panel are unselected.</li>
+										<li>Click on the approach you wish to configure.</li>
+										<li>In the Approach Configuration dialog, configure as desired.</li>
+										<li>Click <strong>Done</strong> when finished.</li>
+									</ol>
+									<li>Repeat the above steps for each approach.</li>
+									<li>Removing an Approach</li>
+									<ol type="a">
+										<li>Select the <strong>Delete</strong> Control on the bottom panel.</li>
+										<li>Click the feature (approach) you wish to delete.</li>
+										<li>Unselect the <strong>Delete</strong> Control.</li>
+									</ol>
+								</ol>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_3">
+							<div class="container-fluid">
+								<h4>Defining Lanes</h4>
+								<ol>
+									<li>Click the <strong>Draw Lanes</strong>(<i class="fa fa-pencil"></i>) Control from the bottom Control Panel.</li>
+									<li>Drawing a Lane</li>
+									<ol type="a">
+										<li>Place the mouse button inside of the approach box you wish to begin defining lanes.</li>
+										<li>Click the mouse once to create the first node of the lane.</li>
+										<li>Click the mouse again to define all subsequent nodes on the lane.</li>
+										<li>Double-click the mouse on the final node you wish to define on the lane.</li>
+									</ol>
+									<li>Modifying a Lane</li>
+									<ol type="a">
+										<li>Click the <strong>Edit Lanes</strong>(<i class="fa fa-sliders"></i>) Control on the bottom Control Panel.</li>
+										<li>Click the lane you wish to modify.</li>
+										<li>All of the nodes on the lane will appear.  The solid colored nodes are ones already defined.
+											The transparent nodes are ones you can add to the lane by simply dragging them.</li>
+										<li>Click and drag the nodes around until you have them in the desired position.</li>
+									</ol>
+									<li>Configuring a Lane</li>
+									<ol type="a">
+										<li>Verify that all of the Controls on the bottom panel are unselected.</li>
+										<li>Click on the lane node you wish to configure in order to bring up the <strong>Lane Configuration</strong> dialog.
+											<br><strong>Note:</strong> Only the first node of the lane will hold the Lane Number and Attribute information.</li>
+										<li>Define a Lane Number (node 1).  Modify any other desired settings.
+											<br><strong>Note:</strong> Lane Attributes will be explained in the next section.</li>
+										<li>Click <strong>Done</strong> when finished.</li>
+									</ol>
+									<li>Repeat the above steps for each lane in each approach.</li>
+									<li>Removing a Lane</li>
+									<ol type="a">
+										<li>Select the <strong>Delete</strong> Control on the bottom panel.</li>
+										<li>Click the feature (lane) you wish to delete.</li>
+										<li>If the lane is a source lane for computed lane's a Dialog will appear warning that deleting the lane will delete all lanes computed from it. Click <strong>OK</strong> to delete the lane and all of it's computed lanes.</li>
+										<li>Unselect the <strong>Delete</strong> Control.</li>
+									</ol>
+								</ol>
+								<br>
+								<p><strong>Note:</strong> When defining elevations, keep in mind that the standard defines the delta between elevations to be
+								   a range of +/- 5.11 meters.  This means that when creating consecutive lane nodes, they should be close
+								   enough together to not have an elevation delta outside of the standard's range.  The same range applies
+								   to lane width delta values.
+								</p> 
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_4">
+							<div class="container-fluid">
+								<h4>Lane Attributes</h4>
+								<ul>
+									<li>Adding Lane Attributes</li>
+									<ol type="a">
+										<li>Click on the first node of the lane you wish you add attributes to; this will again display the <strong>Lane Configuration</strong> dialog.</li>
+										<li>Bring up the <strong>Builder</strong> and select the <strong>Lane</strong> tab.</li>
+										<li>Click and drag the lane attributes from the <strong>Builder</strong> to the <strong>Lane Attributes</strong> section of the <strong>Lane Configuration</strong>.</li>
+										<li>Let go of the mouse button to "drop" and assign the attribute to the lane.</li>
+										<li>Click <strong>Done</strong> when finished adding attributes.</li>
+									</ol>
+									<li>Removing Lane Attributes</li>
+									<ol type="a">
+										<li>Click on the first node of the lane you wish you remove attributes from.</li>
+										<li>From the <strong>Lane Attributes</strong> section of the <strong>Lane Configuration</strong> dialog, click and begin to drag the attribute you wish to remove.</li>
+										<li>Once the dragging begins, a red trashcan will appear at the bottom of the <strong>Lane Attributes</strong> section.</li>
+										<li>Hover the attribute over the trashcan and let go of the mouse button to "drop" and remove the attribute from the lane.</li>
+										<li>Click <strong>Done</strong> when finished removing attributes.</li>
+									</ol>
+								</ul>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_5">
+							<div class="container-fluid">
+								<h4>Finish and Encode</h4>
+								<p class="help-block">Encode your intersection message once you are finished building your intersection.</p>
+								<ul>
+									<li>From the top navbar, go to  <strong>Tools</strong> <i class="fa fa-arrow-right"></i> <strong>Encoder</strong>.</li>
+									<li>Select desired Message Type</li>
+									<ul>
+										<li><b>ISD</b> – SDC/SDW Intersection Situation Data</li>
+										<li><b>Map</b> – SAE J2735 MapData message</li>
+										<li><b>Frame+Map</b> – SAE J2735 MessageFrame message with MapData contents</li>
+										<li><b>SPaT</b> – SAE J2735 SPAT message</li>
+										<li><b>Frame+SPaT</b> – SAE J2735 MessageFrame message with SPAT contents</li>
+										<li><b>SpatRecord</b>  – ISD message SPaT part</li>
+									</ul>
+									<li>Select desired nodes offsets encoding (in the descending order of the message size)</li>
+									<ul>
+										<li><b>Explicit (64 bit)</b> - SAE J2735 Node-LLmD-64b encoding using explicit lat/lon values</li>
+										<li><b>Standard (32 bit)</b> - SAE J2735 Node-XY-32b offset values </li>
+										<li><b>Compact</b> – determines and uses the same minimal SAE J2735 Node-XY-??b offset value encoding for all nodes </li>
+										<li><b>Tight</b> - uses the absolute minimal SAE J2735 Node-XY-??b offset value encoding for each node</li>
+									</ul>
+									<li>Encode the Message</li>
+									<ol type="a">
+										<li>Press the <strong>Encode</strong> button to encode your message.</li>
+										<li>The <strong>UPER Hex</strong> text area box will display the UPER Hex encoded message if successful, or an error message if unsuccessful.</li>
+									</ol>
+									<br/>
+									<small>Note that content of all text areas can be selected and copied via context (right-click) menu option or using Ctrl-A (Select All) and Ctrl-C (copy) shortcuts.</small>
+								</ol>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_6">
+							<div class="container-fluid">
+								<h4>Saving/Loading an Intersection</h4>
+								<p class="help-block">Use the save feature to save a parent or child map.</p>
+								<ul>
+									<li>Saving an Intersection</li>
+									<ol type="a">
+										<li>From the top navbar, go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Save</strong>.</li>
+										<li>Use your browser dialog to save the generated file to your local machine.</li>
+                                        <li>You must save your parent map in order to build a child map.</li>
+									</ol>
+                                    <li>Loading an Intersection</li>
+                                    <ol type="a">
+                                        <li>When building a child map, you must always load a parent map. You can also edit child maps using the load function.</li>
+                                        <li>Begin by navigating to the <strong>File</strong> drop down menu. Select <strong>New Child Map</strong>.</li>
+                                        <li>Another dialog window will appear on the screen which allows you to navigate your file system to find the appropriate parent map.</li>
+                                        <li>Select and open the parent map.</li>
+                                        <li>Use the <strong>approaches</strong>, <strong>lanes</strong>, and <strong>attributes</strong> instructions menus to build the child maps.</li>
+                                    </ol>
+									<li>You can update a child map's reference points by navigating to <strong>File</strong><i class="fa fa-arrow-right"></i> <strong>Update Child Markers</strong>. Use the file navigation to select an updated or new parent map to associate with the child.</li>
+								</ul>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_7">
+							<div class="container-fluid">
+								<h4>Stencil</h4>
+								<p class="help-block">Load a KML file or multiple RSM file(s) to show intersections features not present in a map image. Only one stencil type can be loaded at a time.</p>
+								<ul>
+									<li>Loading a Stencil</li>
+									<ol type="a">
+                                        <li>From the top navbar, go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Open KML Stencil</strong> or go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Open RSM Stencil</strong> .</li>
+                                        <li>Use your browser dialog to open the stencil KML file or RSM file(s) from your local machine.</li>
+                                        <li>The stencil should appear as a layer on the map.</li>
+									</ol>
+									<li>Deleting a Stencil</li>
+									<ol type="a">
+										<li>From the top navbar, go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Delete Stencil</strong>.</li>
+									</ol>
+								</ul>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_8">
+							<div class="container-fluid">
+								<h4>Defining Computed Lanes</h4>
+								<p class="help-block">Create a new lane from an existing lane.  The computed lane will contain the same configuration as the source lane.</p>
+								<ol>
+									<li>Creating a Computed Lane</li>
+									<ol type="a">
+										<li>Select the source lane that is to be copied.</li>
+										<li>Click the <strong>Create Computed Lane</strong> button at the bottom of the source lane's <strong>Lane Configuration</strong> <strong>Lane Info</strong> tab</li>
+										<li>Click the location map where the computed lane is to be created.</li>
+										<li>The <strong>Computed Lane Configuration</strong> dialog will open.</li>
+										<li>On the <strong>Computed</strong> tab modify the rotation and scalings to be applied as transformations to the source lane's nodes.
+											<br><strong>Note:</strong> You can modify the offsets as well, but this will create the computed lane in a location different from what was selected on the map.</li>
+										<li>Modify the other lane configurations as desired.
+											<br><strong>Note:</strong> The <strong>Lane Number</strong> will automatically select the next availble value. All other configuration values will be copied from the source lane. All of these values able to be modified.</li>
+										<li>Click <strong>Done</strong> when finished.</li>
+									</ol>
+									<li>Modifying a Computed Lane's Form</li>
+									<ol type="a">
+										<li>A computed lane's nodes and their relative positioning will reflect the source lane. To modify the computed lane, click the <strong>Edit Lanes</strong>(<i class="fa fa-sliders"></i>) Control on the bottom Control Panel, select the source lane, and modify as desired.</li>
+										<li>Transformations from the source lane's shape can be made by the computed lane's configuraiton: Click the first node of the computed lane to be modified and update the rotaiton and scalings on the <strong>Computed</strong> tab of the <strong>Computed Lane Configuration</strong></li>
+										<li>A computed lane's placement on the map can be modified in two ways:</li>
+										<ol type="1">
+											<li>Click the <strong>Edit Lanes</strong>(<i class="fa fa-sliders"></i>) Control on the bottom Control Panel and select the computed lane. Click the location on the map where the computed lane is to be moved.</li>
+											<li>Click the first node of the computed lane to be modified and update the offsets on the <strong>Computed</strong> tab of the <strong>Computed Lane Configuration</strong></li>
+										</ol>
+									</ol>
+									<li>Modifying a Computed Lane's Configuration</li>
+									<ol type="a">
+										<li>Verify that all of the Controls on the bottom panel are unselected.</li>
+										<li>Click on the computed lane node you wish to configure in order to bring up the <strong>Computed Lane Configuration</strong> dialog.
+											<br><strong>Note:</strong> Only the first node of the lane will hold the Lane Number and Attribute information.</li>
+										<li>Modify any desired settings.
+											<br><strong>Note:</strong> Latitude and Longitude are not able to be modified since they are dependent on the computed transformations applied to the source lane's corresponding node.</li>
+										<li>Click <strong>Done</strong> when finished.</li>
+									</ol>
+									<li>Removing a Computed Lane</li>
+									<ol type="a">
+										<li>Select the <strong>Delete</strong> Control on the bottom panel.</li>
+										<li>Click the computed lane you wish to delete.</li>
+										<li>Unselect the <strong>Delete</strong> Control.</li>
+									</ol>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Instructions Modal -->
+	
+	<div id="control-toolbar" class="container">
+		<div class="btn-toolbar" aria-label="Toolbar with button groups" role="toolbar" data-toggle="buttons">
+			<div id="btn-group" class="btn-group">
+				<button class="btn btn-info btn-end-right" name="layerControl" id="help" value="help" data-toggle="tooltip" data-placement="top" title="Help"><i class="fa fa-question"></i></button>
+                <button class="btn btn-primary btn-end-right" name="layerControl" id="builder" value="builder" onclick="toggle(); return false;" data-placement="top" title="Builder"><i class="fa fa-list"></i></button>
+
+				<button id="approachControlLabel" type="button" class="btn btn-primary" disabled>Approach</button>
+				<button class="btn btn-default" name="layerControl" id="drawStopBar" value="bar" data-toggle="tooltip" data-placement="top" title="Draw Approaches"><i class="fa fa-pencil-square-o"></i></button>
+				<button class="btn btn-default btn-end-right" name="layerControl" id="editStopBar" value="edit" data-toggle="tooltip" data-placement="top" title="Edit Approaches"><i class="fa fa-crop"></i></button>
+				
+				<button id="laneControlLabel" type="button" class="btn btn-primary" disabled>Lanes</button>
+				<button class="btn btn-default" name="layerControl" id="drawLanes" value="line" data-toggle="tooltip" data-placement="top" title="Draw Lanes"><i class="fa fa-pencil"></i></button>
+				<button class="btn btn-default btn-end-right" name="layerControl" id="editLanes" value="modify" data-toggle="tooltip" data-placement="top" title="Edit Lanes"><i class="fa fa-sliders"></i></button>
+
+				<button id="measureControlLabel" type="button" class="btn btn-primary" disabled>Measure</button>
+				<button class="btn btn-default btn-end-right" name="layerControl" id="measureLanes" value="measure" data-toggle="tooltip" data-placement="top" title="Measure"><i class="fa fa-arrows-h"></i></button>
+
+				<button class="btn btn-default btn-end-right" name="layerControl" id="dragSigns" value="drag">Markers &nbsp;<i class="fa fa-lock"></i></button>
+				<button class="btn btn-danger btn-end-left" name="layerControl" id="deleteMarker" value="del" >Delete</button>
+			</div>
+		</div>
+	</div>
+
+	<!--******************************************* SCRIPTS *******************************************-->
+
+	<script src="/private-resources/js/ISDcreator-webapp-keys.js"></script>
+	
+	<script src="external/jquery.min.js"></script>
+	<script src="external/jquery-ui.min.js"></script>
+	<script src="external/touchpunch.js"></script>
+	<script src="external/modernizr-2.6.2.min.js"></script>
+	<script src="external/moment.js"></script>
+	
+	<!-- VALIDATION -->
+	<script src="external/parsley.js"></script>
+	
+	<!-- FROM OPENLAYERS 2 -->
+	<!--<script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>-->
+	<script src="external/openlayers2/OpenLayers.js"></script>
+	
+	<!-- BOOTSTRAP -->
+	<script src="external/bootstrap/js/bootstrap.min.js"></script>
+	<script src="external/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+
+	<!--SheepIt! Form -->
+	<script type="text/javascript" src="external/jquery.sheepItPlugin.js"></script>
+
+	<!--Geocomplete -->
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAXu1X7SrQEMMeYZExNw7ow_0W_0xWqD00"></script>
+	<script type="text/javascript" src="external/jquery.geocomplete.min.js"></script>
+
+	<!-- CUSTOM MAP CODE -->
+	<script src="js/mapping.js"></script>
+	
+	<!-- OTHER -->
+    <script src="js/parent-child.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/mapTools.js"></script>
+	<script src="js/sidebar.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/navbar.js"></script>
+	<script src="js/depositor.js"></script>
+	<script src="js/bing.js"></script>
+	<script src="js/latlon-vincenty.js"></script>
+
+</body>
+</html>

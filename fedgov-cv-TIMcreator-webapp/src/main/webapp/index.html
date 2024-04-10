@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>Connected Vehicle TIM Message Creator</title>
+
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="external/font-awesome-4.3.0/css/font-awesome.css">
+	
+	<!-- FROM OPENLAYERS 2 -->
+	<link rel="stylesheet" href="external/openlayers2/theme/default/style.css" type="text/css">
+	<link rel="stylesheet" href="external/openlayers2/theme/default/google.css" type="text/css">
+	<link rel="stylesheet" href="external/openlayers2/examples/style.css" type="text/css">
+	
+	<!-- BOOTSTRAP -->
+	<link rel="stylesheet" href="external/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="external/bootstrap/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="external/bootstrap-multiselect/css/bootstrap-multiselect.css">
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css">
+	
+	<!-- CUSTOM MAP CODE -->
+	<link rel="stylesheet" href="css/mapping.css" type="text/css">
+
+	<!-- OTHER -->
+	<link rel="stylesheet" href="css/navbar.css" type="text/css">
+	<link rel="stylesheet" href="css/sidebar.css" type="text/css">
+	<link rel="stylesheet" href="css/jquery-ui.css" type="text/css">
+	<link rel="stylesheet" href="css/select2.css" type="text/css">
+
+	
+</head>
+
+<body onload="init()">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header pull-left">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img id="logoimg" src="img/usdot.png">&nbsp;Connected Vehicles</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<div class="col-sm-3 col-md-3">
+					<form class="navbar-form">
+						<div class="input-group">
+							<input id="address-search" type="text" class="form-control" placeholder="Address, City, State">
+							<div class="input-group-btn">
+								<button id="address-search-btn" type='button' class="btn btn-default" disabled><i class="fa fa-search"></i></button>
+							</div>
+						</div>
+					</form>
+				</div>
+                <ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">File <span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+			            <li><a href="#" onclick="saveMap();">Save</a></li>
+			            <li><a href="#" onclick="loadFile();">Open</a></li>
+			            <li><input type="file" id="fileToLoad"></li>
+						  <li class="divider"></li>
+						  <li><a href="#" onclick="loadKMLTrace();">Open KML Stencil</a></li>
+						  <li><a href="#" onclick="loadRSMTrace();">Open RSM Stencil</a></li>
+						  <li><a href="#" onclick="deleteTrace();">Delete Stencil</a></li>
+						  <li><input type="file" id="kmlToLoad"></li>
+						  <li><input type="file" id="rsmToLoad" multiple></li>
+			          </ul>
+			        </li>
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tools <span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+						  <li><a href="#message_deposit_modal" data-toggle="modal" data-target="#message_deposit_modal">Encode/Deposit</a></li>
+						  <li><a href="#" onclick="Clear();">Clear Map</a></li>
+			          </ul>
+			        </li>
+					<li class="dropdown">
+			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Show <span class="caret"></span></a>
+			          <ul class="dropdown-menu" role="menu">
+						  <li><a href="#" onclick="toggle(); return false;"><i class="fa fa-list"></i>&nbsp;&nbsp;Builder</a></li>
+						  <li class="divider"></li>
+						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="ToggleLanes(); return false;"><i id="laneIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Regions</a></li>
+						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="TogglePoints(); return false;"><i id="pointIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Markers</a></li>
+						  <li class="divider"></li>
+						  <li><a href="#" onclick="toggleWidthArray();">Toggle Lane Widths</a></li>
+			          </ul>
+			        </li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Help <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="#instructions_modal" data-toggle="modal" data-target="#instructions_modal">Instructions</a></li>
+							<li class="divider"></li>
+							<li><a href="#" onclick="alert('To request support or report problems please email\nthe CAV Support Services at: CAVSupportServices@dot.gov.');">Support</a></li>
+							<li><a href="#" data-toggle="modal" data-target="#" onclick="alert('TIM Builder Tool for J2735 3/2016 (UPER encoding)\n\n\t  Version 2.2.4, Released on 3/26/2019');">About</a></li>
+						</ul>
+					</li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<!-- MAP -->
+	<div id="map" class="smallmap">
+		<div id="tileAge">Tile Age:
+			<span class="start"></span> - <span class="end"></span>
+		</div>
+		<div id="zoomLevel">Zoom Level:
+			<span class="zoom"></span>
+		</div>
+		<div id="measure">
+			<span class="measurement"></span>
+		</div>
+		<div id="customZoom">
+			<a class="btn btn-default" href="#customZoomOut" id="customZoomOut"><strong>-</strong></a>
+			<a class="btn btn-default" href="#customZoomIn" id="customZoomIn"><strong>+</strong></a>
+		</div>
+	</div>
+	<div id="hidden-drag" class="hidden"></div>
+
+	<div id="sidebar" class="nano">
+		<div class="close" onclick="toggle();">x</div>
+		<h4>Builder</h4>
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" id="poi-tabs">
+			<li class="active"><a href="#intersection-tab" onclick="$('#poi-tabs a[href=\'#intersection-tab\']').tab('show'); return false;">Road Signs</a></li>
+		</ul>
+		<!-- Tab panes -->
+		<div class="tab-content">
+			<div class="tab-pane active" id="intersection-tab">
+				<p class="help-block">Drag and drop these features onto the map</p>
+				<div id="intersection-tab-contents"></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="panel panel-default" id="attributes" style="display: none;" data-parsley-validate="">
+		<div class="panel-heading">
+			<h5 class="selection-panel panel-title">TITLE
+			</h5>
+		</div>
+		<ul class="nav nav-tabs" id="attribute-tabs">
+			<li class="marker-info-tab active"><a href="#marker-info-tab" onclick="$('#attribute-tabs a[href=\'#marker-info-tab\']').tab('show'); return false;">Marker Info</a></li>
+			<li class="content-tab"><a href="#content-tab" onclick="$('#attribute-tabs a[href=\'#content-tab\']').tab('show'); return false;">Content</a></li>
+			<li class="direction-tab"><a href="#direction-tab" onclick="$('#attribute-tabs a[href=\'#direction-tab\']').tab('show'); return false;">Directionality</a></li>
+			<li class="itis-tab"><a href="#itis-tab" onclick="$('#attribute-tabs a[href=\'#itis-tab\']').tab('show'); return false;">ITIS Codes</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="marker-info-tab">
+				<div class="panel-body">
+					<div class="panel-body">
+				
+					<div class="row start_time">
+						<div class="col-sm-4"><label for="start_time">Start Time:</label></div>
+			            <div class="col-sm-7">
+			            	<div class='input-group date' id='start_time'>
+				                <input type='text' class="form-control" />
+				                <span class="input-group-addon">
+				                    <span class="glyphicon glyphicon-calendar"></span>
+				                </span>
+				            </div>
+				         </div>
+				         <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="start_time"></i></div>
+				    </div>
+				    
+				    <div class="row end_time">
+	    				<div class="col-sm-4"><label for="end_time">End Time:</label></div>
+	    				<div class="col-sm-7">
+				            <div class='input-group date' id='end_time'>
+				                <input type='text' class="form-control" />
+				                <span class="input-group-addon">
+				                    <span class="glyphicon glyphicon-calendar"></span>
+				                </span>
+				            </div>
+				        </div>
+				        <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="end_time"></i></div>
+				    </div>
+			            
+					<div class="regionFeatures form-group">
+						<div class="row nwlat" data-toggle="tooltip" title="in decimal degrees">
+							<div class="col-sm-4"><label for="nwlat">NW Latitude:</label></div>
+                        	<div class="col-sm-7"><input class="form-control" id="nwlat" placeholder="-90 to 90" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-90, 90]" data-parsley-pattern-message="This value must include numbers only."></div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="nwlat"></i></div>
+                        </div>
+   						<div class="row nwlong" data-toggle="tooltip" title="in decimal degrees">
+							<div class="col-sm-4"><label for="nwlong">NW Longitude:</label></div>
+                       		<div class="col-sm-7"><input class="form-control" id="nwlong" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="nwlong"></i></div>
+                        </div>
+                        <div class="row selat" data-toggle="tooltip" title="in decimal degrees">
+                        	<div class="col-sm-4"><label for="selat">SE Latitude:</label></div>
+                        	<div class="col-sm-7"><input class="form-control" id="selat" placeholder="-90 to 90" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-90, 90]" data-parsley-pattern-message="This value must include numbers only."></div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="selat"></i></div>
+                        </div>
+                        <div class="row selong" data-toggle="tooltip" title="in decimal degrees">
+                        	<div class="col-sm-4"><label for="selong">SE Longitude:</label></div>
+                        	<div class="col-sm-7"><input class="form-control" id="selong" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="selong"></i></div>
+                        </div>
+                        <!--<div class="row extent">
+                        	<div class="col-sm-4"><label for="extent">Extent:</label></div>
+                        	<div class="col-sm-7"><div id="extent" class="btn-group"><a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select An Extent <span class="caret"></span></a>
+	                            <ul class="dropdown-menu">
+	                                <li><a href="#">(0) Instantly Only</a></li>
+	                                <li><a href="#">(1) For 3 Meters</a></li>
+	                                <li><a href="#">(2) For 10 Meters</a></li>
+	                                <li><a href="#">(3) For 50 Meters</a></li>
+	                                <li><a href="#">(4) For 100 Meters</a></li>
+	                                <li><a href="#">(5) For 500 Meters</a></li>
+	                                <li><a href="#">(6) For 1000 Meters</a></li>
+	                                <li><a href="#">(7) For 5000 Meters</a></li>
+	                                <li><a href="#">(8) For 10000 Meters</a></li>
+	                                <li><a href="#">(9) For 50000 Meters</a></li>
+	                                <li><a href="#">(10) For 100000 Meters</a></li>
+	                                <li><a href="#">(127) Forever</a></li>
+	                            </ul>
+	                    	</div></div>
+	                    	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="extent"></i></div>
+	                    </div>-->
+                        
+                        <div class="row lat" data-toggle="tooltip" title="in decimal degrees">
+							<div class="col-sm-4"><label for="lat">Latitude:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="lat" placeholder="-90 to 90" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-90, 90]" data-parsley-pattern-message="This value must include numbers only."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lat"></i></div>
+						</div>
+						<div class="row long" data-toggle="tooltip" title="in decimal degrees">
+							<div class="col-sm-4"><label for="long">Longitude:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="long" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="long"></i></div>
+						</div>
+						<div class="row elev" data-toggle="tooltip" title="in meters">
+	                        <div class="col-sm-4"><label for="elev">Elevation:</label></div>
+	                        <div class="col-sm-7"><input class="form-control" id="elev" placeholder="-409.6 to 6143.9" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-409.6, 6143.9]" data-parsley-pattern-message="This value must include numbers only."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="elev"></i></div>
+						</div>
+						<div class="row radius" data-toggle="tooltip" title="in meters">
+							<div class="col-sm-4"><label for="radius">Radius:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="radius" placeholder="in meters"></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="radius"></i></div>
+						</div>
+						<div class="row master_lane_width" data-toggle="tooltip" title="in centimeters">
+							<div class="col-sm-4"><label for="master_lane_width">Master Lane Width:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="master_lane_width" placeholder="0 to 32767" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 32767]" data-parsley-pattern-message="This value must be an integer."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="master_lane_width"></i></div>
+						</div>
+						<div class="row lane_width" data-toggle="tooltip" title="in centimeters">
+							<div class="col-sm-4"><label for="lane_width">Lane Width Delta:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="lane_width" placeholder="-512 to 511" data-parsley-pattern="^-?[0-9]+$" data-parsley-range="[-512, 511]" data-parsley-pattern-message="This value must be an integer."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_width"></i></div>
+						</div>
+						<div class="row ssp_tim_rights">
+							<div class="col-sm-4"><label for="ssp_tim_rights">SSP TIM Rights:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="ssp_tim_rights" placeholder="0 to 31" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 31]" data-parsley-pattern-message="This value must be an integer."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="ssp_tim_rights"></i></div>
+						</div>
+						<div class="row ssp_loc_rights">
+							<div class="col-sm-4"><label for="ssp_loc_rights">SSP Location Rights:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="ssp_loc_rights" placeholder="0 to 31" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 31]" data-parsley-pattern-message="This value must be an integer."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="ssp_loc_rights"></i></div>
+						</div>
+						<div class="row verified_lat" data-toggle="tooltip" title="in decimal degrees">
+							<div class="col-sm-4"><label for="verified_lat">Verified Latitude:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="verified_lat" placeholder="-90 to 90" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-90, 90]" data-parsley-pattern-message="This value must include numbers only."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="verified_lat"></i></div>
+						</div>
+						<div class="row verified_long" data-toggle="tooltip" title="in decimal degrees">
+							<div class="col-sm-4"><label for="verified_long">Verified Longitude:</label></div>
+							<div class="col-sm-7"><input class="form-control" id="verified_long" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
+							<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="verified_long"></i></div>
+						</div>
+						<div class="row verified_elev" data-toggle="tooltip" title="in meters">
+                        	<div class="col-sm-4"><label for="verified_elev">Verified Elevation:</label></div>
+                        	<div class="col-sm-7"><input class="form-control" id="verified_elev" placeholder="-409.6 to 6143.9" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-409.6, 6143.9]" data-parsley-pattern-message="This value must include numbers only."></div>
+                        	<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="verified_elev"></i></div>
+                        </div>
+
+                    </div>
+                    </div>
+					<div class="btn-group">
+						<button type="button" class="btnDone btn btn-primary">Done</button>
+						<button type="button" class="btnClose btn btn-primary">Cancel</button>
+					</div>
+			</div>
+		</div>
+		<div class="tab-pane" id="content-tab">
+			<div class="panel-body">
+				<div class="panel-body">
+				<div class="form-group">
+				
+					<div class="row packet_id">
+                    	<div class="col-sm-4"><label for="packet_id">Packet ID:</label></div>
+                    	<div class="col-sm-7"><input class="form-control" id="packet_id" placeholder="0 to 999999999" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 999999999]" data-parsley-pattern-message="This value must be an integer."></div>
+                   		<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="packet_id"></i></div>
+                   	</div>
+					<div class="row ssp_content_rights">
+						<div class="col-sm-4"><label for="ssp_content_rights">SSP Content Rights:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="ssp_content_rights" placeholder="0 to 31" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 31]" data-parsley-pattern-message="This value must be an integer."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="ssp_content_rights"></i></div>
+					</div>
+					<div class="row ssp_type_rights">
+						<div class="col-sm-4"><label for="ssp_type_rights">SSP Type Rights:</label></div>
+						<div class="col-sm-7"><input class="form-control" id="ssp_type_rights" placeholder="0 to 31" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 31]" data-parsley-pattern-message="This value must be an integer."></div>
+						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="ssp_type_rights"></i></div>
+					</div>
+					<div class="row mutcd">
+						<div class="col-sm-4"><label for="mutcd">MUTCD:</label></div>
+			        	<div class="col-sm-7"><div id="mutcd" class="btn-group"><a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select A MUTCD Code <span class="caret"></span></a>
+				            <ul class="dropdown-menu">
+				                <li><a href="#">(0) non-MUTCD Info</a></li>
+				                <li><a href="#">(1) Regulatory Sign (<span style="color: red">Red</span>)</a></li>
+				                <li><a href="#">(2) Warning Sign (<span style="color: yellow">Yellow</span>)</a></li>
+								<li><a href="#">(3) Maintenance and Construction (<span style="color: orange">Orange</span>)</a></li>
+				                <li><a href="#">(4) Motorist Service (<span style="color: blue">Blue</span>) </a></li>
+				                <li><a href="#">(5) Guide Sign (<span style="color: green">Green</span>)</a></li>
+				                <li><a href="#">(6) Recreation and Culture (<span style="color: brown">Brown</span>)</a></li>
+				            </ul>
+					    </div></div>
+					    <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="mutcd"></i></div>
+					</div>
+					<div class="row info-type">
+			        	<div class="col-sm-4"><label for="info-type">Info Type:</label></div>
+					    <div class="col-sm-7"><div id="info-type" class="btn-group"><a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select A Type <span class="caret"></span></a>
+					            <ul class="dropdown-menu">
+					                <li><a href="#">(0) Unknown</a></li>
+					                <li><a href="#">(1) Advisory</a></li>
+					                <li><a href="#">(2) Road Signage</a></li>
+					                <li><a href="#">(3) Commercial Signage</a></li>
+					            </ul>
+					    </div></div>
+					    <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="info-type"></i></div>
+					</div>
+	
+					<div class="row priority">
+						<div class="col-sm-4"><label for="priority">Priority:</label></div>
+					    <div class="col-sm-7"><div id="priority" class="btn-group"><a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select A Priority <span class="caret"></span></a>
+				            <ul class="dropdown-menu">
+				                <li><a href="#">0</a></li>
+				                <li><a href="#">1</a></li>
+				                <li><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+				                <li><a href="#">4</a></li>
+				                <li><a href="#">5</a></li>
+				                <li><a href="#">6</a></li>
+				                <li><a href="#">7</a></li>
+				            </ul>
+					    </div></div>
+					    <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="priority"></i></div>
+					</div>
+				</div>
+				<div class="btn-group">
+					<button type="button" class="btnDone btn btn-primary">Done</button>
+					<button type="button" class="btnClose btn btn-primary">Cancel</button>
+				</div>
+			</div>
+			</div>
+		
+		</div>
+		<div class="tab-pane" id="direction-tab">
+			<div class="panel-body">
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="row direction">
+						<div class="col-sm-4"><label for="direction">Direction:</label></div>
+				        <div class="col-sm-7"><div id="direction" class="btn-group"><a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#">Select A Direction <span class="caret"></span></a>
+				            <ul class="dropdown-menu">
+				                <li><a href="#">(1) Forward</a></li>
+				                <li><a href="#">(2) Reverse</a></li>
+				                <li><a href="#">(3) Both</a></li>
+				            </ul>
+				        </div></div>
+				        <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="direction"></i></div>
+				    </div>  
+			        <label for="circle">Select the heading slices:</label>
+			        <canvas id="circle" width="300" height="300"></canvas>
+			        </div>
+       				<div class="btn-group">
+       					<button type="button" class="btnDone btn btn-primary">Done</button>
+						<button type="button" class="btnClose btn btn-primary">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tab-pane" id="itis-tab">
+			<div class="panel-body">
+				<!-- sheepIt Form -->
+				<div id="itisForm">
+					<div id="itisForm_template">
+						<div class="row itis_text" data-toggle="tooltip">
+							<div class="col-sm-3"><input id="text_#index#" type="radio" name="itis_group_#index#" value="text_#index#" checked="false"><label for="itisForm_#index#_itis_text">Text:</label></div>
+							<div class="col-sm-9"><input disabled type="text" class="form-control itis_text_list" id="itisForm_#index#_itis_text"
+														 placeholder="Type Text" data-parsley-maxlength="500"></div>
+						</div>
+
+						<div class="row itis_codes" data-toggle="tooltip">
+							<div class="col-sm-3"><input id="code_#index#" type="radio" name="itis_group_#index#" value="code_#index#" checked="true"><label for="itisForm_#index#_itis_codes">
+								Codes:</label></div>
+							<div class="col-sm-9 clearfix">
+								<select class="styled-select itis_code_list" id="itisForm_#index#_itis_codes"  style="width: 100%" multiple="multiple">
+								</select>
+							</div>
+						</div>
+						<hr/>
+					</div>
+
+					<div id="itisForm_noforms_template">No ITIS Codes</div>
+
+					<div id="itisForm_controls">
+						<div class="pull-left" id="itisForm_add"><a>Add Row <i class="fa fa-plus"></i></a></div>
+						<div class="pull-right" id="itisForm_remove_last"><a>Delete Row <img class="delete" src="img/cross.png" width="10" height="10" border="0"></a></div>
+						<br/><br/>
+					</div>
+				</div>
+
+				<div class="btn-group">
+					<button type="button" class="btnDone btn btn-primary">Done</button>
+					<button type="button" class="btnClose btn btn-primary">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<!-- Deposit Modal -->
+	<div class="modal fade" id="message_deposit_modal" tabindex="-1" role="dialog" aria-labelledby="message_deposit_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="message_deposit_modal_label">Message Deposit</h4>
+					<p class="help-block">"Generate" the json message, then "Deposit" it to the warehouse</p>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label for="message_json" class="col-sm-2 control-label">Message</label>
+								<div class="col-sm-10">
+									<textarea readonly class="form-control" rows="5" id="message_json" placeholder="Message to send"></textarea>
+								</div>
+							</div>
+							<div id="alert_placeholder"></div>
+							<div class="form-group" id="message_status">
+								<label for="message_text" class="col-sm-2 control-label">ASN.1</label>
+								<div class="col-sm-10">
+									<textarea readonly class="form-control" rows="4" id="message_text" placeholder="Text Response"></textarea>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="message_hex" class="col-sm-2 control-label">Hex</label>
+								<div class="col-sm-10">
+									<textarea readonly class="form-control" rows="4" id="message_hex" placeholder="Hex Response"></textarea>
+								</div>
+							</div>
+							<p><b>Message Size: </b><span class="message_size"></span></p>
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-sm-2">
+							<label for="deposit_check"><span>Deposit? &nbsp;</span>&nbsp;&nbsp;</label>
+							<input type="checkbox" id="deposit_check" value="yes">
+						</div>
+						<div class="col-sm-3">
+							<label for="message_type" class="pull-left">Message Type: &nbsp;&nbsp;</label>
+							<select id="message_type" class="pull-left">
+								<option value="ASD">ASD</option>
+								<option value="TIM">TIM</option>
+								<option value="Frame+TIM">Frame+TIM</option>
+							</select>
+							<label for="node_offsets" class="pull-left">Node Offsets: &nbsp;&nbsp;</label>
+							<select id="node_offsets" class="pull-left">
+								<option value="Explicit">Explicit (64 bit)</option>
+								<option value="Standard">Standard (32 bit)</option>
+								<option value="Compact">Compact</option>
+								<option value="Tight">Tight</option>
+							</select>
+							<label for="enable_elevation" class="pull-left" style="margin-top: 8px;">Enable Elevation?: &nbsp;&nbsp;</label>
+							<input id="enable_elevation" type="checkbox" class="pull-left" style="margin-top: 12px;">
+						</div>
+						<div class="col-sm-3" id="ttl">
+							<label for="time" class="pull-left">Time To Live (optional):  &nbsp;</label>
+							<select id="time" class="pull-left">
+								<option value="0">(0) Minute</option>
+								<option value="1">(1) Half Hour</option>
+								<option value="2">(2) Day</option>
+								<option value="3">(3) Week</option>
+								<option value="4">(4) Month</option>
+								<option value="5">(5) Year</option>
+							</select>
+						</div>
+						<div class="col-sm-4" style="right: 0; position: absolute; margin-top: -15px;">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<button type="button" id="message_deposit" class="btn btn-primary">Encode</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Deposit Modal -->
+	
+	<!-- Open File Modal -->
+	<div class="modal fade" id="open_file_modal" tabindex="-1" role="dialog" aria-labelledby="open_file_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="open_file_modal_label">Load Map File</h4>
+					<p class="help-block">Please select the map file to load:</p>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<input type="file" id="fileToLoad2">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Open File Modal -->
+	
+	<!-- ? Help Modal -->
+	<div class="modal fade" id="help_modal" tabindex="-1" role="dialog" aria-labelledby="help_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header bg-warning">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="help_modal_label"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-sm-3">Minimum Value:</div>
+							<div class="col-sm-8" id="min"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">Maximum Value:</div>
+							<div class="col-sm-8" id="max"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">Units:</div>
+							<div class="col-sm-8" id="units"></div>
+						</div>
+						<div class="row">
+							<div class="col-sm-3">Description:</div>
+							<div class="col-sm-8" id="description"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End ? Help Modal -->
+
+	<!-- Instructions Modal -->
+	<div class="modal fade" id="instructions_modal" tabindex="-1" role="dialog" aria-labelledby="instructions_modal_label" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="instructions_modal_label">Instructions</h4>
+					<p class="help-block">Guide on how to map a traveler information message and deposit it to the warehouse</p>
+				</div>
+				<div class="modal-body">
+					<!-- Nav tabs -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#instructions_tab_1" aria-controls="getting_started" role="tab" data-toggle="tab">Getting Started</a></li>
+                        <li role="presentation"><a href="#instructions_tab_3" aria-controls="lanes" role="tab" data-toggle="tab">Regions</a></li>
+                        <li role="presentation"><a href="#instructions_tab_2" aria-controls="approaches" role="tab" data-toggle="tab">Applicable Region</a></li>
+						<li role="presentation"><a href="#instructions_tab_5" aria-controls="deposit" role="tab" data-toggle="tab">Encode/Deposit</a></li>
+						<li role="presentation"><a href="#instructions_tab_6" aria-controls="save_load" role="tab" data-toggle="tab">Save/Load</a></li>
+						<li role="presentation"><a href="#instructions_tab_7" aria-controls="stencil" role="tab" data-toggle="tab">Stencil</a></li>
+					</ul>
+
+					<!-- Tab panes -->
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="instructions_tab_1">
+							<div class="container-fluid">
+								<h4>Getting Started - Define your Zone</h4>
+								<ol>
+									<li>Zoom into the area you wish you begin building.</li>
+									<li>From the top navbar, go to <strong>Show</strong> <i class="fa fa-arrow-right"></i> <strong>Builder</strong> to bring up the menu to begin building your area.</li>
+									<ul>
+										<li>In the <strong>Road Signs</strong> tab, you should see the various road sign options and the <strong>Verified Point Marker</strong>.</li>
+									</ul>
+									<li>Click and drag a road sign to the area you wish to begin building. You can only place one road sign per message.</li>
+									<ul>
+										<li>Note that the <strong>Markers</strong> Control becomes enabled once the marker is placed.</li>
+										<li>You may drag around the marker after being placed to tweak its location</li>
+										<li>Click on the marker to open up the <strong>Configuration</strong> dialog. From here you can view its Latitude, Longitude, Elevation, and other variables. </li>
+										<li>You may toggle the control back off once you are finished tweaking the location of the markers to lock them in place.</li>
+									</ul>
+									<li>Click and drag the <strong>Verified Point Marker</strong> to a known, surveyed location on the map.</li>
+									<ul>
+										<li>Click on the marker to open up the <strong>Configuration</strong> dialog.
+											You can view the location of the marker on the map, as well as view and modify the verified location of the marker.</li>
+										<li>Check the verified marker information and edit as necessary.  Click <strong>Done</strong> when finished.</li>
+									</ul>
+									<li>Close the <strong>Builder</strong> once you are finished placing the two markers.</li>
+								</ol>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_2">
+							<div class="container-fluid">
+								<h4>Defining the Applicable Region</h4>
+								<ol>
+									<li>Toggle ON the <strong>Draw Applicable Region</strong> Control from the bottom Control Panel.</li>
+									<li>Drawing the Region</li>
+									<ul>
+										<li>Click and drag the mouse to create a rectangular box, symbolizing the area which will allow deposits.
+										<li>Do not worry about the exact size/shape/position of the box as it can be modified.</li>
+                                        <li>You can only draw one applicable region at a time.</li>
+									</ul>
+									<li>Modifying a Region</li>
+									<ul>
+										<li>Toggle ON the <strong>Edit Applicable Region</strong> Control on the bottom Control Panel.</li>
+										<li>Click the box you wish to modify.</li>
+										<li>Click and drag from the center dot to move the box around.</li>
+										<li>Click and drag from the outside dot to resize the box.</li>
+									</ul>
+									<li>Removing a Region</li>
+									<ul>
+										<li>Toggle <strong>ON</strong> the <strong>Delete</strong> Control on the bottom panel.</li>
+										<li>Click the feature (area) you wish to delete.</li>
+										<li>Toggle <strong>OFF</strong> the <strong>Delete</strong> Control.</li>
+									</ul>
+								</ol>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_3">
+							<div class="container-fluid">
+								<h4>Defining the Region</h4>
+								<ol>
+									<li>Toggle ON the <strong>Draw Region</strong> Control from the bottom Control Panel.</li>
+									<li>Drawing a Line</li>
+									<ol type="a">
+										<li>Place the mouse button where you wish to begin defining the region.</li>
+										<li>Click the mouse once to create the first node of the line.</li>
+										<li>Click the mouse again to define all subsequent nodes on the line.</li>
+										<li>Double-click the mouse on the final node you wish to define on the line.</li>
+									</ol>
+									<li>Modifying a Line</li>
+									<ol type="a">
+										<li>Toggle ON the <strong>Edit Regions</strong> Control on the bottom Control Panel.</li>
+										<li>Click the line you wish to modify.</li>
+										<li>All of the nodes on the line will appear.  The solid colored nodes are ones already defined.
+											The transparent nodes are ones you can add to the line by simply dragging them.</li>
+										<li>Click and drag the nodes around until you have them in the desired position.</li>
+									</ol>
+									<li>Configuring a Line</li>
+									<ol type="a">
+										<li>Verify that all of the Controls on the bottom panel are toggled <strong>OFF</strong>.</li>
+										<li>Click on the line node you wish to configure in order to being up the <strong>Region Configuration</strong> dialog.
+											Note: only the first node of the line will hold the Lane Number and Attribute information.</li>
+										<li>Define a Lane Number (node 1).  Modify any other desired settings.
+										<li>Click <strong>Done</strong> when finished.</li>
+									</ol>
+									<li>Repeat the above steps for each region.</li>
+									<li>Removing a Region</li>
+									<ul>
+										<li>Toggle <strong>ON</strong> the <strong>Delete</strong> Control on the bottom panel.</li>
+										<li>Click the feature (region) you wish to delete.</li>
+										<li>Toggle <strong>OFF</strong> the <strong>Delete</strong> Control.</li>
+									</ul>
+								</ol>
+								<br>
+								<p>Note: When defining elevations, keep in mind that the standard defines the delta between elevations to be
+								   a range of +/- 5.11 meters.  This means that when creating consecutive lane nodes, they should be close
+								   enough together to not have an elevation delta outside of the standard's range.  The same range applies
+								   to lane width delta values.
+								</p>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_5">
+							<div class="container-fluid">
+								<h4>Finish and Encode or Deposit</h4>
+								<p class="help-block">Encode and/or deposit your TIM message to the warehouse once you are finished building it.</p>
+								<ol>
+									<li>Open Encode/Deposit dialog</li>
+									<ol type="a">
+										<li>Click on <strong>Tools</strong><i class="fa fa-arrow-right"></i> <strong>Encode/Deposit</strong> to load the deposit window. Unless there are errors, a JSON message should already be generated from the map data.
+											Its contents will appear in the <strong>Message</strong> textarea box.</li>
+										<li>Verify the contents of the message.</li>
+									</ol>
+									<li>Select desired Message Type</li>
+									<ul>
+										<li><b>ASD</b> – ASD Safety Message</li>
+										<li><b>TIM</b> – SAE J2735 TIM message</li>
+										<li><b>Frame+TIM</b> – SAE J2735 MessageFrame message with TIM contents</li>
+									</ul>
+									<li>Select desired nodes offsets encoding (in the descending order of the message size)</li>
+									<ul>
+										<li><b>Explicit (64 bit)</b> - SAE J2735 Node-LLmD-64b encoding using explicit lat/lon values</li>
+										<li><b>Standard (32 bit)</b> - SAE J2735 Node-XY-32b offset values </li>
+										<li><b>Compact</b> – determines and uses the same minimal SAE J2735 Node-XY-??b offset value encoding for all nodes </li>
+										<li><b>Tight</b> - uses the absolute minimal SAE J2735 Node-XY-??b offset value encoding for each node</li>
+									</ul>
+									<li>Encode the Message</li>
+									<ol type="a">
+										<li>Press the <strong>Encode</strong> button to generate the UPER encoding.</li>
+										<li>The <strong>Hex</strong> textarea box will display the hex encoded message if successful, or an error message if unsuccessful.</li>
+                                        <li>The <strong>ASN.1</strong> textarea box will display the ASN.1 encoded message if successful, or an error message if unsuccessful.</li>
+                                        <li>
+                                        Note that although the cursor in all textareas is the prohibition sign <strong style="color: red;">&#x20E0;</strong> because the textareas are read-only, you can select the content of any textarea and copy it via stardard shortcut keys or a context menu available on the right click. The easiest way to copy all content from a textarea is to click in the textarea and then type Ctrl-A to select all lines and Ctrl-C to copy to clipboard.
+                                        </li>
+									</ol>
+                                    <li>Deposit the Message</li>
+                                    <ol type="a">
+                                        <li>Click the <strong>Deposit?</strong> checkbox to permit deposit. The button title will change and a <strong>Time To Live</strong> dropdown will appear.</li>
+                                        <li>The <strong>Time To Live</strong> variable is optional.</li>
+                                        <li>Once complete, press the <strong>Encode/Deposit</strong> button and the encoded messages will appear in the appropriate boxes and the message will be deposited into the SDW.</li>
+                                    </ol>
+								</ol>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_6">
+							<div class="container-fluid">
+								<h4>Save and Loading a Zone</h4>
+								<p class="help-block">Use the save/load feature to save your work locally and pick up where you left off.</p>
+								<ul>
+									<li>Saving a Zone</li>
+									<ol type="a">
+										<li>From the top navbar, go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Save</strong>.</li>
+										<li>Use your browser dialog to save the generated file to your local machine.</li>
+									</ol>
+									<li>Loading a Zone</li>
+									<ol type="a">
+										<li>Verify you are working with an empty drawing by going to <strong>Tools</strong> <i class="fa fa-arrow-right"></i> <strong>Clear Map</strong></li>
+										<li>From the top navbar, go to <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Open</strong>.</li>
+										<li>Use your browser dialog to select the a previously saved zone file from your local machine.</li>
+										<li>Select and Open the file to begin working on the saved zone.</li>
+									</ol>
+								</ul>
+							</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="instructions_tab_7">
+							<div class="container-fluid">
+								<h4>Stencil</h4>
+								<p class="help-block">Load a KML file or multiple RSM file(s) to show intersections features not present in a map image. Only one stencil type can be loaded at a time.</p>
+								<ul>
+									<li>Loading a Stencil</li>
+									<ol type="a">
+										<li>From the top navbar, go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Open KML Stencil</strong> or go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Open RSM Stencil</strong> .</li>
+										<li>Use your browser dialog to open the stencil KML file or RSM file(s) from your local machine.</li>
+										<li>The stencil should appear as a layer on the map.</li>
+									</ol>
+									<li>Deleting a Stencil</li>
+									<ol type="a">
+										<li>From the top navbar, go to  <strong>File</strong> <i class="fa fa-arrow-right"></i> <strong>Delete Stencil</strong>.</li>
+									</ol>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Instructions Modal -->
+	
+	<div id="control-toolbar" class="container">
+		<div class="btn-toolbar" aria-label="Toolbar with button groups" role="toolbar" data-toggle="buttons">
+			<div class="btn-group">
+				<button class="btn btn-info btn-end-right" name="layerControl" id="help" value="help" data-toggle="tooltip" data-placement="top" title="Help"><i class="fa fa-question"></i></button>
+				<button class="btn btn-primary btn-end-right" name="layerControl" id="builder" value="builder" onclick="toggle(); return false;" data-placement="top" title="Builder"><i class="fa fa-list"></i></button>
+
+                <button type="button" class="btn btn-primary" disabled>Applicable Region</button>
+                <button class="btn btn-default" name="layerControl" id="drawDepositArea" value="area" data-toggle="tooltip" data-placement="top" title="Draw Applicable Region"><i class="fa fa-pencil-square-o"></i></button>
+                <button class="btn btn-default btn-end-right" name="layerControl" id="editDepositArea" value="edit" data-toggle="tooltip" data-placement="top" title="Edit Applicable Region"><i class="fa fa-crop"></i></button>
+			
+				<button type="button" class="btn btn-primary" disabled>Lane Regions</button>
+				<button class="btn btn-default" name="layerControl" id="drawLanes" value="line" data-toggle="tooltip" data-placement="top" title="Draw Regions"><i class="fa fa-pencil-square-o"></i></button>
+				<button class="btn btn-default btn-end-right" name="layerControl" id="editLanes" value="modify" data-toggle="tooltip" data-placement="top" title="Edit Regions"><i class="fa fa-sliders"></i></button>
+
+                <button type="button" class="btn btn-primary" disabled>Polygon Regions</button>
+                <button class="btn btn-default" name="layerControl" id="drawPoly" value="polygon" data-toggle="tooltip" data-placement="top" title="Draw Regions"><i class="fa fa-pencil-square-o"></i></button>
+				<button class="btn btn-default" name="layerControl" id="drawCircle" value="circle" data-toggle="tooltip" data-placement="top" title="Draw Circle"><i class="fa fa-circle-thin"></i></button>
+				<button class="btn btn-default" name="layerControl" id="editPoly" value="change" data-toggle="tooltip" data-placement="top" title="Edit Regions"><i class="fa fa-th"></i></button>
+				<button class="btn btn-default btn-end-right" name="layerControl" id="dragPoly" value="dragPoly" data-toggle="tooltip" data-placement="top" title="Move Regions"><i class="fa fa-arrows"></i></button>
+
+				<button id="measureControlLabel" type="button" class="btn btn-primary" disabled>Measure</button>
+				<button class="btn btn-default btn-end-right" name="layerControl" id="measureLanes" value="measure" data-toggle="tooltip" data-placement="top" title="Measure"><i class="fa fa-arrows-h"></i></button>
+
+				<button class="btn btn-default btn-end-right" name="layerControl" id="dragSigns" value="drag">Markers &nbsp;<i class="fa fa-lock"></i></button>
+				<button class="btn btn-danger btn-end-left" name="layerControl" id="deleteMarker" value="del" >Delete</button>
+			</div>
+		</div>
+	</div>
+	
+
+	<!--******************************************* SCRIPTS *******************************************-->
+
+	<script src="/private-resources/js/TIMcreator-webapp-keys.js"></script>
+	
+	<script src="external/jquery.min.js"></script>
+	<script src="external/jquery-ui.min.js"></script>
+	<script src="external/jquery.easing.js"></script>
+	<script src="external/touchpunch.js"></script>
+	<script src="external/modernizr-2.6.2.min.js"></script>
+	
+	<!-- FROM OPENLAYERS 2 -->
+	<script src="external/openlayers2/OpenLayers.js"></script>
+	
+	<!-- BOOTSTRAP -->
+	<script src="external/bootstrap/js/bootstrap.min.js"></script>
+    <script src="external/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+	<script src="external/moment.js"></script>
+	<script src="external/bootstrap-datetimepicker.js"></script>
+	<script src="external/select2.js"></script>
+
+	
+	<!-- VALIDATION -->
+	<script src="external/parsley.js"></script>
+
+	<!--SheepIt! Form -->
+	<script type="text/javascript" src="external/jquery.sheepItPlugin.js"></script>
+
+	<!--Geocomplete -->
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAXu1X7SrQEMMeYZExNw7ow_0W_0xWqD00"></script>
+	<script type="text/javascript" src="external/jquery.geocomplete.min.js"></script>
+	
+	<!-- CUSTOM MAP CODE -->
+	<script src="js/mapping.js"></script>
+	
+	<!-- OTHER -->
+	<script src="js/config.js"></script>
+	<script src="js/mapTools.js"></script>
+	<script src="js/sidebar.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/navbar.js"></script>
+	<script src="js/depositor.js"></script>
+	<script src="js/circle.js"></script>
+	<script src="js/bing.js"></script>
+	<script src="js/latlon-vincenty.js"></script>
+	
+
+</body>
+</html>
