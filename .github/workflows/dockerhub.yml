@@ -7,7 +7,7 @@ on:
       - "master"
       - "release/*"
     tags:
-      - 'v*' # Triggered on tags that start with 'v'
+      - "v*" # Triggered on tags that start with 'v'
 
 jobs:
   dockerhub:
