@@ -1,0 +1,55 @@
+#sidebar{
+    position: absolute;
+    height: 80%;
+    width: 25%;
+    top: 62px;
+    left: -500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+
+    background: white;
+    box-shadow: 0 1px 7px rgba(0,0,0,0.65);
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+
+    z-index: 1000;
+}
+
+#sidebar .close {
+    position: absolute;
+    right: 15px;
+    top: 5px;
+    width: 20px;
+    height: 20px;
+
+    color: #333;
+    font-size: 25pt;
+    line-height: 1em;
+    text-align: center;
+    background: white;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+    cursor: pointer;
+
+    z-index: 8;
+}
+
+@media(max-width:500px){
+    #sidebar {
+        width: 93%;
+        padding: 10px;
+        left: 10px;
+        right: 10px;
+    }
+}
+
+@media(min-width:501px) and (max-width:1200px){
+    #sidebar {
+        width: 305px;
+    }
+}

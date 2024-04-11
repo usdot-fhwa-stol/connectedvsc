@@ -1,0 +1,35 @@
+<tr id="rowNew">
+    <td>
+        <div id='connectionIdNew' class="btn-group">
+            <a class="btn btn-default dropdown-toggle btn-select" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+            <ul class="dropdown-menu scrollable-menu" role="menu">
+            </ul>
+        </div>
+    </td>
+    <td>
+        <input name='remoteIDNew' class='form-control input-md' placeholder="0-65535" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."/>
+    </td>
+    <td>
+        <input name='toLaneNew' class='form-control input-md' placeholder="0-255" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 255]" data-parsley-pattern-message="This value must be an integer."/>
+    </td>
+    <td>
+        <input name='signal_idNew' class='form-control input-md' placeholder="0-255" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 255]" data-parsley-pattern-message="This value must be an integer."/>
+    </td>
+    <td>
+        <div id="maneuversNew">
+            <ul class="list-group">
+                <li class="list-group-item" id="attr_droppableNew">
+                    <p class="help-block text-center">drop content here</p>
+                </li>
+                <li class="list-group-item list-group-item-danger hidden trash_droppable">
+                    <div class="text-center center-block">
+                        <i class="fa fa-trash-o fa-2x"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </td>
+    <td>
+        <a id="deleteNew" class="btn btn-default" onclick="deleteRow()"><i class="fa fa-trash fa-lg" ></i></a>
+    </td>
+</tr>

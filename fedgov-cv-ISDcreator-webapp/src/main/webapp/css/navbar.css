@@ -1,0 +1,121 @@
+body{padding-top: 50px;}
+
+.navbar{background-image: none;}
+.navbar-inverse .navbar-brand {color: #ffffff;}
+#logoimg{height: 100%; margin-top: -4px; display: inline-block;}
+
+.navbar-right input {
+    display: block;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+#message_data{
+	position:absolute;
+    top: 80px;
+    right:50%;
+    width:25%;
+    z-index: 1000;	
+}
+
+.btn-group{
+	margin: 0 auto;
+}
+
+.btn-group-right{
+	float: right;
+	margin: 0 auto;
+}
+
+footer {
+    background-color: #222;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    overflow:hidden;
+    border-top: 1px solid #101010;
+    z-index: 2000;
+}
+
+.footer_controls {
+	margin-left: 7.6%;
+	margin-top: 14px;
+	color: white;
+}
+
+.footer_controls h5, input {
+	display: inline;
+}
+
+.footer_controls h5 {
+	margin-left: 30px;
+}
+
+.footer_controls, .minimize{ 
+	display: inline-block;
+}
+
+.minimize {
+	cursor: pointer;
+	margin-top: -5px;
+	padding-right: 20px;
+	float: right;
+	color: white;
+}
+
+#control-toolbar {
+    position: absolute;
+    bottom: 10px;
+    z-index: 2000;
+}
+
+#control-toolbar .btn-group {
+    width: auto;
+}
+
+
+.btn-end-right {
+	margin-right: 10px;
+	border-radius: 25px 0 0 25px;
+}
+
+.btn-end-left {
+	margin-left: 10px;
+	border-radius: 0 25px 25px 0;
+}
+
+.btn-end-middle {
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.glowing-border { 
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 6px #D80000;
+}
+
+.help-block-lat, .help-block-long, .help-block-elev, .help-block-vlong, .help-block-vlat, .help-block-velev {
+	margin-top: 5px;
+	color: red;
+}
+
+.btn-default.current.active {
+	border-style: solid;
+	border-color: #397D02;
+	background-color: #9DB68C;
+}
+
+.btn-danger.current.active {
+	border-style: solid;
+	border-style: inset;
+	border-color: #D9534F;
+	background-color: #FF3030;
+}
+
+.navbar-form .form-control {
+	height: 33px;
+}
