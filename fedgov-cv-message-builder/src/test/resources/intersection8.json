@@ -1,0 +1,204 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 499313,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "E Adams St & Woodward Ave",
+        "layerID": "2",
+        "intersectionID": "32416",
+        "msgCount": "1",
+        "masterLaneWidth": "366",
+        "referenceLat": 42.33697688662324,
+        "referenceLon": -83.05085470667616,
+        "referenceElevation": 184
+      },
+      "referencePointChild": {
+        "speedLimitType": [
+          {
+            "speedLimitType": "Unknown",
+            "velocity": "10"
+          },
+          {
+            "speedLimitType": "Truck Min Speed",
+            "velocity": "20.5"
+          },
+          {
+            "speedLimitType": "Vehicles w/ Trailers Min Speed",
+            "velocity": "30"
+          }
+        ]
+      },
+      "verifiedPoint": {
+        "verifiedMapLat": 42.337216790419895,
+        "verifiedMapLon": -83.05042018881625,
+        "verifiedMapElevation": 184,
+        "verifiedSurveyedLat": 42.337216790419895,
+        "verifiedSurveyedLon": -83.05042018881625
+      },
+      "laneList": {
+        "approach": [
+          {
+            "approachType": "Ingress",
+            "approachID": "01",
+            "drivingLanes": [
+              {
+                "laneID": "01",
+                "laneType": "Vehicle",
+                "typeAttributes": [],
+                "sharedWith": [],
+                "connections": [
+                  {
+                    "fromLane": "01",
+                    "toLane": "3",
+                    "signal_id": "1",
+                    "maneuvers": [
+                      "1"
+                    ]
+                  }
+                ],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33682025472585,
+                    "nodeLong": -83.05075814715165,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.33667551857417,
+                    "nodeLong": -83.05064817658213,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  }
+                ]
+              },
+              {
+                "laneID": "02",
+                "laneType": "Vehicle",
+                "typeAttributes": [],
+                "sharedWith": [],
+                "connections": [
+                  {
+                    "fromLane": "02",
+                    "toLane": "4",
+                    "signal_id": "1",
+                    "maneuvers": [
+                      "1"
+                    ]
+                  }
+                ],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33683215083275,
+                    "nodeLong": -83.050688409718,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.336665605127024,
+                    "nodeLong": -83.05055966368532,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "approachType": "Egress",
+            "approachID": "04",
+            "drivingLanes": [
+              {
+                "laneID": "03",
+                "laneType": "Vehicle",
+                "typeAttributes": [],
+                "sharedWith": [],
+                "connections": [
+                  {
+                    "fromLane": "03",
+                    "toLane": "",
+                    "signal_id": "",
+                    "maneuvers": []
+                  }
+                ],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.336879735239066,
+                    "nodeLong": -83.05106123677112,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.33677465296043,
+                    "nodeLong": -83.05131872883652,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  }
+                ]
+              },
+              {
+                "laneID": "04",
+                "laneType": "Vehicle",
+                "typeAttributes": [],
+                "sharedWith": [],
+                "connections": [
+                  {
+                    "fromLane": "04",
+                    "toLane": "",
+                    "signal_id": "",
+                    "maneuvers": []
+                  }
+                ],
+                "laneManeuvers": [],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33693326765299,
+                    "nodeLong": -83.05106928339792,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.336814306670924,
+                    "nodeLong": -83.05135896197152,
+                    "nodeElev": "184",
+                    "laneWidthDelta": "0"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": [
+          {
+            "laneSet": "01",
+            "spatRevision": "1",
+            "signalGroupID": "1",
+            "signalPhase": "(0) Unavailable",
+            "startTime": "1000",
+            "minEndTime": "2000",
+            "maxEndTime": "3000",
+            "likelyTime": "4000",
+            "stateConfidence": "0",
+            "nextTime": "5000"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 408431,
+    "layerType": "intersectionData",
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "E Adams St & Woodward Ave",
+        "intersectionID": "43744",
+        "layerID": "1",
+        "msgCount": "5",
+        "masterLaneWidth": "366",
+        "referenceLat": 42.33697886930271,
+        "referenceLon": -83.05083861342344,
+        "referenceElevation": 184
+      },
+      "verifiedPoint": {
+        "verifiedMapLat": 42.33721084240311,
+        "verifiedMapLon": -83.05055698147666,
+        "verifiedMapElevation": 184,
+        "verifiedSurveyedLat": "42.3372108425",
+        "verifiedSurveyedLon": "-83.050556982",
+        "verifiedSurveyedElevation": "188"
+      },
+      "laneList": {
+        "approach": [
+          {
+            "approachType": "Egress",
+            "approachID": "1",
+            "speedLimit": "50",
+            "laneDirection": "(2) Northwestbound",
+            "drivingLanes": [
+              {
+                "laneID": "02",
+                "laneWidth": "366",
+                "laneType": "Parking",
+                "typeAttributes": [
+                  "1",
+                  "4",
+                  "5"
+                ],
+                "sharedWith": [
+                  "0"
+                ],
+                "laneManeuvers": [
+                  2,
+                  5
+                ],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33683611620074,
+                    "nodeLong": -83.05077424040708
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.336768704901836,
+                    "nodeLong": -83.05072059622618
+                  },
+                  {
+                    "nodeNumber": 2,
+                    "nodeLat": 42.336633882085245,
+                    "nodeLong": -83.05063744774667
+                  }
+                ]
+              },
+              {
+                "laneID": "02",
+                "laneWidth": "366",
+                "laneType": "Bike",
+                "typeAttributes": [
+                  "4",
+                  "5",
+                  "6"
+                ],
+                "sharedWith": [
+                  "0",
+                  "1"
+                ],
+                "laneManeuvers": [
+                  2,
+                  7
+                ],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33686982182411,
+                    "nodeLong": -83.0507071851812
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.336731033849894,
+                    "nodeLong": -83.05062403670166
+                  }
+                ]
+              },
+              {
+                "laneID": "02",
+                "laneWidth": "366",
+                "laneType": "Parking",
+                "typeAttributes": [
+                  "1",
+                  "4",
+                  "5"
+                ],
+                "sharedWith": [
+                  "0",
+                  "4",
+                  "5",
+                  "6"
+                ],
+                "laneManeuvers": [
+                  2,
+                  5,
+                  7
+                ],
+                "laneNodes": [
+                  {
+                    "nodeNumber": 0,
+                    "nodeLat": 42.33688370060472,
+                    "nodeLong": -83.05064012995621
+                  },
+                  {
+                    "nodeNumber": 1,
+                    "nodeLat": 42.33681034130153,
+                    "nodeLong": -83.05058380356667
+                  },
+                  {
+                    "nodeNumber": 2,
+                    "nodeLat": 42.33676672221507,
+                    "nodeLong": -83.05056234589485
+                  },
+                  {
+                    "nodeNumber": 3,
+                    "nodeLat": 42.336697328152816,
+                    "nodeLong": -83.05054088822213
+                  },
+                  {
+                    "nodeNumber": 4,
+                    "nodeLat": 42.33664577822802,
+                    "nodeLong": -83.0505113839235
+                  },
+                  {
+                    "nodeNumber": 5,
+                    "nodeLat": 42.336598193644654,
+                    "nodeLong": -83.05046042195214
+                  },
+                  {
+                    "nodeNumber": 6,
+                    "nodeLat": 42.336552591718224,
+                    "nodeLong": -83.05042823544397
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "spatData": {
+      "intersections": {
+        "status": "00",
+        "states": [
+          {
+            "laneSet": "0202",
+            "spatRevision": "2",
+            "signalGroupID": "1",
+            "signalPhase": "(4) Pre-Movement",
+            "startTime": "10",
+            "minEndTime": "11",
+            "maxEndTime": "12",
+            "likelyTime": "13",
+            "stateConfidence": "15",
+            "nextTime": "14"
+          },
+          {
+            "laneSet": "02",
+            "spatRevision": "1",
+            "signalGroupID": "4",
+            "signalPhase": "(4) Pre-Movement",
+            "startTime": "20",
+            "minEndTime": "21",
+            "maxEndTime": "22",
+            "likelyTime": "23",
+            "stateConfidence": "10",
+            "nextTime": "24"
+          }
+        ]
+      }
+    }
+  }
+}
