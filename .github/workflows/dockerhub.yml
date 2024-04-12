@@ -3,11 +3,11 @@ name: Docker Hub build
 on:
   push:
     branches:
-      - "develop"
-      - "master"
+      - develop
+      - master
       - "release/*"
     tags:
-      - "v*" # Triggered on tags that start with 'v'
+      - "*" 
 
 jobs:
   dockerhub:
