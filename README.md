@@ -13,5 +13,5 @@ repositories used for ConnectedVCS Tools development.
 2. Run `sudo ./build.sh`.
 
 ## Deployment
-1. Locate `isd.war` and `tim.war` in fedgov-cv-ISDcreator-webapp/target and fedgov-cv-TIMcreator-webapp/target respectively.
+1. Locate `root.war`,`isd.war` and `tim.war` in connectedvcs-tools, fedgov-cv-ISDcreator-webapp/target and fedgov-cv-TIMcreator-webapp/target respectively.
 2. Deploy as servlets in conjunction with Apache Tomcat.
