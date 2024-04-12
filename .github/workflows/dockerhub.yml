@@ -11,7 +11,7 @@ on:
 
 jobs:
   dockerhub:
-    uses: usdot-fhwa-stol/actions/.github/workflows/dockerhub.yml@fix-dockerhub-action-tags
+    uses: usdot-fhwa-stol/actions/.github/workflows/dockerhub.yml@main
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

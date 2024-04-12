@@ -5,6 +5,6 @@ on:
 
 jobs:
   docker:
-    uses: usdot-fhwa-stol/actions/.github/workflows/docker.yml@fix/GH_PAT_Token
+    uses: usdot-fhwa-stol/actions/.github/workflows/docker.yml@main
     secrets:
       GH_PAT: ${{ secrets.GH_PAT }}
