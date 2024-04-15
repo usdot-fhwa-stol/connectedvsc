@@ -3,8 +3,11 @@ name: Docker Hub build
 on:
   push:
     branches:
-      - "develop"
-      - "master"
+      - develop
+      - master
+      - "release/*"
+    tags:
+      - "*" 
 
 jobs:
   dockerhub:
