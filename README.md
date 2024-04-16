@@ -26,7 +26,7 @@ Please read our [ConnectedVCS Tools Code of Conduct](Code_of_Conduct.md) which o
 The development team would like to acknowledge the people who have made direct contributions to the design and code in this repository. [ConnectedVCS Tools Attribution](ATTRIBUTION.md) 
 
 ## License
-By contributing to the Federal Highway Administration (FHWA) ConnectedVCS Tools, you agree that your contributions will be licensed under its Apache License 2.0 license. [ConnectedVCS License](LICENSE) 
+By contributing to the Federal Highway Administration (FHWA) ConnectedVCS Tools, you agree that your contributions will be licensed under its Apache License 2.0 license. [ConnectedVCS Tools License](LICENSE) 
 
 ## Contact
 For more information, contact CAVSupportServices@dot.gov.
