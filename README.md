@@ -17,16 +17,16 @@ repositories used for ConnectedVCS Tools development.
 2. Deploy as servlets in conjunction with Apache Tomcat.
 
 ## Contribution
-Welcome to the CARMA contributing guide. Please read this guide to learn about our development process, how to propose pull requests and improvements, and how to build and test your changes to this project. [CARMA Contributing Guide](Contributing.md) 
+Welcome to the ConnectedVCS Tools contributing guide. Please read this guide to learn about our development process, how to propose pull requests and improvements, and how to build and test your changes to this project. [ConnectedVCS Tools Contributing Guide](Contributing.md) 
 
 ## Code of Conduct 
-Please read our [CARMA Code of Conduct](Code_of_Conduct.md) which outlines our expectations for participants within the CARMA community, as well as steps to reporting unacceptable behavior. We are committed to providing a welcoming and inspiring community for all and expect our code of conduct to be honored. Anyone who violates this code of conduct may be banned from the community.
+Please read our [ConnectedVCS Tools Code of Conduct](Code_of_Conduct.md) which outlines our expectations for participants within the Connected Vehicle (CV) community, as well as steps to reporting unacceptable behavior. We are committed to providing a welcoming and inspiring community for all and expect our code of conduct to be honored. Anyone who violates this code of conduct may be banned from the community.
 
 ## Attribution
-The development team would like to acknowledge the people who have made direct contributions to the design and code in this repository. [CARMA Attribution](ATTRIBUTION.md) 
+The development team would like to acknowledge the people who have made direct contributions to the design and code in this repository. [ConnectedVCS Tools Attribution](ATTRIBUTION.md) 
 
 ## License
-By contributing to the Federal Highway Administration (FHWA) ConnectedVCS Tools, you agree that your contributions will be licensed under its Apache License 2.0 license. [CARMA License](<LICENSE.md>) 
+By contributing to the Federal Highway Administration (FHWA) ConnectedVCS Tools, you agree that your contributions will be licensed under its Apache License 2.0 license. [ConnectedVCS License](LICENSE) 
 
 ## Contact
 For more information, contact CAVSupportServices@dot.gov.
