@@ -8,6 +8,6 @@
 * Ed Leslie - Senior Electrical Engineer/Project Manager (Leidos) 
 * Kyle Rush - Senior Software Engineer (Leidos)
 * Omkar Dokur - Software Engineer (Leidos) 
-* Saikrisha Bairamoni - DevOps Engineer (Leidos)
+* Saikrishna Bairamoni - DevOps Engineer (Leidos)
 * Saina Ramyar - Software Engineer/Principal Investigator (Leidos)
 * William Martin - CAV R&D Engineer (Leidos)
