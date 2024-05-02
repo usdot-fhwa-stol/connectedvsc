@@ -376,6 +376,7 @@ function createMessageJSON()
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
                 "intersectionID": feature.attributes.intersectionID,
+                "regionID": feature.attributes.regionID,
                 "msgCount": feature.attributes.revisionNum,
                 "masterLaneWidth": feature.attributes.masterLaneWidth,
                 "referenceLat": feature.attributes.LonLat.lat,

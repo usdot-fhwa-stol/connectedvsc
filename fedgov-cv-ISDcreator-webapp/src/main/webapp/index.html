@@ -383,6 +383,11 @@
 							  <div class="col-sm-7"><input class="form-control" id="long" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
 							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="longitude"></i></div>
 							</div>
+							<div class="row region">
+								<div class="col-sm-4"><label for="region">Region ID:</label></div>
+								<div class="col-sm-7"><input class="form-control" id="region" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="region_id"></i></div>
+							</div>
 							<div class="row intersection">
 							  <div class="col-sm-4"><label for="intersection">Intersection ID:</label></div>
 							  <div class="col-sm-7"><input class="form-control" id="intersection" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
@@ -398,6 +403,58 @@
 							  <div class="col-sm-7"><input class="form-control" id="lane_width" placeholder="-512 to 511" data-parsley-pattern="^-?[0-9]+$" data-parsley-range="[-512, 511]" data-parsley-pattern-message="This value must be an integer."></div>
 							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_width"></i></div>
 							</div>
+
+							<!-- sheepIt Form 2-->
+							<!-- <div id="laneSpeedForm">
+								<div id="laneSpeedForm_template">
+
+									<hr>
+									<div class="row speed_limit_type" data-toggle="tooltip" title="in 0.02 m/s">
+										<div class="col-sm-4"><label for="laneSpeedForm_#index#_speedLimitType">
+											Speed Limit Type:</label></div>
+										<div class="col-sm-6 clearfix">
+											<select class="styled-select" id="laneSpeedForm_#index#_speedLimitType">
+												<option value="" selected="" disabled="">Speed Limit Type</option>
+												<option value="Unknown">Unknown</option>
+												<option value="Max Speed in School Zone">Max Speed in School Zone</option>
+												<option value="Max Speed in School Zone w/ Children">Max Speed in School Zone w/ Children</option>
+												<option value="Max Speed in Construction Zone">Max Speed in Construction Zone</option>
+												<option value="Vehicle Min Speed">Vehicle Min Speed</option>
+												<option value="Vehicle Max Speed">Vehicle Max Speed</option>
+												<option value="Vehicle Night Max Speed">Vehicle Night Max Speed</option>
+												<option value="Truck Min Speed">Truck Min Speed</option>
+												<option value="Truck Max Speed">Truck Max Speed</option>
+												<option value="Truck Night Max Speed">Truck Night Max Speed</option>
+												<option value="Vehicles w/ Trailers Min Speed">Vehicles w/ Trailers Min Speed</option>
+												<option value="Vehicles w/ Trailers Max Speed">Vehicles w/ Trailers Max Speed</option>
+												<option value="Vehicles w/ Trailers Night Max Speed">Vehicles w/ Trailers Night Max Speed</option>
+											</select>
+										</div>
+										<div class="col-sm-1">
+											<a id="laneSpeedForm_remove_current"><img class="delete" src="img/cross.png" width="10" height="10" border="0"></a>
+										</div>
+										<div class="col-sm-1">
+											<i class="fa fa-question-circle" aria-hidden="true" tag="speed_limit_type"></i>
+										</div>
+									</div>
+
+									<div class="row velocity" data-toggle="tooltip" title="in MPH">
+										<div class="col-sm-4"><label for="laneSpeedForm_#index#_velocity">Velocity:</label></div>
+										<div class="col-sm-7"><input type="text" class="form-control" id="laneSpeedForm_#index#_velocity"
+																	placeholder="0 to 366" data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-range="[0, 366]" data-parsley-pattern-message="This value must include numbers only."></div>
+										<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="velocity"></i></div>
+									</div>
+
+								</div>
+
+								<div id="laneSpeedForm_noforms_template">No Speed Limit Restrictions</div>
+								<div id="laneSpeedForm_controls">
+									<div id="laneSpeedForm_add"><a>Add Row <i class="fa fa-plus"></i></a></div>
+									<br/>
+								</div>
+							</div> -->
+
+							
 							<div class="row master_lane_width" data-toggle="tooltip" title="in centimeters">
 							  <div class="col-sm-4"><label for="master_lane_width">Master Lane Width:</label></div>
 							  <div class="col-sm-7"><input class="form-control" id="master_lane_width" placeholder="0 to 32767" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 32767]" data-parsley-pattern-message="This value must be an integer."></div>
