@@ -89,6 +89,10 @@ public class IntersectionInputData {
 		for (int i=0; i<approaches.length; i++) {
 			Approach approach = approaches[i];
 
+			if(approach.approachType == null) {
+				throw new IllegalArgumentException("Approach Type missing for Approach ID: " + approach.approachID);
+			}
+
 			if(approach.approachID != CrosswalkLane.CROSSWALK_APPROACH_ID) {
 				if (approach.drivingLanes == null || approach.drivingLanes.length == 0) {
 					throw new IllegalArgumentException("approach " + approach.approachID + " contains no drivingLanes");

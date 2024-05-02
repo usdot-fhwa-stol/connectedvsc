@@ -15,3 +15,23 @@ repositories used for ConnectedVCS Tools development.
 ## Deployment
 1. Locate `root.war`,`isd.war` and `tim.war` in `connectedvcs-tools/`, `connectedvcs-tools/fedgov-cv-ISDcreator-webapp/target` and `connectedvcs-tools/fedgov-cv-TIMcreator-webapp/target` respectively.
 2. Deploy as servlets in conjunction with Apache Tomcat.
+
+## Contribution
+Welcome to the ConnectedVCS Tools contributing guide. Please read this guide to learn about our development process, how to propose pull requests and improvements, and how to build and test your changes to this project. [ConnectedVCS Tools Contributing Guide](Contributing.md) 
+
+## Code of Conduct 
+Please read our [ConnectedVCS Tools Code of Conduct](Code_of_Conduct.md) which outlines our expectations for participants within the Connected Vehicle (CV) community, as well as steps to reporting unacceptable behavior. We are committed to providing a welcoming and inspiring community for all and expect our code of conduct to be honored. Anyone who violates this code of conduct may be banned from the community.
+
+## Attribution
+The development team would like to acknowledge the people who have made direct contributions to the design and code in this repository. [ConnectedVCS Tools Attribution](ATTRIBUTION.md) 
+
+## License
+By contributing to the Federal Highway Administration (FHWA) ConnectedVCS Tools, you agree that your contributions will be licensed under its Apache License 2.0 license. [ConnectedVCS Tools License](LICENSE) 
+
+## Contact
+For more information, contact CAVSupportServices@dot.gov.
+
+## Support
+For technical support, please contact the CAV Support Services at CAVSupportServices@dot.gov.
+
+
