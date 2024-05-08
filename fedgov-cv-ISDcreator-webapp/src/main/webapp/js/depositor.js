@@ -191,7 +191,8 @@ function createMessageJSON()
 	                        "nodeLat": latlon.lat,
 	                        "nodeLong": latlon.lon,
 	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
-	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m]
+	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
+                            "speedLimitType": lanes.features[j].attributes.speedLimitType
 	                    }
 	                }
                 } else {

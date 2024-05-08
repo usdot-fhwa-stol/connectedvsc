@@ -516,6 +516,10 @@ function init() {
 		        	$(".lane_number").show();
                     $('.spat-info-tab').show();
                     $('.connection-tab').show();
+					$(".intersection-info-tab").find('a:contains("Intersection Info")').text('Speed Limits');
+					$('.intersection-info-tab').show();
+					$('.layer').hide();
+					$('.lane-speed-text').show();
                     $(".shared_with").show();
                     if(!selected_marker.attributes.computed) {
                 		// Only show the button if this lane is already defined with a lane number
@@ -585,6 +589,12 @@ function init() {
                     toggleLaneTypeAttributes(selected_marker.attributes.laneType);
                 }
 
+				if (!lanes.features[selected_marker.attributes.lane].attributes.speedLimitType) {
+					removeSpeedForm();
+					addSpeedForm();
+				} else {
+					rebuildSpeedForm(lanes.features[selected_marker.attributes.lane].attributes.speedLimitType);
+				}
                 
             	$('#shared_with').multiselect('deselectAll', false);
             	$("#shared_with").multiselect("refresh");
@@ -1664,6 +1674,9 @@ function referencePointWindow(feature){
     $(".master_lane_width").show();
     $(".intersection_name").show();
     if (selected == "child"){
+		$(".intersection-info-tab").find('a:contains("Speed Limits")').text('Intersection Info');
+		$('.layer').show();
+		$('.lane-speed-text').hide();		
     	$('.intersection-info-tab').show();
         $(".velocity").show();
     }
@@ -2046,7 +2059,11 @@ $(".btnDone").click(function(){
 		
 			var move = new OpenLayers.LonLat($('#long').val(), $('#lat').val()).transform(fromProjection, toProjection)
 		
-			if (selected_layer.name == "Lane Marker Layer"){                
+			if (selected_layer.name == "Lane Marker Layer"){   
+				var currentLaneSpeedLimits = saveSpeedForm();
+				(lanes.features[selected_marker.attributes.lane]).attributes.speedLimitType = currentLaneSpeedLimits;
+				speedLimits = [];
+
 				var vert = lanes.features[selected_marker.attributes.lane].geometry.components[selected_marker.attributes.number];
 				vert.move(move.lon - vert.x, move.lat - vert.y);
 				selected_marker.move(move);
