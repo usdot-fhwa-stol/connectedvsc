@@ -22,7 +22,7 @@
     var typeAttribute = [];
     var laneTypeOptions = [];
     var nodeLaneWidth = [];
-    var signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID;
+    var signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID, regionID;
     var nodeObject = [];
     var revisionNum = 0;
 
@@ -384,6 +384,7 @@ function init() {
 		        	$(".verified_lat").hide();
 		        	$(".verified_long").hide();
 		        	$(".intersection").hide();
+					$(".region").hide();
 		        	$(".elev").hide();
 		        	$(".verified_elev").hide();
 		        	$(".lane_width").hide();
@@ -487,6 +488,7 @@ function init() {
 	        	$(".verified_elev").hide();
 	        	$(".approach_type").hide();
 	        	$(".intersection").hide();
+				$(".region").hide();
                 $(".revision").hide();
                 $('.phases').hide();
                 $(".master_lane_width").hide();
@@ -514,6 +516,10 @@ function init() {
 		        	$(".lane_number").show();
                     $('.spat-info-tab').show();
                     $('.connection-tab').show();
+					$(".intersection-info-tab").find('a:contains("Intersection Info")').text('Speed Limits');
+					$('.intersection-info-tab').show();
+					$('.layer').hide();
+					$('.lane-speed-text').show();
                     $(".shared_with").show();
                     if(!selected_marker.attributes.computed) {
                 		// Only show the button if this lane is already defined with a lane number
@@ -583,6 +589,12 @@ function init() {
                     toggleLaneTypeAttributes(selected_marker.attributes.laneType);
                 }
 
+				if (!lanes.features[selected_marker.attributes.lane].attributes.speedLimitType) {
+					removeSpeedForm();
+					addSpeedForm();
+				} else {
+					rebuildSpeedForm(lanes.features[selected_marker.attributes.lane].attributes.speedLimitType);
+				}
                 
             	$('#shared_with').multiselect('deselectAll', false);
             	$("#shared_with").multiselect("refresh");
@@ -1274,6 +1286,7 @@ function placeComputedLane(newDotFeature) {
 			$(".verified_elev").hide();
 			$(".approach_type").hide();
 			$(".intersection").hide();
+			$(".region").hide();
 			$(".revision").hide();
 			$('.phases').hide();
 			$(".master_lane_width").hide();
@@ -1655,11 +1668,15 @@ function referencePointWindow(feature){
 	$(".lat").show();
 	$(".long").show();
 	$(".intersection").show();
+	$(".region").show();
 	$(".elev").show();
     $(".revision").show();
     $(".master_lane_width").show();
     $(".intersection_name").show();
     if (selected == "child"){
+		$(".intersection-info-tab").find('a:contains("Speed Limits")').text('Intersection Info');
+		$('.layer').show();
+		$('.lane-speed-text').hide();		
     	$('.intersection-info-tab').show();
         $(".velocity").show();
     }
@@ -1670,6 +1687,7 @@ function referencePointWindow(feature){
 		$("#long").prop('readonly', true);
 		$("#elev").prop('readonly', true);
 		$(".intersection").hide();
+		$(".region").hide();
     	$(".verified_lat").show();
     	$(".verified_long").show();
     	$(".verified_elev").show();
@@ -1710,8 +1728,18 @@ function referencePointWindow(feature){
 		$("#intersection_name").val(selected_marker.attributes.intersectionName);
 	}
 
+	if (! selected_marker.attributes.regionID){
+        $("#region").val("");
+    } else {
+        $("#region").val(selected_marker.attributes.regionID);
+    }
+
     if (selected == "child"){
-        $('.btnDone').prop('disabled', true);
+		if(feature.attributes.marker.name != "Reference Point Marker") {
+			$('.btnDone').prop('disabled', true);
+		} else {
+			$('.btnDone').prop('disabled', false);
+		}
         $('.intersection-btn').prop('disabled', false);
         $('.btnClose').prop('readonly', false);
     } else {
@@ -2031,7 +2059,11 @@ $(".btnDone").click(function(){
 		
 			var move = new OpenLayers.LonLat($('#long').val(), $('#lat').val()).transform(fromProjection, toProjection)
 		
-			if (selected_layer.name == "Lane Marker Layer"){                
+			if (selected_layer.name == "Lane Marker Layer"){   
+				var currentLaneSpeedLimits = saveSpeedForm();
+				(lanes.features[selected_marker.attributes.lane]).attributes.speedLimitType = currentLaneSpeedLimits;
+				speedLimits = [];
+
 				var vert = lanes.features[selected_marker.attributes.lane].geometry.components[selected_marker.attributes.number];
 				vert.move(move.lon - vert.x, move.lat - vert.y);
 				selected_marker.move(move);
@@ -2118,11 +2150,9 @@ $(".btnDone").click(function(){
 			
 			if (selected_layer.name == "Vector Layer"){
 				if (selected == "child"){
-
                     selected_marker.attributes.speedLimitType = saveSpeedForm();
                     selected_marker.attributes.layerID = $("#layer").val();
                     speedLimits = [];
-
 				} else {
 					selected_marker.move(move);
 					if (selected_marker.attributes.marker.name == "Verified Point Marker"){
@@ -2131,14 +2161,15 @@ $(".btnDone").click(function(){
 						selected_marker.attributes.verifiedElev = $("#verified_elev").val();
 						selected_marker.attributes.elevation = $("#elev").val();
 					}
-					if (selected_marker.attributes.marker.name == "Reference Point Marker"){
-						selected_marker.attributes.intersectionName = $("#intersection_name").val();
-						selected_marker.attributes.elevation = $("#elev").val();
-		                selected_marker.attributes.intersectionID = $("#intersection").val();
-		                intersectionID = $("#intersection").val();
-		                selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
-		                selected_marker.attributes.revisionNum = revisionNum;
-					}
+				}
+				if (selected_marker.attributes.marker.name == "Reference Point Marker") {
+					selected_marker.attributes.intersectionName = $("#intersection_name").val();
+					selected_marker.attributes.elevation = $("#elev").val();
+					selected_marker.attributes.intersectionID = $("#intersection").val();
+					intersectionID = $("#intersection").val();
+					selected_marker.attributes.regionID = $("#region").val();
+					selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
+					selected_marker.attributes.revisionNum = revisionNum;
 				}
 			}
 			$('#attributes').parsley().reset();

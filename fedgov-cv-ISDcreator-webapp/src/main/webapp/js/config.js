@@ -198,6 +198,14 @@ var help_notes = [
     	units: "Decimal Degrees",
     	description: "The geographic longitude of an object."
     },
+	{
+    	value: "region_id",
+    	title: "Region ID",
+    	max: "65535",
+    	min: "0",
+    	units: "N/A",
+    	description: 'A globally unique regional assignment value that is typically assigned to a regional DOT authority. Also known as "Road Regulator ID" and is a portion of the "Intersection Reference ID".'
+    },
     {
     	value: "intersection_id",
     	title: "Intersection ID",

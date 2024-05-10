@@ -191,7 +191,8 @@ function createMessageJSON()
 	                        "nodeLat": latlon.lat,
 	                        "nodeLong": latlon.lon,
 	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
-	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m]
+	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
+                            "speedLimitType": lanes.features[j].attributes.speedLimitType
 	                    }
 	                }
                 } else {
@@ -376,6 +377,7 @@ function createMessageJSON()
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
                 "intersectionID": feature.attributes.intersectionID,
+                "regionID": feature.attributes.regionID,
                 "msgCount": feature.attributes.revisionNum,
                 "masterLaneWidth": feature.attributes.masterLaneWidth,
                 "referenceLat": feature.attributes.LonLat.lat,
