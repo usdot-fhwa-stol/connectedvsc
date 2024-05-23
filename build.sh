@@ -17,4 +17,6 @@ mvn install -DskipTests=true
 cd ../fedgov-cv-TIMcreator-webapp/
 mvn install -DskipTests=true
 
+jar cvf ../private-resources.war -C ../root/private-resources .
+
 jar cvf ../root.war -C ../root .
