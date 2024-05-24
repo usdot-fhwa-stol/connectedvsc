@@ -1,2 +1,2 @@
-var apiKey = "AtfnR5fTfimOpEVHKeIkEPlDRj3hvsy_jBrF6Bi0vRAMQEh2J4e-dxxrGqRVPmkD";
-var geoNamesUserName = "connectedvcs-test";
+var apiKey = "<insert-bingMaps-api-key>";
+var geoNamesUserName = "<insert-api-project-name>";

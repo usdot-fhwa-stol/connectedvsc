@@ -1,6 +1,4 @@
 FROM gradle:7.4.2-jdk8 AS gradle-build
-ARG TOKEN
-RUN git clone https://$TOKEN@github.com/usdot-fhwa-stol/CARMASensitive.git 
 RUN ls -la && pwd
 FROM maven:3.8.5-jdk-8-slim AS mvn-build
 ADD . /root
