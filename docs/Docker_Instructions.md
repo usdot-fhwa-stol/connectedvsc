@@ -20,9 +20,9 @@ git clone https://github.com/usdot-fhwa-stol/connectedvcs-tools.git
 
 4. Using SSL vs not using SSL:
 
-    - If using SSL certificates, you may look up instructions to generate a keystore and SSL certficiates with your certificate authority (CA) of choice. In this case, the [Dockerfile](https://github.com/usdot-fhwa-stol/connectedvcs-tools/blob/develop/Dockerfile) will need to be updated to copy your applicable keystore information to the image. **NOTE**: Only the last two lines in the Dockerfile will need to be updated.
+    - If using SSL certificates, you may look up instructions to generate a keystore and SSL certficiates with your certificate authority (CA) of choice. In this case, the [Dockerfile](../Dockerfile) will need to be updated to copy your applicable keystore information to the image. **NOTE**: Only the last two lines in the Dockerfile will need to be updated.
 
-    - If running the tool without certificates, the Dockerfile may be updated with the contents of this [Dockerfile no-SSL Example](https://github.com/usdot-fhwa-stol/connectedvcs-tools/tree/develop/docs/Dockerfile_No_SSL_Example).
+    - If running the tool without certificates, the Dockerfile may be updated with the contents of this [Dockerfile no-SSL Example](Dockerfile_No_SSL_Example).
 
 5. After all changes/updates have been made, build the image:
 ```

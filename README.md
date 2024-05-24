@@ -5,10 +5,10 @@ ConnectedVCS Tool packages. Each subfolder corresponds to one of the original
 repositories used for ConnectedVCS Tools development.
 
 ## Docker Instructions
-Build and setup instructions for the docker image can be found in the [Docker Instructions](https://github.com/usdot-fhwa-stol/connectedvcs-tools/tree/develop/docs/Docker_Instructions.md).
+Build and setup instructions for the docker image can be found in the [Docker Instructions](docs/Docker_Instructions.md).
 
 ## Local Instructions
-Build and setup instructions for running ConnectedVCS Tools locally can be found in the [Local Instructions](https://github.com/usdot-fhwa-stol/connectedvcs-tools/tree/develop/docs/Local_Instructions.md).
+Build and setup instructions for running ConnectedVCS Tools locally can be found in the [Local Instructions](docs/Local_Instructions.md).
 
 ## Contribution
 Welcome to the ConnectedVCS Tools contributing guide. Please read this guide to learn about our development process, how to propose pull requests and improvements, and how to build and test your changes to this project. [ConnectedVCS Tools Contributing Guide](Contributing.md).
