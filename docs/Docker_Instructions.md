@@ -20,23 +20,23 @@ git clone https://github.com/usdot-fhwa-stol/connectedvcs-tools.git
 
 4. Using SSL vs not using SSL:
 
-    - If using SSL certificates, you may look up instructions to generate a keystore and SSL certficiates with your certificate authority (CA) of choice. In this case, the [Dockerfile](../Dockerfile) will need to be updated to copy your applicable keystore information to the image. **NOTE**: Only the last two lines in the Dockerfile will need to be updated.
+    - If using SSL certificates, you may look up instructions to generate a keystore and SSL certficiates with your certificate authority (CA) of choice. In this case, the [Dockerfile SSL Example](Dockerfile_SSL_example) will need to be updated to copy your applicable keystore information to the image. **NOTE**: Only the last two lines in the Dockerfile will need to be updated.
 
-    - If running the tool without certificates, the Dockerfile may be updated with the contents of this [Dockerfile No-SSL Example](Dockerfile_No_SSL_example).
+    - If running the tool without certificates, the default Dockerfile may be used as is [Dockerfile](../Dockerfile).
 
 5. After all changes/updates have been made, build the image:
 ```
-sudo docker build -t udsotfhwastol/isd-creator:<tag> .
+sudo docker build -t udsotfhwastol/connectedvcs-tools:<tag> .
 ```
 
 ### Run Image with SSL certificate
 ```
-sudo docker run -d -p 443:443 udsotfhwastol/isd-creator:<tag>>
+sudo docker run -d -p 443:443 udsotfhwastol/connectedvcs-tools:<tag>>
 ```
 
 ### Run Image without SSL certificate
 ```
-sudo docker run -d -p 8080:8080 udsotfhwastol/isd-creator:<tag>>
+sudo docker run -d -p 8080:8080 udsotfhwastol/connectedvcs-tools:<tag>>
 ```
 
 ## Access the ConnectedVCS Tools Interface
