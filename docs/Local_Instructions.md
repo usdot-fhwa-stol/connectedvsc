@@ -19,7 +19,7 @@ echo export LD_LIBRARY_PATH="[path_to_connectedvcs-tools]/fedgov-cv-lib-asn1c/th
 
 ## Local Build Instructions
 
-1. Install JDK and Maven.
+1. Install JDK (openjdk-8-jdk) and Maven (3.6.3).
 2. Create a new Bing Maps API Key (Basic, Website) using https://www.bingmapsportal.com/ 
 3. Enter API key in private-resources/js/ISDcreator-webapp-keys.js
 4. Run:
