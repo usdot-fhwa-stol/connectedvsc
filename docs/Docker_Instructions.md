@@ -31,12 +31,12 @@ sudo docker build -t udsotfhwastol/connectedvcs-tools:<tag> .
 
 ### Run Image with SSL certificate
 ```
-sudo docker run -d -p 443:443 udsotfhwastol/connectedvcs-tools:<tag>>
+sudo docker run -d -p 443:443 udsotfhwastol/connectedvcs-tools:<tag>
 ```
 
 ### Run Image without SSL certificate
 ```
-sudo docker run -d -p 8080:8080 udsotfhwastol/connectedvcs-tools:<tag>>
+sudo docker run -d -p 8080:8080 udsotfhwastol/connectedvcs-tools:<tag>
 ```
 
 ## Access the ConnectedVCS Tools Interface
