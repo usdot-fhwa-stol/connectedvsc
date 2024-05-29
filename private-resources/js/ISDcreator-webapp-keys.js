@@ -1,0 +1,1 @@
+var apiKey = "<bingMaps-isd-api-key>";

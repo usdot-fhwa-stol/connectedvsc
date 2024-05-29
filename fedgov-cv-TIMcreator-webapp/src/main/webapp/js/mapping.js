@@ -37,12 +37,34 @@
         4.777314267158508, 2.388657133579254, 1.194328566789627,
         0.5971642833948135, 0.29858214169740677];
 
+    const getApiKey = (() => {
+        let cachedApiKey = null;
+
+        return async function () {
+            if (cachedApiKey) {
+                return cachedApiKey;
+            }
+
+            const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+            const text = await res.text();
+
+            // Extract the API key from the file content
+            const match = text.match(/var\s+apiKey\s*=\s*"([^"]+)"/);
+            if (match && match[1]) {
+                cachedApiKey = match[1];
+            } else {
+                throw new Error('API key not found in the file');
+            }
+
+            return cachedApiKey;
+        };
+    })();
 
 /**
  * Define functions that must bind on load
  */
 
-function init() {
+async function init() {
 
     //Set initial variables needed to do stuff. :-/
     var d = new Date();
@@ -70,6 +92,8 @@ function init() {
      * Note: each layer is defined in this section, and layers interact with the sidebar
      * by showing/hiding DOM elements. Also, all data is loaded into the forms via these feature objects
      */
+
+    var apiKey = await getApiKey();
 
 	map = new OpenLayers.Map('map', {
         allOverlays: false,
