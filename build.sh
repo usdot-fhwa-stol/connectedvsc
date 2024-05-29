@@ -1,3 +1,6 @@
+LD_LIBRARY_PATH="Users/castilloch/Desktop/connectedvcs-tools/fedgov-cv-lib-asn1c/third_party_lib"
+export LD_LIBRARY_PATH
+
 # Build Steps
 cd ./fedgov-cv-parent
 mvn install -DskipTests=true
@@ -17,4 +20,4 @@ mvn install -DskipTests=true
 cd ../fedgov-cv-TIMcreator-webapp/
 mvn install -DskipTests=true
 
-jar cvf ../root.war -C ../root .
+# jar cvf ../root.war -C ../root .

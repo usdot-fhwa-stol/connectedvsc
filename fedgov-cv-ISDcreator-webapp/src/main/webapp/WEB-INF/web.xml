@@ -61,7 +61,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping> -->
 	
-	<security-constraint>
+	<!-- <security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Everything</web-resource-name>
 			<url-pattern>/*</url-pattern>
@@ -73,6 +73,6 @@
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
+	</welcome-file-list> -->
 	
 </web-app>

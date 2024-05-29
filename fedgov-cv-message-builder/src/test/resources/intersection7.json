@@ -6,6 +6,7 @@
       "referencePoint": {
         "descriptiveIntersctionName": "E Adams St & Woodward Ave",
         "intersectionID": "39753",
+        "regionID": "3",
         "msgCount": "1",
         "masterLaneWidth": "366",
         "referenceLat": 42.33697440827397,

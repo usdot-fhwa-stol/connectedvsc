@@ -82,6 +82,8 @@ import gov.usdot.cv.mapencoder.LaneAttributesSidewalk;
 import gov.usdot.cv.mapencoder.LaneAttributesStriping;
 import gov.usdot.cv.mapencoder.LaneAttributesTrackedVehicle;
 import gov.usdot.cv.mapencoder.LaneAttributesVehicle;
+import gov.usdot.cv.mapencoder.LaneDataAttribute;
+import gov.usdot.cv.mapencoder.LaneDataAttributeList;
 import gov.usdot.cv.mapencoder.LaneDirection;
 import gov.usdot.cv.mapencoder.LaneList;
 import gov.usdot.cv.mapencoder.LaneSharing;
@@ -228,7 +230,16 @@ public class IntersectionSituationDataBuilder {
 		// Set Intersection ID
 		IntersectionReferenceID intersectionReferenceID = new IntersectionReferenceID();
 		intersectionReferenceID.setId(referencePoint.intersectionID);
-		intersectionReferenceID.setRegionExists(false); // TODO: Implement region after updating UI to include RoadRegulatorID
+		
+		if (referencePoint.regionID != 0) {
+			intersectionReferenceID.setRegionExists(true);
+			intersectionReferenceID.setRegion(referencePoint.regionID);
+		} else {
+			intersectionReferenceID.setRegionExists(false);
+			
+		}
+		
+
 		intersection.setId(intersectionReferenceID);
 		
 		// Set Intersection Revision
@@ -545,6 +556,7 @@ public class IntersectionSituationDataBuilder {
 			NodeXY[] nodeXyArray = new NodeXY[lane.laneNodes.length];
 			int nodeIndex = 0;
 
+
 			// Loop through the lane nodes
 			for (LaneNode laneNode : lane.laneNodes) {
 				GeoPoint nextPoint = new GeoPoint(laneNode.nodeLat, laneNode.nodeLong);
@@ -580,6 +592,53 @@ public class IntersectionSituationDataBuilder {
 						hasAttributes = true;
 					}
 				}
+
+				//Set Speed Limit(s)
+
+				//creates a LaneDataAttributeObject which holds setSpeedLimits method
+				LaneDataAttribute currentLaneDataAttribute = new LaneDataAttribute();
+				//ensure speedLimitType isn't empty for a current node
+				if (laneNode.speedLimitType != null && laneNode.speedLimitType.length > 0) {
+					//creates a speedLimitList object
+					SpeedLimitList speedLimitList = new SpeedLimitList();
+					//length of however many speed limits a node has
+					int speedLimitListLength = laneNode.speedLimitType.length;
+					//an array of speedLimits which contain type and velocity
+					RegulatorySpeedLimit[] regulatorySpeedLimits = new RegulatorySpeedLimit[speedLimitListLength];
+					//loops through all speed limits a node has
+					for (int regIndex = 0; regIndex < speedLimitListLength; regIndex++) {
+						//creates a Regulatory
+						RegulatorySpeedLimit regulatorySpeedLimit = new RegulatorySpeedLimit();
+						//extracts the velocity
+						short currentVelocity = laneNode.speedLimitType[regIndex].getVelocity();
+						//sets the type
+						regulatorySpeedLimit.setType(getSpeedLimitType(laneNode.speedLimitType[regIndex].speedLimitType));
+						//sets the velocity
+						regulatorySpeedLimit.setSpeed(currentVelocity);
+						//adds this speed limit to the array of speed limits
+						regulatorySpeedLimits[regIndex] = regulatorySpeedLimit;
+					}
+					//sets speedLimitsExist to true
+					currentLaneDataAttribute.setSpeedLimitsExist(true);
+
+					//sets the speed Limit List of the node to the above list ^
+					speedLimitList.setSpeedLimits(regulatorySpeedLimits);
+
+					//sets speed limit attribute for the node as the compiled list
+					currentLaneDataAttribute.setSpeedLimits(speedLimitList);
+				} else {
+					currentLaneDataAttribute.setSpeedLimitsExist(false);
+				}
+
+				//
+ 				// LaneDataAttributeList laneDataAttributeList = new LaneDataAttributeList();
+				// LaneDataAttribute[] laneDataAttribute = new LaneDataAttribute[1];
+				// LaneDataAttribute currentLaneDataAttribute = new LaneDataAttribute();
+				// currentLaneDataAttribute.setSpeedLimits(null);
+				// laneDataAttribute[0] = currentLaneDataAttribute;
+				// laneDataAttributeList.setLaneAttributeList(laneDataAttribute);
+				// attributes.setData(laneDataAttributeList);
+
 
 				if (hasAttributes) {
 					nodeXy.setAttributesExists(true);

@@ -216,6 +216,7 @@ public class IntersectionInputData {
 	public static class ReferencePoint {
 		public String descriptiveIntersctionName;
 		public int intersectionID;
+		public int regionID;
 		public int layerID;
 		public int msgCount;
 		public short masterLaneWidth;
@@ -231,7 +232,8 @@ public class IntersectionInputData {
 		public String toString() {
 			return String.format("ReferencePoint [%s=%s,%s=%d,%s=%d,%s=%d,%s=%d,%s=%g,%s=%g,%s=%d,%s=%s,", 
 					"descriptiveIntersctionName", descriptiveIntersctionName,
-					"intersectionID", intersectionID,					
+					"intersectionID", intersectionID,
+					"regionID", regionID,					
 					"layerID", layerID,
 					"msgCount", msgCount,
 					"masterLaneWidth", masterLaneWidth,
@@ -275,7 +277,7 @@ public class IntersectionInputData {
 		public RegulatorySpeedLimit[] speedLimitType;	
 	}
 	
-	// @JsonTypeName("speedLimitType")
+	// @JsonTypeName("speedLimitType") 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class RegulatorySpeedLimit {
 		public String speedLimitType;
@@ -392,6 +394,7 @@ public class IntersectionInputData {
 		public double nodeLong;
 		public double nodeElev;
 		public short laneWidthDelta;
+		public RegulatorySpeedLimit[] speedLimitType;
 		
 		@Override
 		public String toString() {
