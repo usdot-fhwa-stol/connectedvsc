@@ -45,7 +45,7 @@
                 return cachedApiKey;
             }
 
-            const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+            const res = await fetch('/private-resources/js/TIMcreator-webapp-keys.js');
             const text = await res.text();
 
             // Extract the API key from the file content
