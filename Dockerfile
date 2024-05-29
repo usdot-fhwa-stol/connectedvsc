@@ -25,7 +25,7 @@ FROM jetty:9.4.46-jre8-slim
 # Install the generated WAR files
 COPY --from=mvn-build /root/fedgov-cv-ISDcreator-webapp/target/isd.war /var/lib/jetty/webapps 
 COPY --from=mvn-build /root/fedgov-cv-TIMcreator-webapp/target/tim.war /var/lib/jetty/webapps
-COPY --from=mvn-build /private-resources.war /var/lib/jetty/webapps
+COPY --from=mvn-build /root/private-resources.war /var/lib/jetty/webapps
 COPY --from=mvn-build /root/root.war /var/lib/jetty/webapps
 
 # Create third_party_lib directory and copy the shared libraries to it
