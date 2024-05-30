@@ -1,1 +1,1 @@
-var apiKey = "<bingMaps-tim-api-key>";
+const apiKey = "<bingMaps-tim-api-key>";

@@ -25,6 +25,8 @@
     var signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID, regionID;
     var nodeObject = [];
     var revisionNum = 0;
+	let cachedApiKey = null;
+	let cachedUsername = null;
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
         19567.87923828125, 9783.939619140625, 4891.9698095703125,
@@ -42,29 +44,55 @@
         4.777314267158508, 2.388657133579254, 1.194328566789627,
         0.5971642833948135, 0.29858214169740677];
 
-	const getApiKey = (() => {
-        let cachedApiKey = null;
-    
-        return async function () {
-            if (cachedApiKey) {
-                return cachedApiKey;
-            }
-    
-            const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
-            const text = await res.text();
-    
-            // Extract the API key from the file content
-            const regex = /var\s+apiKey\s*=\s*"([^"]+)"/;
-            const match = regex.exec(text);
-            cachedApiKey = match?.[1];
-    
-            if (!cachedApiKey) {
-                throw new Error('API key not found in the file');
-            }
-    
-            return cachedApiKey;
-        };
-    })();
+async function getApiKey() {
+	if (cachedApiKey) {
+		return cachedApiKey;
+	}
+
+	try {
+		const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+		const text = await res.text();
+
+		// Extract the API key from the file content
+		const regex = /const\s+apiKey\s*=\s*"([^"]+)"/;
+		const match = regex.exec(text);
+		cachedApiKey = match?.[1];
+
+		if (!cachedApiKey) {
+			throw new Error('API key not found in the file');
+		}
+
+		return cachedApiKey;
+	} catch (error) {
+		console.error('Failed to fetch API key:', error);
+		throw new Error('Failed to fetch API key');
+	}
+}
+
+async function getUsername() {
+	if (cachedUsername) {
+		return cachedUsername;
+	}
+
+	try {
+		const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+		const text = await res.text();
+
+		// Extract the API key from the file content
+		const regex = /const\s+geoNamesUserName\s*=\s*"([^"]+)"/;
+		const match = regex.exec(text);
+		cachedUsername = match?.[1];
+
+		if (!cachedUsername) {
+			throw new Error('API key not found in the file');
+		}
+
+		return cachedUsername;
+	} catch (error) {
+		console.error('Failed to fetch API key:', error);
+		throw new Error('Failed to fetch API key');
+	}
+}
 	
 /**
  * Define functions that must bind on load
@@ -1937,9 +1965,11 @@ function populateAttributeWindow(temp_lat, temp_lon){
 	$('#long').val(temp_lon);
 }
 
-function populateRefWindow(feature, lat, lon)
+async function populateRefWindow(feature, lat, lon)
 {
-	
+	const apiKey = await getApiKey();
+	const geoNamesUserName = await getUsername();
+
 	$.ajax({
 		type: 'GET',
 		url: intersection_url,
@@ -2282,7 +2312,8 @@ function getCookie(cname) {
     return "";
 }
 
-function getElevation(dot, latlon, i, j, callback){
+async function getElevation(dot, latlon, i, j, callback){
+	const apiKey = await getApiKey();
 
     $.ajax({
         url: elevation_url + latlon.lat + ',' + latlon.lon + '&key=' + apiKey,
