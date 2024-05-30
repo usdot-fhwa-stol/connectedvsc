@@ -43,27 +43,28 @@
         0.5971642833948135, 0.29858214169740677];
 
 	const getApiKey = (() => {
-		let cachedApiKey = null;
-
-		return async function () {
-			if (cachedApiKey) {
-				return cachedApiKey;
-			}
-
-			const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
-			const text = await res.text();
-
-			// Extract the API key from the file content
-			const match = text.match(/var\s+apiKey\s*=\s*"([^"]+)"/);
-			if (match && match[1]) {
-				cachedApiKey = match[1];
-			} else {
-				throw new Error('API key not found in the file');
-			}
-
-			return cachedApiKey;
-		};
-	})();
+        let cachedApiKey = null;
+    
+        return async function () {
+            if (cachedApiKey) {
+                return cachedApiKey;
+            }
+    
+            const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+            const text = await res.text();
+    
+            // Extract the API key from the file content
+            const regex = /var\s+apiKey\s*=\s*"([^"]+)"/;
+            const match = regex.exec(text);
+            cachedApiKey = match?.[1];
+    
+            if (!cachedApiKey) {
+                throw new Error('API key not found in the file');
+            }
+    
+            return cachedApiKey;
+        };
+    })();
 	
 /**
  * Define functions that must bind on load
@@ -95,7 +96,7 @@ async function init() {
      * by showing/hiding DOM elements. Also, all data is loaded into the forms via these feature objects
      */
 
-	var apiKey = await getApiKey();
+	const apiKey = await getApiKey();
 
 	map = new OpenLayers.Map('map', {
         allOverlays: false,

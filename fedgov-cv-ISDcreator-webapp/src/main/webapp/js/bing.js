@@ -59,7 +59,7 @@
  */
 
 async function tileAge() {
-    var apiKey = await getApiKey();
+    const apiKey = await getApiKey();
 
     var convertedLonLat = new OpenLayers.LonLat(map.getCenter().lon, map.getCenter().lat).transform(toProjection, fromProjection);
     var current_zoom = map.getZoom();
