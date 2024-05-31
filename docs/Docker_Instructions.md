@@ -1,11 +1,12 @@
 # Running Dockerized ConnectedVCS Tools
-
 If you are running ConnectedVCS Tools using a docker image, you can use the following instructions:
 
-## Install Docker CE
+## Prerequisites
+ConnectedVCS Tools has been developed using Ubuntu 20.04 and Ubuntu 22.04. Further testing with other operating systems is needed before guidance is created. For the moment, please use Ubuntu 20.04 or later [Ubuntu LTS Release](https://releases.ubuntu.com/).
 
+### Install Docker CE
 Instructions for installing Docker may change, so please use the current instructions at the Docker website:
-https://docs.docker.com/desktop/install/linux-install/
+https://docs.docker.com/desktop/install/linux-install/.
 
 ## Run the ConnectedVCS Tools Image
 
@@ -15,8 +16,9 @@ https://docs.docker.com/desktop/install/linux-install/
 ```
 git clone https://github.com/usdot-fhwa-stol/connectedvcs-tools.git
 ```
-2. Create a new Bing Maps API Key (Basic, Website) using https://www.bingmapsportal.com/ 
-3. Enter API key in private-resources/js/ISDcreator-webapp-keys.js
+2. Create a new Bing Maps API Key (Basic, Website) using https://www.bingmapsportal.com/.
+    - Please read the [Bing Maps API Key Guidance](/docs/BingMaps_API_Key_Guidance.md).
+3. Enter Bing Maps API key and any arbitrary username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js).
 
 4. Using SSL vs not using SSL:
 

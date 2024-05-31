@@ -42,5 +42,7 @@ RUN cd /var/lib/jetty \
 RUN java -jar $JETTY_HOME/start.jar --create-files
 
 RUN java -jar $JETTY_HOME/start.jar --add-to-start=https
-COPY maptool/keystore* /var/lib/jetty/etc
-COPY maptool/ssl.ini /var/lib/jetty/start.d/
+
+## Change following two lines to include your keystore files and ssl.ini (sample available in /docs/Sample_ssl.ini):
+# COPY maptool/keystore* /var/lib/jetty/etc
+# COPY maptool/ssl.ini /var/lib/jetty/start.d/
