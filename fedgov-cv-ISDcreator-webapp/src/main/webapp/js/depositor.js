@@ -188,13 +188,13 @@ function createMessageJSON()
 	                    var latlon = new OpenLayers.LonLat(lanes.features[j].geometry.components[m].x,lanes.features[j].geometry.components[m].y).transform(toProjection, fromProjection);
 	                    
 
-                        var currentSpeedLimits = [];
+                        let currentSpeedLimits = [];
                         if(lanes.features[j].attributes.speedLimitType) {
-                            var mapSpeedLimits = lanes.features[j].attributes.speedLimitType;
+                            let mapSpeedLimits = lanes.features[j].attributes.speedLimitType;
 
-                            for (var sIndex = 0; sIndex < mapSpeedLimits.length; sIndex ++) {
-                                if (mapSpeedLimits[sIndex].speedLimitType != "Speed Limit Type") {
-                                    currentSpeedLimits.push(mapSpeedLimits[sIndex])
+                            for (mapSpeedLimit of mapSpeedLimits) {
+                                if (mapSpeedLimit.speedLimitType != "Speed Limit Type") {
+                                    currentSpeedLimits.push(mapSpeedLimit)
                                 }
                             }
                         }

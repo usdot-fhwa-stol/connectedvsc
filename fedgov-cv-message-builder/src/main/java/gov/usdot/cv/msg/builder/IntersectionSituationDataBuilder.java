@@ -605,7 +605,7 @@ public class IntersectionSituationDataBuilder {
 						regulatorySpeedLimit.setSpeed(currentVelocity);
 						regulatorySpeedLimits[regIndex] = regulatorySpeedLimit;
 					}
-					currentLaneDataAttribute.setChoice(LaneDataAttribute.SPEEDLIMITS);
+					currentLaneDataAttribute.setChoice(LaneDataAttribute.SPEED_LIMITS);
 					speedLimitList.setSpeedLimits(regulatorySpeedLimits);
 
 					currentLaneDataAttribute.setSpeedLimits(speedLimitList);
