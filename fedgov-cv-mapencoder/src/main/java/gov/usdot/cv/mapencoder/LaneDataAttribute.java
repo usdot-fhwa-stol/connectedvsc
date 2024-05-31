@@ -24,7 +24,6 @@ public class LaneDataAttribute {
     private int laneCrownPointLeft;
     private int laneAngle;
     private SpeedLimitList speedLimits;
-    private boolean speedLimitsExist;
 
     //enum choices
     public static final int PATHENDPOINTANGLE = 1;
@@ -37,7 +36,7 @@ public class LaneDataAttribute {
     public LaneDataAttribute() {
     }
 
-    public LaneDataAttribute(int choice, int pathEndPointAngle, int laneCrownPointCenter, int laneCrownPointRight, int laneCrownPointLeft, int laneAngle, SpeedLimitList speedLimits, boolean speedLimitsExist) {
+    public LaneDataAttribute(int choice, int pathEndPointAngle, int laneCrownPointCenter, int laneCrownPointRight, int laneCrownPointLeft, int laneAngle, SpeedLimitList speedLimits) {
         this.choice = choice;
         this.pathEndPointAngle = pathEndPointAngle;
         this.laneCrownPointCenter = laneCrownPointCenter;
@@ -45,7 +44,6 @@ public class LaneDataAttribute {
         this.laneCrownPointLeft = laneCrownPointLeft;
         this.laneAngle = laneAngle;
         this.speedLimits = speedLimits;
-        this.speedLimitsExist = speedLimitsExist;
     }
 
     public int getChoice() {
@@ -102,13 +100,5 @@ public class LaneDataAttribute {
 
     public void setSpeedLimits(SpeedLimitList speedLimits) {
         this.speedLimits = speedLimits;
-    }
-
-    public boolean isSpeedLimitsExist() {
-        return speedLimitsExist;
-    }
-
-    public void setSpeedLimitsExist(boolean speedLimitsExist) {
-        this.speedLimitsExist = speedLimitsExist;
     }
 }

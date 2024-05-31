@@ -229,8 +229,7 @@ public class IntersectionSituationDataBuilder {
 		
 		// Set Intersection ID
 		IntersectionReferenceID intersectionReferenceID = new IntersectionReferenceID();
-		intersectionReferenceID.setId(referencePoint.intersectionID);
-		
+		intersectionReferenceID.setId(referencePoint.intersectionID);	
 		if (referencePoint.regionID != 0) {
 			intersectionReferenceID.setRegionExists(true);
 			intersectionReferenceID.setRegion(referencePoint.regionID);
@@ -238,8 +237,7 @@ public class IntersectionSituationDataBuilder {
 			intersectionReferenceID.setRegionExists(false);
 			
 		}
-		
-
+	
 		intersection.setId(intersectionReferenceID);
 		
 		// Set Intersection Revision
@@ -607,7 +605,6 @@ public class IntersectionSituationDataBuilder {
 						regulatorySpeedLimit.setSpeed(currentVelocity);
 						regulatorySpeedLimits[regIndex] = regulatorySpeedLimit;
 					}
-					currentLaneDataAttribute.setSpeedLimitsExist(true);
 					currentLaneDataAttribute.setChoice(LaneDataAttribute.SPEEDLIMITS);
 					speedLimitList.setSpeedLimits(regulatorySpeedLimits);
 

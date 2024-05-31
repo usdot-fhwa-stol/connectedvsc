@@ -685,7 +685,7 @@
                         },
                         {
                           "speedLimitType": "Max Speed in School Zone",
-                          "velocity": ""
+                          "velocity": "82"
                         },
                         {
                           "speedLimitType": "Truck Night Max Speed",
@@ -780,11 +780,6 @@
                       "nodeElev": 242,
                       "laneWidthDelta": 0,
                       "speedLimitType": [
-                        {
-                            "speedLimitType": "Speed Limit Type",
-                            "velocity": ""
-                        
-                        },
                         {
                             "speedLimitType": "Truck Max Speed",
                             "velocity": "90"

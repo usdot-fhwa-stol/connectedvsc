@@ -1,10 +1,15 @@
 package gov.usdot.cv.msg.builder;
 
+import gov.usdot.cv.msg.builder.message.SemiMessage;
+import gov.usdot.cv.msg.builder.message.IntersectionMessage;
+
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
