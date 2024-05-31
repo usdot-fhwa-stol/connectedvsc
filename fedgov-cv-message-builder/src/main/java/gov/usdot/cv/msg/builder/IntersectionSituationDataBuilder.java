@@ -594,40 +594,38 @@ public class IntersectionSituationDataBuilder {
 				}
 
 				//Set Speed Limit(s)
+				//Looping through every Node 
+				//We open a new laneDataAttributeList, which will hold an array of LaneDataAttributes
+				//LaneDataAttributes array will hold a LaneDataAttribute.
+				
+				//LaneDataAttribute holds a speedLimitList, a speedLimitList is an array of Regulatory Speed Limits, which consists of velocity and type
+				//Run a for loop for the length of 
 
-				//creates a LaneDataAttributeObject which holds setSpeedLimits method
-				LaneDataAttribute currentLaneDataAttribute = new LaneDataAttribute();
-				//ensure speedLimitType isn't empty for a current node
+				
 				if (laneNode.speedLimitType != null && laneNode.speedLimitType.length > 0) {
-					//creates a speedLimitList object
+					LaneDataAttributeList laneDataAttributeList = new LaneDataAttributeList();
+					LaneDataAttribute[] laneDataAttribute = new LaneDataAttribute[1];
+					LaneDataAttribute currentLaneDataAttribute = new LaneDataAttribute();
 					SpeedLimitList speedLimitList = new SpeedLimitList();
-					//length of however many speed limits a node has
 					int speedLimitListLength = laneNode.speedLimitType.length;
-					//an array of speedLimits which contain type and velocity
 					RegulatorySpeedLimit[] regulatorySpeedLimits = new RegulatorySpeedLimit[speedLimitListLength];
-					//loops through all speed limits a node has
 					for (int regIndex = 0; regIndex < speedLimitListLength; regIndex++) {
-						//creates a Regulatory
 						RegulatorySpeedLimit regulatorySpeedLimit = new RegulatorySpeedLimit();
-						//extracts the velocity
 						short currentVelocity = laneNode.speedLimitType[regIndex].getVelocity();
-						//sets the type
 						regulatorySpeedLimit.setType(getSpeedLimitType(laneNode.speedLimitType[regIndex].speedLimitType));
-						//sets the velocity
 						regulatorySpeedLimit.setSpeed(currentVelocity);
-						//adds this speed limit to the array of speed limits
 						regulatorySpeedLimits[regIndex] = regulatorySpeedLimit;
 					}
-					//sets speedLimitsExist to true
 					currentLaneDataAttribute.setSpeedLimitsExist(true);
-
-					//sets the speed Limit List of the node to the above list ^
+					currentLaneDataAttribute.setChoice(LaneDataAttribute.SPEEDLIMITS);
 					speedLimitList.setSpeedLimits(regulatorySpeedLimits);
 
-					//sets speed limit attribute for the node as the compiled list
 					currentLaneDataAttribute.setSpeedLimits(speedLimitList);
-				} else {
-					currentLaneDataAttribute.setSpeedLimitsExist(false);
+					laneDataAttribute[0] = currentLaneDataAttribute;
+					laneDataAttributeList.setLaneAttributeList(laneDataAttribute);
+					attributes.setDataExists(true);
+					attributes.setData(laneDataAttributeList);
+					hasAttributes = true;
 				}
 
 				//
