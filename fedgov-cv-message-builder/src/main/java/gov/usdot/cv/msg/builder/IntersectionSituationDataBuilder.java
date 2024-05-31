@@ -593,15 +593,6 @@ public class IntersectionSituationDataBuilder {
 					}
 				}
 
-				//Set Speed Limit(s)
-				//Looping through every Node 
-				//We open a new laneDataAttributeList, which will hold an array of LaneDataAttributes
-				//LaneDataAttributes array will hold a LaneDataAttribute.
-				
-				//LaneDataAttribute holds a speedLimitList, a speedLimitList is an array of Regulatory Speed Limits, which consists of velocity and type
-				//Run a for loop for the length of 
-
-				
 				if (laneNode.speedLimitType != null && laneNode.speedLimitType.length > 0) {
 					LaneDataAttributeList laneDataAttributeList = new LaneDataAttributeList();
 					LaneDataAttribute[] laneDataAttribute = new LaneDataAttribute[1];
@@ -627,16 +618,6 @@ public class IntersectionSituationDataBuilder {
 					attributes.setData(laneDataAttributeList);
 					hasAttributes = true;
 				}
-
-				//
- 				// LaneDataAttributeList laneDataAttributeList = new LaneDataAttributeList();
-				// LaneDataAttribute[] laneDataAttribute = new LaneDataAttribute[1];
-				// LaneDataAttribute currentLaneDataAttribute = new LaneDataAttribute();
-				// currentLaneDataAttribute.setSpeedLimits(null);
-				// laneDataAttribute[0] = currentLaneDataAttribute;
-				// laneDataAttributeList.setLaneAttributeList(laneDataAttribute);
-				// attributes.setData(laneDataAttributeList);
-
 
 				if (hasAttributes) {
 					nodeXy.setAttributesExists(true);
