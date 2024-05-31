@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
 import gov.usdot.cv.msg.builder.message.IntersectionMessage;
-
-
 public class IntersectionSituationDataBuilderTest {
 
     // Encoder encoder;
@@ -137,7 +136,7 @@ public class IntersectionSituationDataBuilderTest {
         try {
             String jsonContent = new String(Files.readAllBytes(Paths.get(filePath)));
             res = builder.build(jsonContent);
-            //assertEquals(expectedHexString, res.getHexString());
+            assertEquals(expectedHexString, res.getHexString());
         } catch (IOException e) {
             e.printStackTrace();
         }

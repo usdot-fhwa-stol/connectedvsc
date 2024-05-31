@@ -192,7 +192,7 @@ function createMessageJSON()
                         if(lanes.features[j].attributes.speedLimitType) {
                             let mapSpeedLimits = lanes.features[j].attributes.speedLimitType;
 
-                            for (mapSpeedLimit of mapSpeedLimits) {
+                            for (let mapSpeedLimit of mapSpeedLimits) {
                                 if (mapSpeedLimit.speedLimitType != "Speed Limit Type") {
                                     currentSpeedLimits.push(mapSpeedLimit)
                                 }
