@@ -1,1 +1,2 @@
-var apiKey = "<insert-bingMaps-api-key>";
+const apiKey = "<bingMaps-isd-api-key>";
+const geoNamesUserName = "<bingMaps-isd-api-username>";

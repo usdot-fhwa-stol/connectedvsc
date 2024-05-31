@@ -1,0 +1,1 @@
+const apiKey = "<bingMaps-tim-api-key>";

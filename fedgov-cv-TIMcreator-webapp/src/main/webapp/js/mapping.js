@@ -8,41 +8,66 @@
  * DEFINE GLOBAL VARIABLES
  */
 
-    var map;
-    var vectors, lanes, laneMarkers, area, polygons, polyMarkers, radiuslayer, trace, laneWidths;
-    var fromProjection, toProjection;
-    var temp_lat, temp_lon, selected_marker, selected_layer, selected_marker_limit;
-    var mutcd, priority, direction, extent, info_type, ttl;
-    var circle_bounds;
+var map;
+var vectors, lanes, laneMarkers, area, polygons, polyMarkers, radiuslayer, trace, laneWidths;
+var fromProjection, toProjection;
+var temp_lat, temp_lon, selected_marker, selected_layer, selected_marker_limit;
+var mutcd, priority, direction, extent, info_type, ttl;
+var circle_bounds;
 
-    var content = [];
-    var elevation_url = 'https://dev.virtualearth.net/REST/v1/Elevation/List?hts=ellipsoid&points=';
-    var nodeLaneWidth = [];
-    var circles_temp = [];
-    var circles_reset = [];
+var content = [];
+var elevation_url = 'https://dev.virtualearth.net/REST/v1/Elevation/List?hts=ellipsoid&points=';
+var nodeLaneWidth = [];
+var circles_temp = [];
+var circles_reset = [];
+let cachedApiKey = null;
 
-    var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
-        19567.87923828125, 9783.939619140625, 4891.9698095703125,
-        2445.9849047851562, 1222.9924523925781, 611.4962261962891,
-        305.74811309814453, 152.87405654907226, 76.43702827453613,
-        38.218514137268066, 19.109257068634033, 9.554628534317017,
-        4.777314267158508, 2.388657133579254, 1.194328566789627,
-        0.5971642833948135, 0.29858214169740677, 0.14929107084870338,
-        0.07464553542435169];
-     var bingServerResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
-        19567.87923828125, 9783.939619140625, 4891.9698095703125,
-        2445.9849047851562, 1222.9924523925781, 611.4962261962891,
-        305.74811309814453, 152.87405654907226, 76.43702827453613,
-        38.218514137268066, 19.109257068634033, 9.554628534317017,
-        4.777314267158508, 2.388657133579254, 1.194328566789627,
-        0.5971642833948135, 0.29858214169740677];
+var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
+    19567.87923828125, 9783.939619140625, 4891.9698095703125,
+    2445.9849047851562, 1222.9924523925781, 611.4962261962891,
+    305.74811309814453, 152.87405654907226, 76.43702827453613,
+    38.218514137268066, 19.109257068634033, 9.554628534317017,
+    4.777314267158508, 2.388657133579254, 1.194328566789627,
+    0.5971642833948135, 0.29858214169740677, 0.14929107084870338,
+    0.07464553542435169];
+    var bingServerResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
+    19567.87923828125, 9783.939619140625, 4891.9698095703125,
+    2445.9849047851562, 1222.9924523925781, 611.4962261962891,
+    305.74811309814453, 152.87405654907226, 76.43702827453613,
+    38.218514137268066, 19.109257068634033, 9.554628534317017,
+    4.777314267158508, 2.388657133579254, 1.194328566789627,
+    0.5971642833948135, 0.29858214169740677];
 
+async function getApiKey() {
+    if (cachedApiKey) {
+        return cachedApiKey;
+    }
+
+    try {
+        const res = await fetch('/private-resources/js/TIMcreator-webapp-keys.js');
+        const text = await res.text();
+
+        // Extract the API key from the file content
+        const regex = /const\s+apiKey\s*=\s*"([^"]+)"/;
+        const match = regex.exec(text);
+        cachedApiKey = match?.[1];
+
+        if (!cachedApiKey) {
+            throw new Error('API key not found in the file');
+        }
+
+        return cachedApiKey;
+    } catch (error) {
+        console.error('Failed to fetch API key:', error);
+        throw new Error('Failed to fetch API key');
+    }
+}
 
 /**
  * Define functions that must bind on load
  */
 
-function init() {
+async function init() {
 
     //Set initial variables needed to do stuff. :-/
     var d = new Date();
@@ -70,6 +95,8 @@ function init() {
      * Note: each layer is defined in this section, and layers interact with the sidebar
      * by showing/hiding DOM elements. Also, all data is loaded into the forms via these feature objects
      */
+
+    const apiKey = await getApiKey();
 
 	map = new OpenLayers.Map('map', {
         allOverlays: false,
@@ -1222,8 +1249,10 @@ function populateAttributeWindow(temp_lat, temp_lon){
 	$('#long').val(temp_lon);
 }
 
-function populateRefWindow(feature, lat, lon)
+async function populateRefWindow(feature, lat, lon)
 {
+    const apiKey = await getApiKey();
+
     $.ajax({
         url: elevation_url + lat + ',' + lon + '&key=' + apiKey,
         dataType: 'jsonp',
@@ -1630,8 +1659,9 @@ function getCookie(cname) {
     return "";
 }
 
-function getElevation(dot, latlon, i, j, callback){
-	
+async function getElevation(dot, latlon, i, j, callback){
+	const apiKey = await getApiKey();
+
     $.ajax({
         url: elevation_url + latlon.lat + ',' + latlon.lon + '&key=' + apiKey,
         dataType: 'jsonp',
