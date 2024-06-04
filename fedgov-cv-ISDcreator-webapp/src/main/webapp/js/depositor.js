@@ -186,13 +186,26 @@ function createMessageJSON()
                 if(!lanes.features[j].attributes.computed) {
 	                for(var m=0; m< lanes.features[j].geometry.components.length; m++){
 	                    var latlon = new OpenLayers.LonLat(lanes.features[j].geometry.components[m].x,lanes.features[j].geometry.components[m].y).transform(toProjection, fromProjection);
-	                    nodeArray[m] = {
+	                    
+
+                        let currentSpeedLimits = [];
+                        if(lanes.features[j].attributes.speedLimitType) {
+                            let mapSpeedLimits = lanes.features[j].attributes.speedLimitType;
+
+                            for (let mapSpeedLimit of mapSpeedLimits) {
+                                if (mapSpeedLimit.speedLimitType != "Speed Limit Type") {
+                                    currentSpeedLimits.push(mapSpeedLimit)
+                                }
+                            }
+                        }
+                        
+                        nodeArray[m] = {
 	                        "nodeNumber": m,
 	                        "nodeLat": latlon.lat,
 	                        "nodeLong": latlon.lon,
 	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
 	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
-                            "speedLimitType": lanes.features[j].attributes.speedLimitType
+                            "speedLimitType": currentSpeedLimits
 	                    }
 	                }
                 } else {
