@@ -312,26 +312,13 @@ function createMessageJSON()
             "speedLimit": box.features[i].attributes.speedLimit,
             "drivingLanes": drivingLaneArray
         };
-
-        //TODO: List out the lanes in a list. 
-        //Ex:  Approach Type empty for approach associated with lane(s) 01, 02, etc. 
-        //Thoughts: Create a list of lanes where approach type is empty, then display the list in string format.
-
-        //TODO -- disable Encode button
-        //Thoughts: disable when length of above list is not zero, otherwise enable.
-
-        //TODO -- Fix issue where only one alert is showing up (ex. only SPat shows, or only the last approach alert)
-        //Thoughts: no thoughts yet.
-
-        //if the approachType equal "Select an Approach Type" we display a similar message to spat
+        
         if (approachArray[i].approachType === undefined) {
             incompleteApproaches.push(lanes.features[i].attributes.laneNumber)
 
             if (incompleteApproaches) {
-            //display alert "approach type empty for approach associated with lane"
-            //lanes.features[a].attributes.laneNumber should give correct lane.
                 $("#message_deposit").prop('disabled', true);
-                $('#alert_placeholder').html('<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Approach Type empty for approach associated with lane(s) " + incompleteApproaches.toString() + "." +'</span></div>');
+                $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Approach Type empty for approach associated with lane(s) " + incompleteApproaches.toString() + "." +'</span></div>');
             }
         }
 
@@ -381,7 +368,7 @@ function createMessageJSON()
             }
 
         } else {
-            //$('#alert_placeholder').html('<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "SPaT message empty for lane " + lanes.features[a].attributes.laneNumber + "." +'</span></div>');
+            $('#alert_placeholder').append('<div id="spat-alert" class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "SPaT message empty for lane " + lanes.features[a].attributes.laneNumber + "." +'</span></div>');
         }
     }
     errors.clearMarkers();
