@@ -312,14 +312,14 @@ function createMessageJSON()
             "speedLimit": box.features[i].attributes.speedLimit,
             "drivingLanes": drivingLaneArray
         };
-        
-        if (approachArray[i].approachType === undefined) {
-            incompleteApproaches.push(lanes.features[i].attributes.laneNumber)
 
-            if (incompleteApproaches) {
-                $("#message_deposit").prop('disabled', true);
-                $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Approach Type empty for approach associated with lane(s) " + incompleteApproaches.toString() + "." +'</span></div>');
-            }
+        if (approachArray[i].approachType === undefined) {
+            
+            for (let d = 0; d < drivingLaneArray.length; d++)
+                incompleteApproaches.push(drivingLaneArray[d].laneID);
+
+            $("#message_deposit").prop('disabled', true);
+            $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Approach Type empty for approach associated with lane(s) " + incompleteApproaches.toString() + "." +'</span></div>');
         }
 
         drivingLaneArray = [];
