@@ -11,4 +11,5 @@ An account with Bing Maps can be created using the [Bing Maps Portal](https://ww
 
 ### **Using your API Key**
 
+#### To do: Create Local and Docker build instructions.
 Once a key is obtained, please insert your key and any arbitrary username in the [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js) file and build your updated ConnectedVCS Tools using either the [Local](/docs/) or [Docker](/docs/) build instructions.
