@@ -27,7 +27,7 @@ extern "C" {
  * Class:     gov_usdot_cv_lib_asn1c_RGAMessage
  * Method:    encodeRGA
  */
-JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeMap
+JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA
   (JNIEnv *, jint, jint);
 #ifdef __cplusplus
 }
