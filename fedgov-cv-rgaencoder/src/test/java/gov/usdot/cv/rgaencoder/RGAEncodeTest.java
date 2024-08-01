@@ -22,6 +22,8 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import gov.usdot.cv.mapencoder.ByteArrayObject;
+
 public class RGAEncodeTest {
     private static final Logger logger = LogManager.getLogger(RGAEncodeTest.class);
     Encoder encoder;
