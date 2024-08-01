@@ -45,6 +45,6 @@ RUN cd /var/lib/jetty \
     && echo 'log4j2.version=2.23.1' >> start.d/logging-log4j2.ini
 RUN java -jar $JETTY_HOME/start.jar --create-files
 
-# RUN java -jar $JETTY_HOME/start.jar --add-to-start=https
-# COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/keystore* /var/lib/jetty/etc
-# COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/ssl.ini /var/lib/jetty/start.d/
+RUN java -jar $JETTY_HOME/start.jar --add-to-start=https
+COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/keystore* /var/lib/jetty/etc
+COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/ssl.ini /var/lib/jetty/start.d/
