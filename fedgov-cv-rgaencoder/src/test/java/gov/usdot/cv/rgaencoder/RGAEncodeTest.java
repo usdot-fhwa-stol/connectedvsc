@@ -44,10 +44,8 @@ public class RGAEncodeTest {
 
     @Test
     public void rgaEncodeTester() {
-        long start = System.currentTimeMillis();
-        //logger.debug("mockRGA timestamp: " + mockRGA.getTimeStamp());
         ByteArrayObject res = encoder.encode(mockRGA);
-        long end = System.currentTimeMillis();
+        
         try {
             for (byte b : res.getMessage()) {
                 logger.debug(b + " ");
