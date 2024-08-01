@@ -66,17 +66,12 @@
          }
  
          ChannelBuffer buffer = ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN, encodeMsg);
-         byte[] byteArray = new byte[buffer.readableBytes()];
  
          String hexString = Hex.encodeHexString(encodeMsg);
          logger.debug("Encoded hex string of the RGA message: " + hexString);
  
          return new ByteArrayObject("RGA", encodeMsg);
      }
- 
-     // Not in scope
-     public RGAData decode(ByteArrayObject binaryMessage) {
-         return new RGAData();
-     }
+
  }
  

@@ -43,7 +43,7 @@ public class RGAEncodeTest {
 
 
     @Test
-    public void RGAEncodeTest() {
+    public void rgaEncodeTester() {
         long start = System.currentTimeMillis();
         //logger.debug("mockRGA timestamp: " + mockRGA.getTimeStamp());
         ByteArrayObject res = encoder.encode(mockRGA);
