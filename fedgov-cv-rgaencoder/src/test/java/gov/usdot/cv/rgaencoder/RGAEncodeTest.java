@@ -22,8 +22,6 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import gov.usdot.cv.mapencoder.ByteArrayObject;
-
 public class RGAEncodeTest {
     private static final Logger logger = LogManager.getLogger(RGAEncodeTest.class);
     Encoder encoder;
@@ -41,9 +39,9 @@ public class RGAEncodeTest {
 
 
     @Test
-    public void MAPEncodeTest() {
+    public void RGAEncodeTest() {
         long start = System.currentTimeMillis();
-        //logger.debug("mockMap timestamp: " + mockRGA.getTimeStamp());
+        //logger.debug("mockRGA timestamp: " + mockRGA.getTimeStamp());
         ByteArrayObject res = encoder.encode(mockRGA);
         long end = System.currentTimeMillis();
         try {
