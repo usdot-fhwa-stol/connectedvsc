@@ -22,23 +22,21 @@ import org.junit.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import gov.usdot.cv.mapencoder.ByteArrayObject;
+
 public class RGAEncodeTest {
     private static final Logger logger = LogManager.getLogger(RGAEncodeTest.class);
     Encoder encoder;
     RGAData mockRGA;
     
-
     @Before
     public void setup() {
-
         mockRGA = mock(RGAData.class);
         
-
         encoder = new Encoder();
 
         when(mockRGA.getMajorVer()).thenReturn(2);
         when(mockRGA.getMinorVer()).thenReturn(1);
-        
     }
 
 
