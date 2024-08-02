@@ -45,18 +45,7 @@ public class RGAEncodeTest {
     @Test
     public void rgaEncodeTester() {
         ByteArrayObject res = encoder.encode(mockRGA);
-        
-        try {
-            for (byte b : res.getMessage()) {
-                logger.debug(b + " ");
-            }
-        }
-        catch(Exception e) {
-            logger.error("Exception while printing res");
-        }
-
         byte[] expected = { 0, 43, 2, 64, 0 };
-
-       Assert.assertArrayEquals(expected, res.getMessage());
+        Assert.assertArrayEquals(expected, res.getMessage());
     }
 }

@@ -34,8 +34,7 @@
          try {
              System.loadLibrary("asn1c_rga");
          } catch (Exception e) {
-             logger.error("Exception trapped while trying to load the asn1c library" + e.toString());
-             e.printStackTrace();
+             logger.error("Exception trapped while trying to load the asn1c library", e);
          }
      }
  
