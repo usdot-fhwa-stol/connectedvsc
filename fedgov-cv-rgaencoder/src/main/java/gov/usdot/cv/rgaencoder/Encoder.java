@@ -16,13 +16,9 @@
 
  package gov.usdot.cv.rgaencoder;
  
- import java.nio.ByteOrder;
-
  import org.apache.commons.codec.binary.Hex;
  import org.apache.logging.log4j.LogManager;
  import org.apache.logging.log4j.Logger;
- import org.jboss.netty.buffer.ChannelBuffer;
- import org.jboss.netty.buffer.ChannelBuffers;
 
  import gov.usdot.cv.mapencoder.ByteArrayObject;
  
@@ -30,6 +26,7 @@
      private static final Logger logger = LogManager.getLogger(Encoder.class);
  
      public Encoder() {
+        //Will be developed at a later time
      }
  
      // Load libasn1c.so external C library
@@ -64,9 +61,7 @@
              logger.error("Cannot encode!");
              return new ByteArrayObject("RGA", null);
          }
- 
-         ChannelBuffer buffer = ChannelBuffers.copiedBuffer(ByteOrder.LITTLE_ENDIAN, encodeMsg);
- 
+
          String hexString = Hex.encodeHexString(encodeMsg);
          logger.debug("Encoded hex string of the RGA message: " + hexString);
  
