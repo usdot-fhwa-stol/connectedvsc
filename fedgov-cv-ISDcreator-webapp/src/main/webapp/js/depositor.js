@@ -169,6 +169,8 @@ function createMessageJSON()
     var computedLane = "";
     var spatArray = spatsArray["spatNodes"];
 
+    let incompleteApproaches = []
+
     for(var b=0; b< laneFeat.length; b++){
         lanes.features[b].attributes.inBox = false;
     }
@@ -186,13 +188,26 @@ function createMessageJSON()
                 if(!lanes.features[j].attributes.computed) {
 	                for(var m=0; m< lanes.features[j].geometry.components.length; m++){
 	                    var latlon = new OpenLayers.LonLat(lanes.features[j].geometry.components[m].x,lanes.features[j].geometry.components[m].y).transform(toProjection, fromProjection);
-	                    nodeArray[m] = {
+	                    
+
+                        let currentSpeedLimits = [];
+                        if(lanes.features[j].attributes.speedLimitType) {
+                            let mapSpeedLimits = lanes.features[j].attributes.speedLimitType;
+
+                            for (let mapSpeedLimit of mapSpeedLimits) {
+                                if (mapSpeedLimit.speedLimitType != "Speed Limit Type") {
+                                    currentSpeedLimits.push(mapSpeedLimit)
+                                }
+                            }
+                        }
+                        
+                        nodeArray[m] = {
 	                        "nodeNumber": m,
 	                        "nodeLat": latlon.lat,
 	                        "nodeLong": latlon.lon,
 	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
 	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
-                            "speedLimitType": lanes.features[j].attributes.speedLimitType
+                            "speedLimitType": currentSpeedLimits
 	                    }
 	                }
                 } else {
@@ -298,6 +313,12 @@ function createMessageJSON()
             "drivingLanes": drivingLaneArray
         };
 
+        if (approachArray[i].approachType === undefined) {
+            incompleteApproaches.push(drivingLaneArray[0].laneID);
+            $("#message_deposit").prop('disabled', true);
+            $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Approach Type empty for approach associated with lane(s) " + incompleteApproaches.toString() + "." +'</span></div>');
+        }
+
         drivingLaneArray = [];
     }
 
@@ -344,7 +365,7 @@ function createMessageJSON()
             }
 
         } else {
-            $('#alert_placeholder').html('<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "SPaT message empty for lane " + lanes.features[a].attributes.laneNumber + "." +'</span></div>');
+            $('#alert_placeholder').append('<div id="spat-alert" class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "SPaT message empty for lane " + lanes.features[a].attributes.laneNumber + "." +'</span></div>');
         }
     }
     errors.clearMarkers();

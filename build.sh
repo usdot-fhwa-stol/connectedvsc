@@ -8,6 +8,9 @@ mvn install -DskipTests=true
 cd ../fedgov-cv-mapencoder/
 mvn install -DskipTests=true
 
+cd ../fedgov-cv-rgaencoder/
+mvn install -DskipTests=true
+
 cd ../fedgov-cv-message-builder/
 mvn install -DskipTests=true
 

@@ -10,6 +10,8 @@ RUN cd /root/fedgov-cv-lib-asn1c \
     && mvn install -DskipTests
 RUN cd /root/fedgov-cv-mapencoder \
     && mvn install -DskipTests
+RUN cd /root/fedgov-cv-rgaencoder \
+    && mvn install -DskipTests
 RUN cd /root/fedgov-cv-message-builder \
     && mvn install -DskipTests
 RUN cd /root/fedgov-cv-ISDcreator-webapp \
