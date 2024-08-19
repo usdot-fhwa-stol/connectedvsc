@@ -55,6 +55,7 @@ import gov.usdot.cv.msg.builder.util.JSONMapper;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
 import gov.usdot.cv.mapencoder.ConnectingLane;
@@ -211,6 +212,18 @@ public class IntersectionSituationDataBuilder {
 		mapData.setIntersections(buildIntersections(isdInputData));
 		return mapData;
 	}
+
+	//TODO2: Add new Java class to extract base layer RGA JSON data into a java object using sample base layer RGA JSON developed in design story
+	//Question: are we still using only major and minor version for now, or the entirety of the base layer?
+
+	//TODO3: Add method to generate RGA java object.
+	//Note: only using Major Version and Minor Version for now, as that is all that is implemented.
+	// private RGAData buildRGAData() {
+	// 	RGAData rgaData = new RGAData();
+	// 	rgaData.setMajorVer(null);
+	// 	rgaData.setMinorVer(null);
+	// 	return rgaData;
+	// }
 
 	public IntersectionGeometry[] buildIntersections(IntersectionInputData isdInputData) {
 		/*
