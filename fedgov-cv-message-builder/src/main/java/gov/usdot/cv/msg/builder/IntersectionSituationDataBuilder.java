@@ -173,6 +173,9 @@ public class IntersectionSituationDataBuilder {
 					hexString = (J2735Helper.getHexString(md)).substring(8);
 					readableString = md.toString();
 					break;
+				// case RGA: 
+				// 	logger.debug("in RGA: " );
+					
 				case SPaT:
 					break;
 				case FramePlusMap:
@@ -180,10 +183,13 @@ public class IntersectionSituationDataBuilder {
 					hexString = J2735Helper.getHexString(md);
 					readableString = md.toString();
 					break;
+				// case FramePlusRGA:
+				// 	logger.debug("in FramePlusRGA: ");
+
 				case FramePlusSPaT :
 					break;
 				case SpatRecord:
-					break;
+					break; 
 			}
 			im.setHexString(hexString);
 			im.setReadableString(readableString);
@@ -213,17 +219,14 @@ public class IntersectionSituationDataBuilder {
 		return mapData;
 	}
 
-	//TODO2: Add new Java class to extract base layer RGA JSON data into a java object using sample base layer RGA JSON developed in design story
-	//Question: are we still using only major and minor version for now, or the entirety of the base layer?
-
-	//TODO3: Add method to generate RGA java object.
-	//Note: only using Major Version and Minor Version for now, as that is all that is implemented.
-	// private RGAData buildRGAData() {
-	// 	RGAData rgaData = new RGAData();
-	// 	rgaData.setMajorVer(null);
-	// 	rgaData.setMinorVer(null);
-	// 	return rgaData;
-	// }
+	
+	private RGAData buildRGAData(IntersectionInputData isdInputData) {
+		RGAData rgaData = new RGAData();
+		rgaData.setMinuteOfTheYear((long) isdInputData.mapData.minuteOfTheYear);
+		rgaData.setMajorVer(null); //what to use here
+		rgaData.setMinorVer(null);
+		return rgaData;
+	}
 
 	public IntersectionGeometry[] buildIntersections(IntersectionInputData isdInputData) {
 		/*

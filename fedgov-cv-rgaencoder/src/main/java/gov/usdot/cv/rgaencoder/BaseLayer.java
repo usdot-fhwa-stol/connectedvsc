@@ -14,17 +14,106 @@
  * the License.
  */
 
- package gov.usdot.cv.rgaencoder; 
+ package gov.usdot.cv.rgaencoder;
 
- public class BaseLayer {
-     private ReferencePoint referencePoint;
-     private ReferencePointChild referencePointChild;
-     private VerifiedPoint verifiedPoint;
-     
-     public BaseLayer()
-     {
-        
-     }
-     
- }
+import gov.usdot.cv.mapencoder.Position3D;
+
+public class BaseLayer {
+    //DataSetFormatVersionInfo
+    private Integer majorVer;
+    private Integer minorVer;
+
+    //ReferencePointInfo
+    private Position3D location;
+    private DDate timeOfCalculation;
+
+    //RoadGeometryRefIDInfo
+    private String relativeToRdAuthID;
+
+    //DataSetContentIdentification
+    private Integer contentVer;
+    private DDateTime contentDateTime;
+
+    public BaseLayer()
+    {
+        this.majorVer = null;
+        this.minorVer = null;
+        this.location = null;
+        this.timeOfCalculation = null;
+        this.relativeToRdAuthID = null;
+        this.contentVer = null;
+        this.contentDateTime = null;
+    }
+    
+    public BaseLayer(int majorVer, int minorVer, Position3D location, DDate timeOfCalculation, String relativeToRdAuthID, int contentVer, DDateTime contentDateTime) {
+        this.majorVer = majorVer;
+        this.minorVer = minorVer;
+        this.location = location;
+        this.timeOfCalculation = timeOfCalculation;
+        this.relativeToRdAuthID = relativeToRdAuthID;
+        this.contentVer = contentVer;
+        this.contentDateTime = contentDateTime;
+    }
+
+    public int getMajorVer() {
+        return majorVer;
+    }
+
+    public int getMinorVer() {
+        return minorVer;
+    }
+
+    public Position3D getLocation() {
+        return location;
+    }
+
+    public DDate getTimeOfCalculation() {
+        return timeOfCalculation;
+    }
+    
+    public String getRelativeToRdAuthID() {
+        return relativeToRdAuthID;
+    }
+
+    public int getContentVer() {
+        return contentVer;
+    }
+
+    public DDateTime getContentDateTime() {
+        return contentDateTime;
+    }
+
+    public void setMajorVer(Integer majorVer) {
+        this.majorVer = majorVer;
+    }
+
+    public void setMinorVer(Integer minorVer) {
+        this.minorVer = minorVer;
+    }
+
+    public void setLocation(Position3D location) {
+        this.location = location;
+    }
+
+    public void setTimeOfCalculation(DDate timeOfCalculation) {
+        this.timeOfCalculation = timeOfCalculation;
+    }
+
+    public void setRelativeToRdAuthID(String relativeToRdAuthID) {
+        this.relativeToRdAuthID = relativeToRdAuthID;
+    }
+
+    public void setContentVer(Integer contentVer) {
+        this.contentVer = contentVer;
+    }
+
+    public void setContentDateTime(DDateTime contentDateTime) {
+        this.contentDateTime = contentDateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "RGAData [majorVer=" + majorVer + ", minorVer=" + minorVer + ", location="+ location + ", timeOfCalculation" + timeOfCalculation + ", contentVer=" + contentVer + ", contentDate Time" + contentDateTime + "]";
+    }
+}
  

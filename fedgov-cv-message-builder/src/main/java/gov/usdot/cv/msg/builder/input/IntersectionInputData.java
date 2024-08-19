@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.RGAData;
 
 // import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
 
@@ -16,7 +17,9 @@ public class IntersectionInputData {
 	public enum GenerateType {
 		ISD("ISD"),
 		Map("Map"),
+		RGA("RGA"), //new
 		FramePlusMap("Frame+Map"),
+		FramePlusRGA("Frame+RGA"), //new
 		SPaT("SPaT"),
 		FramePlusSPaT("Frame+SPaT"),
 		SpatRecord("SpatRecord");
@@ -44,6 +47,7 @@ public class IntersectionInputData {
 	
 	public long minuteOfTheYear;
 	public MapData mapData;
+	public RGAData rgaData; //new 
 	public String messageType = "Frame+Map";
 	public OffsetEncodingType nodeOffsets = OffsetEncodingType.Standard;
 	public boolean enableElevation = true;

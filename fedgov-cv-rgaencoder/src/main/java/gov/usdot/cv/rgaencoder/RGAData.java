@@ -17,74 +17,19 @@
 package gov.usdot.cv.rgaencoder; 
 
 public class RGAData {
-    private Long minuteOfTheYear;
-    private Integer majorVer;
-    private Integer minorVer;
-    private Integer contentVersion;
-    private String contentDateTime;
     private BaseLayer baseLayer;
     
     public RGAData()
     {
-        this.minuteOfTheYear = null;
-        this.majorVer = null;
-        this.minorVer = null;
-        this.contentVersion = null;
-        this.contentDateTime = null;
         this.baseLayer = null;
     }
     
-    public RGAData(Long minuteOfTheYear,int majorVer, int minorVer, int contentVersion, String contentDateTime) {
-        this.minuteOfTheYear = minuteOfTheYear;
-        this.majorVer = majorVer;
-        this.minorVer = minorVer;
-        this.contentVersion = contentVersion;
-        this.contentDateTime = contentDateTime;
+    public RGAData(BaseLayer baseLayer) {
         this.baseLayer = baseLayer;
     }
 
-    public Long getMinuteOfTheYear() {
-        return minuteOfTheYear;
-    }
-
-    public int getMajorVer() {
-        return majorVer;
-    }
-
-    public int getMinorVer() {
-        return minorVer;
-    }
-
-    public int getContentVersion() {
-        return contentVersion;
-    }
-
-    public String getContentDateTime() {
-        return contentDateTime;
-    }
-
     public BaseLayer getBaseLayer() {
-        return this.baseLayer;
-    }
-
-    public void setMinuteOfTheYear(Long minuteOfTheYear) {
-        this.minuteOfTheYear = minuteOfTheYear;
-    }
-
-    public void setMajorVer(Integer majorVer){
-        this.majorVer = majorVer;
-    }
-
-    public void setMinorVer(Integer minorVer){
-        this.minorVer = minorVer;
-    }
-
-    public void setContentVersion(Integer contentVersion){
-        this.contentVersion = contentVersion;
-    }
-
-    public void setContentDateTime(String contentDateTime){
-        this.contentDateTime = contentDateTime;
+        return baseLayer;
     }
 
     public void setBaseLayer(BaseLayer baseLayer){
@@ -93,6 +38,6 @@ public class RGAData {
 
     @Override
     public String toString() {
-        return "RGAData [minuteOfTheYear" + minuteOfTheYear + ", majorVer=" + majorVer + ", minorVer=" + minorVer + ", contentVer=" + contentVersion + ", contentDate Time" + contentDateTime + "]";
+        return "RGAData [baseLayer" + baseLayer + "]";
     }
 }
