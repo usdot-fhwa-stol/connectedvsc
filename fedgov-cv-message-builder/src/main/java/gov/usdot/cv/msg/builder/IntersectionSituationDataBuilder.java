@@ -56,6 +56,7 @@ import gov.usdot.cv.msg.builder.util.OffsetEncoding;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
 import gov.usdot.cv.rgaencoder.BaseLayer;
+import gov.usdot.cv.rgaencoder.DDate;
 import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
@@ -233,6 +234,7 @@ public class IntersectionSituationDataBuilder {
 	public BaseLayer buildBaseLayer(IntersectionInputData isdInputData) {
 		BaseLayer baseLayer = new BaseLayer();
 		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
+		DDate dDate = new DDate();
 
 		//DataSetFormatVersionInfo
 		baseLayer.setMajorVer(isdInputData.mapData.majorVer);
@@ -251,6 +253,21 @@ public class IntersectionSituationDataBuilder {
 		baseLayer.setLocation(position3d);
 
 		//TODO: Set the timeOfCalculation from minuteOfTheYear
+		// minuteoftheyear is 134775 (example)
+		// There are 1440 minutes in a day, so 93.59 days have elapsed. 
+		// We can use the average 30.437 to calculate months, so 3.07 months have elapsed (or 4 FULL months*).
+		// This part ^^ is confusing, but essentially we'd have to round up for this to get the exact month.
+		// minuteOfTheYear always assumes the current year in the time system being used, so currently 2024. 
+		// We can use the .07 and multiply by 30.437 to get the days elapsed in the month, so 2.13 days have elapsed (or just 2)
+		// So we can set year to 2024, month to 4, and day to 2.
+		// Example broken down manually => 31[Jan] + 29[Feb] + 31[Mar] + 2[Apr] = 93.
+		// Concerned about using minuteOfTheYear assuming current year, would the isdData be calculated in a different year that isn't the current?
+
+		dDate.setDay(null); //run calculation based on the above.
+		dDate.setMonth(null); //run calculation based on the above.
+		dDate.setYear(null); //run calculation based on current year?
+		baseLayer.setTimeOfCalculation(dDate);
+
 
 		//RoadGeometryRefIDInfo
 		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
