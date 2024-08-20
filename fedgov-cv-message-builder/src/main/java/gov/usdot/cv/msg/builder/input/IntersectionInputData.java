@@ -46,8 +46,11 @@ public class IntersectionInputData {
 	public static final short INVALID_ELEVATION = -4096;
 	
 	public long minuteOfTheYear;
+	public Integer majorVer;
+	public Integer minorVer;
+	public String relativeToRdAuthID;
+	public Integer contentVer;
 	public MapData mapData;
-	public RGAData rgaData; //NEW
 	public String messageType = "Frame+Map";
 	public OffsetEncodingType nodeOffsets = OffsetEncodingType.Standard;
 	public boolean enableElevation = true;
@@ -431,6 +434,9 @@ public class IntersectionInputData {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class MapData {
 		public int minuteOfTheYear;
+		public int majorVer;
+		public int minorVer;
+		public int contentVer;
 		public String layerType;
 		public IntersectionGeometry intersectionGeometry;
 		public SpatData spatData;
@@ -438,6 +444,9 @@ public class IntersectionInputData {
 		@Override
 		public String toString() {
 			return "MapData [minuteOfTheYear=" + minuteOfTheYear 
+					+ ", majorVer=" + majorVer
+					+ ", minorVer=" + minorVer
+					+ ", contentVer=" + contentVer
 					+ ", layerType=" + layerType 
 					+ ",  intersectionGeometry=" + intersectionGeometry 
 					+ ", spatData=" + spatData 	

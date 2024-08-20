@@ -55,6 +55,7 @@ import gov.usdot.cv.msg.builder.util.JSONMapper;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.BaseLayer;
 import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
@@ -130,6 +131,8 @@ public class IntersectionSituationDataBuilder {
 		IntersectionMessage im = new IntersectionMessage();
 		logger.debug("User Input: " + intersectionData);
 		MapData md = null;
+		//RGAData rd = null;
+
 		// TODO: temporarily commented out
 		// SpatRecord sr = null;
 		// SPAT spat = null;
@@ -173,8 +176,9 @@ public class IntersectionSituationDataBuilder {
 					hexString = (J2735Helper.getHexString(md)).substring(8);
 					readableString = md.toString();
 					break;
-				// case RGA: 
-				// 	logger.debug("in RGA: " );
+				case RGA: 
+				 	logger.debug("in RGA: " );
+					hexString = (J2735Helper.getHexString(md)).substring(8);
 					
 				case SPaT:
 					break;
@@ -222,8 +226,41 @@ public class IntersectionSituationDataBuilder {
 	
 	private RGAData buildRGAData(IntersectionInputData isdInputData) {
 		RGAData rgaData = new RGAData();
-		rgaData.setBaseLayer(isdInputData.mapData.intersectionGeometry.);
+		rgaData.setBaseLayer(buildBaseLayer(isdInputData));
 		return rgaData;
+	}
+
+	public BaseLayer buildBaseLayer(IntersectionInputData isdInputData) {
+		BaseLayer baseLayer = new BaseLayer();
+		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
+
+		//DataSetFormatVersionInfo
+		baseLayer.setMajorVer(isdInputData.mapData.majorVer);
+		baseLayer.setMinorVer(isdInputData.mapData.minorVer);
+
+		//ReferencePointInfo
+		Position3D position3d = new Position3D();
+		position3d.setLongitude(J2735Helper.convertGeoCoordinateToInt(referencePoint.referenceLon));
+		position3d.setLatitude(J2735Helper.convertGeoCoordinateToInt(referencePoint.referenceLat));
+		if (referencePoint.referenceElevation != 0.00) {
+			position3d.setElevationExists(true);
+			position3d.setElevation((float) referencePoint.getReferenceElevation());
+		} else {
+			position3d.setElevationExists(false);
+		}
+		baseLayer.setLocation(position3d);
+
+		//TODO: Set the timeOfCalculation from minuteOfTheYear
+
+		//RoadGeometryRefIDInfo
+		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
+
+		//DataSetContentIdentification
+		baseLayer.setContentVer(isdInputData.mapData.contentVer);
+
+		//TODO: Set the contentDateTime from minuteOfTheYear
+
+		return baseLayer;
 	}
 
 	public IntersectionGeometry[] buildIntersections(IntersectionInputData isdInputData) {
