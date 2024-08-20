@@ -17,9 +17,9 @@ public class IntersectionInputData {
 	public enum GenerateType {
 		ISD("ISD"),
 		Map("Map"),
-		RGA("RGA"), //new
+		RGA("RGA"), //NEW
 		FramePlusMap("Frame+Map"),
-		FramePlusRGA("Frame+RGA"), //new
+		FramePlusRGA("Frame+RGA"), //NEW
 		SPaT("SPaT"),
 		FramePlusSPaT("Frame+SPaT"),
 		SpatRecord("SpatRecord");
@@ -47,7 +47,7 @@ public class IntersectionInputData {
 	
 	public long minuteOfTheYear;
 	public MapData mapData;
-	public RGAData rgaData; //new 
+	public RGAData rgaData; //NEW
 	public String messageType = "Frame+Map";
 	public OffsetEncodingType nodeOffsets = OffsetEncodingType.Standard;
 	public boolean enableElevation = true;

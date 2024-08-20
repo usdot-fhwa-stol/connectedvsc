@@ -222,9 +222,7 @@ public class IntersectionSituationDataBuilder {
 	
 	private RGAData buildRGAData(IntersectionInputData isdInputData) {
 		RGAData rgaData = new RGAData();
-		rgaData.setMinuteOfTheYear((long) isdInputData.mapData.minuteOfTheYear);
-		rgaData.setMajorVer(null); //what to use here
-		rgaData.setMinorVer(null);
+		rgaData.setBaseLayer(isdInputData.mapData.intersectionGeometry.);
 		return rgaData;
 	}
 
