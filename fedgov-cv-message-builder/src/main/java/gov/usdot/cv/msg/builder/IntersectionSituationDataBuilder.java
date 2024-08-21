@@ -51,6 +51,7 @@ import gov.usdot.cv.msg.builder.message.IntersectionMessage;
 import gov.usdot.cv.msg.builder.util.BitStringHelper;
 import gov.usdot.cv.msg.builder.util.GeoPoint;
 import gov.usdot.cv.msg.builder.util.J2735Helper;
+import gov.usdot.cv.msg.builder.util.J2945Helper;
 import gov.usdot.cv.msg.builder.util.JSONMapper;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
@@ -180,7 +181,7 @@ public class IntersectionSituationDataBuilder {
 					break;
 				case RGA: 
 				 	logger.debug("in RGA: " );
-					hexString = (J2735Helper.getHexString(rd)).substring(8);
+					hexString = (J2945Helper.getHexString(rd)).substring(8);
 					readableString = rd.toString();
 					break;
 				case SPaT:
@@ -192,7 +193,7 @@ public class IntersectionSituationDataBuilder {
 					break;
 				case FramePlusRGA:
 					logger.debug("in RGA: " );
-					hexString = (J2735Helper.getHexString(rd)).substring(8);
+					hexString = (J2945Helper.getHexString(rd)).substring(8);
 					readableString = rd.toString();
 					break;
 				case FramePlusSPaT :
