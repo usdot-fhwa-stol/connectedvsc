@@ -7,6 +7,8 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.DDate;
+import gov.usdot.cv.rgaencoder.DDateTime;
 import gov.usdot.cv.rgaencoder.RGAData;
 
 // import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
@@ -46,6 +48,8 @@ public class IntersectionInputData {
 	public static final short INVALID_ELEVATION = -4096;
 	
 	public long minuteOfTheYear;
+	public DDate timeOfCalculation;
+	public DDateTime contentDateTime;
 	public Integer majorVer;
 	public Integer minorVer;
 	public String relativeToRdAuthID;
@@ -434,6 +438,8 @@ public class IntersectionInputData {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class MapData {
 		public int minuteOfTheYear;
+		public DDate timeOfCalculation;
+		public DDateTime contentDateTime;
 		public int majorVer;
 		public int minorVer;
 		public String relativeToRdAuthID;

@@ -132,7 +132,7 @@ public class IntersectionSituationDataBuilder {
 		IntersectionMessage im = new IntersectionMessage();
 		logger.debug("User Input: " + intersectionData);
 		MapData md = null;
-		//RGAData rd = null;
+		RGAData rd = null;
 
 		// TODO: temporarily commented out
 		// SpatRecord sr = null;
@@ -149,6 +149,7 @@ public class IntersectionSituationDataBuilder {
 			generateType = isdInputData.getGenerateType();
 			logger.debug("generateType: " + generateType);
 			md = buildMapData(isdInputData);
+			rd = buildRGAData(isdInputData);
 			// TODO: temporarily commented out
 			// sr = buildSpatRecord(isdInputData);
 			// isd = buildISD(isdInputData, md, sr);
@@ -179,8 +180,9 @@ public class IntersectionSituationDataBuilder {
 					break;
 				case RGA: 
 				 	logger.debug("in RGA: " );
-					hexString = (J2735Helper.getHexString(md)).substring(8);
-					
+					hexString = (J2735Helper.getHexString(rd)).substring(8);
+					readableString = rd.toString();
+					break;
 				case SPaT:
 					break;
 				case FramePlusMap:
@@ -188,9 +190,11 @@ public class IntersectionSituationDataBuilder {
 					hexString = J2735Helper.getHexString(md);
 					readableString = md.toString();
 					break;
-				// case FramePlusRGA:
-				// 	logger.debug("in FramePlusRGA: ");
-
+				case FramePlusRGA:
+					logger.debug("in RGA: " );
+					hexString = (J2735Helper.getHexString(rd)).substring(8);
+					readableString = rd.toString();
+					break;
 				case FramePlusSPaT :
 					break;
 				case SpatRecord:
@@ -234,7 +238,6 @@ public class IntersectionSituationDataBuilder {
 	public BaseLayer buildBaseLayer(IntersectionInputData isdInputData) {
 		BaseLayer baseLayer = new BaseLayer();
 		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
-		DDate dDate = new DDate();
 
 		//DataSetFormatVersionInfo
 		baseLayer.setMajorVer(isdInputData.mapData.majorVer);
@@ -252,22 +255,7 @@ public class IntersectionSituationDataBuilder {
 		}
 		baseLayer.setLocation(position3d);
 
-		//TODO: Set the timeOfCalculation from minuteOfTheYear
-		// minuteoftheyear is 134775 (example)
-		// There are 1440 minutes in a day, so 93.59 days have elapsed. 
-		// We can use the average 30.437 to calculate months, so 3.07 months have elapsed (or 4 FULL months*).
-		// This part ^^ is confusing, but essentially we'd have to round up for this to get the exact month.
-		// minuteOfTheYear always assumes the current year in the time system being used, so currently 2024. 
-		// We can use the .07 and multiply by 30.437 to get the days elapsed in the month, so 2.13 days have elapsed (or just 2)
-		// So we can set year to 2024, month to 4, and day to 2.
-		// Example broken down manually => 31[Jan] + 29[Feb] + 31[Mar] + 2[Apr] = 93.
-		// Concerned about using minuteOfTheYear assuming current year, would the isdData be calculated in a different year that isn't the current?
-
-		dDate.setDay(null); //run calculation based on the above.
-		dDate.setMonth(null); //run calculation based on the above.
-		dDate.setYear(null); //run calculation based on current year?
-		baseLayer.setTimeOfCalculation(dDate);
-
+		baseLayer.setTimeOfCalculation(isdInputData.mapData.timeOfCalculation);
 
 		//RoadGeometryRefIDInfo
 		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
@@ -275,7 +263,7 @@ public class IntersectionSituationDataBuilder {
 		//DataSetContentIdentification
 		baseLayer.setContentVer(isdInputData.mapData.contentVer);
 
-		//TODO: Set the contentDateTime from minuteOfTheYear
+		baseLayer.setContentDateTime(isdInputData.mapData.contentDateTime);
 
 		return baseLayer;
 	}
