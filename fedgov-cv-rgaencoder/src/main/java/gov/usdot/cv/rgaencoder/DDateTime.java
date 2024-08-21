@@ -14,7 +14,7 @@ public class DDateTime extends DDate {
         this.offset = null;
     }
     
-    public DDateTime(int hour, int minute, int second, int offset) {
+    public DDateTime(Integer hour, Integer minute, Integer second, Integer offset) {
         this.hour = hour;
         this.minute = minute; 
         this.second = second;

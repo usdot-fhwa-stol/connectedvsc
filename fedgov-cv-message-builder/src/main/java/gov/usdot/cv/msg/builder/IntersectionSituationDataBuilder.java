@@ -38,6 +38,7 @@ import gov.usdot.cv.msg.builder.exception.MessageBuildException;
 import gov.usdot.cv.msg.builder.exception.MessageEncodeException;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.Approach;
+import gov.usdot.cv.msg.builder.input.IntersectionInputData.ContentDateTime;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.LaneConnection;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.CrosswalkLane;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.DrivingLane;
@@ -47,6 +48,7 @@ import gov.usdot.cv.msg.builder.input.IntersectionInputData.ReferencePoint;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.ReferencePointChild;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.SpatData;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.State;
+import gov.usdot.cv.msg.builder.input.IntersectionInputData.TimeOfCalculation;
 import gov.usdot.cv.msg.builder.message.IntersectionMessage;
 import gov.usdot.cv.msg.builder.util.BitStringHelper;
 import gov.usdot.cv.msg.builder.util.GeoPoint;
@@ -58,6 +60,7 @@ import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
 import gov.usdot.cv.rgaencoder.BaseLayer;
 import gov.usdot.cv.rgaencoder.DDate;
+import gov.usdot.cv.rgaencoder.DDateTime;
 import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
@@ -239,6 +242,8 @@ public class IntersectionSituationDataBuilder {
 	public BaseLayer buildBaseLayer(IntersectionInputData isdInputData) {
 		BaseLayer baseLayer = new BaseLayer();
 		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
+		TimeOfCalculation timeOfCalculation = isdInputData.mapData.timeOfCalculation;
+		ContentDateTime contentDateTime = isdInputData.mapData.contentDateTime;
 
 		//DataSetFormatVersionInfo
 		baseLayer.setMajorVer(isdInputData.mapData.majorVer);
@@ -256,7 +261,11 @@ public class IntersectionSituationDataBuilder {
 		}
 		baseLayer.setLocation(position3d);
 
-		baseLayer.setTimeOfCalculation(isdInputData.mapData.timeOfCalculation);
+		DDate dDate = new DDate();
+		dDate.setDay(timeOfCalculation.day);
+		dDate.setMonth(timeOfCalculation.month);
+		dDate.setYear(timeOfCalculation.year);
+		baseLayer.setTimeOfCalculation(dDate);
 
 		//RoadGeometryRefIDInfo
 		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
@@ -264,8 +273,15 @@ public class IntersectionSituationDataBuilder {
 		//DataSetContentIdentification
 		baseLayer.setContentVer(isdInputData.mapData.contentVer);
 
-		baseLayer.setContentDateTime(isdInputData.mapData.contentDateTime);
-
+		DDateTime dDateTime = new DDateTime();
+		dDateTime.setHour(contentDateTime.hour);
+		dDateTime.setMinute(contentDateTime.minute);
+		dDateTime.setSecond(contentDateTime.second);
+		dDateTime.setDay(contentDateTime.day);
+		dDateTime.setMonth(contentDateTime.month);
+		dDateTime.setYear(contentDateTime.year);
+		baseLayer.setContentDateTime(dDateTime);
+		
 		return baseLayer;
 	}
 

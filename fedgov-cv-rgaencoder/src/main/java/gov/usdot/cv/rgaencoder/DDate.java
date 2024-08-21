@@ -28,7 +28,7 @@ public class DDate {
         this.day = null;
     }
     
-    public DDate(int year, int month, int day) {
+    public DDate(Integer year, Integer month, Integer day) {
         this.year = year;
         this.month = month; 
         this.day = day;

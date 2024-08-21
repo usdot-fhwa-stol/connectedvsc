@@ -45,7 +45,7 @@ public class BaseLayer {
         this.contentDateTime = null;
     }
     
-    public BaseLayer(int majorVer, int minorVer, Position3D location, DDate timeOfCalculation, String relativeToRdAuthID, int contentVer, DDateTime contentDateTime) {
+    public BaseLayer(Integer majorVer, Integer minorVer, Position3D location, DDate timeOfCalculation, String relativeToRdAuthID, Integer contentVer, DDateTime contentDateTime) {
         this.majorVer = majorVer;
         this.minorVer = minorVer;
         this.location = location;
@@ -55,11 +55,11 @@ public class BaseLayer {
         this.contentDateTime = contentDateTime;
     }
 
-    public int getMajorVer() {
+    public Integer getMajorVer() {
         return majorVer;
     }
 
-    public int getMinorVer() {
+    public Integer getMinorVer() {
         return minorVer;
     }
 
@@ -75,7 +75,7 @@ public class BaseLayer {
         return relativeToRdAuthID;
     }
 
-    public int getContentVer() {
+    public Integer getContentVer() {
         return contentVer;
     }
 

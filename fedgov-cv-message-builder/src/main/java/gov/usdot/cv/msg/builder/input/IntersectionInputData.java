@@ -48,8 +48,8 @@ public class IntersectionInputData {
 	public static final short INVALID_ELEVATION = -4096;
 	
 	public long minuteOfTheYear;
-	public DDate timeOfCalculation;
-	public DDateTime contentDateTime;
+	public TimeOfCalculation timeOfCalculation;
+	public ContentDateTime contentDateTime;
 	public Integer majorVer;
 	public Integer minorVer;
 	public String relativeToRdAuthID;
@@ -252,6 +252,39 @@ public class IntersectionInputData {
 		}
 	}
 	
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class TimeOfCalculation {
+		public int day;
+		public int month;
+		public int year; 
+
+		@Override
+		public String toString() {
+			return "TimeOfCalculation [day=" + day
+					+ ", month=" + month
+					+ ", year=" + year
+					+ "]";
+		}
+	}
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class ContentDateTime extends TimeOfCalculation {
+		public int hour;
+		public int minute;
+		public int second; 
+
+		@Override
+		public String toString() {
+			return "TimeOfCalculation [day=" + day
+					+ ", month=" + month
+					+ ", year=" + year
+					+ ", hour=" + hour
+					+ ", minute=" + minute
+					+ ", second=" + second
+					+ "]";
+		}
+	}
+	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class VerifiedPoint {
 		public double verifiedMapLat;
@@ -438,8 +471,8 @@ public class IntersectionInputData {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class MapData {
 		public int minuteOfTheYear;
-		public DDate timeOfCalculation;
-		public DDateTime contentDateTime;
+		public TimeOfCalculation timeOfCalculation;
+		public ContentDateTime contentDateTime;
 		public int majorVer;
 		public int minorVer;
 		public String relativeToRdAuthID;
@@ -451,6 +484,8 @@ public class IntersectionInputData {
 		@Override
 		public String toString() {
 			return "MapData [minuteOfTheYear=" + minuteOfTheYear 
+					+ ", timeOfCalculation=" + timeOfCalculation
+					+ ", contentDateTime=" + contentDateTime
 					+ ", majorVer=" + majorVer
 					+ ", minorVer=" + minorVer
 					+ ", relativeToRdAuthID" + relativeToRdAuthID
