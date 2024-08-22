@@ -1,6 +1,8 @@
 # Running Dockerized ConnectedVCS Tools
 If you are running ConnectedVCS Tools using a docker image, you can use the following instructions:
 
+**NOTE:** Bing Maps is now deprecated and new users are no longer allowed to create API keys. We will be migrating to Azure Maps and updating this documentation soon.
+
 ## Prerequisites
 ConnectedVCS Tools has been developed using Ubuntu 20.04 and Ubuntu 22.04. Further testing with other operating systems is needed before guidance is created. For the moment, please use Ubuntu 20.04 or later [Ubuntu LTS Release](https://releases.ubuntu.com/).
 
@@ -16,29 +18,34 @@ https://docs.docker.com/desktop/install/linux-install/.
 ```
 git clone https://github.com/usdot-fhwa-stol/connectedvcs-tools.git
 ```
-2. Create a new Bing Maps API Key (Basic, Website) using https://www.bingmapsportal.com/.
-    - Please read the [Bing Maps API Key Guidance](/docs/BingMaps_API_Key_Guidance.md).
-3. Enter Bing Maps API key and any arbitrary username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js).
+2. Note: Placeholder for Azure Maps API key generation.
 
-4. Using SSL vs not using SSL:
+3. Enter Azure Maps API key and username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js).
 
-    - If using SSL certificates, you may look up instructions to generate a keystore and SSL certficiates with your certificate authority (CA) of choice. In this case, the [Dockerfile SSL Example](Dockerfile_SSL_example) will need to be updated to copy your applicable keystore information to the image. **NOTE**: Only the last two lines in the Dockerfile will need to be updated.
+4. Create a new Google Maps API Key using the [Google Maps Platform](https://developers.google.com/maps/documentation/javascript/get-api-key#create-api-keys).
+    - Please read the [Google Maps API Key Guidance](/docs/GoogleMaps_API_Key_Guidance.md).
+5. Enter your key to the end of the Geocomplete src link (indicated by "YOUR_API_KEY") at the [index.html](/fedgov-cv-ISDcreator-webapp/src/main/webapp/index.html)
 
-    - If running the tool without certificates, the default Dockerfile may be used as is [Dockerfile](../Dockerfile).
+6. Using SSL vs not using SSL:
 
-5. After all changes/updates have been made, build the image:
-```
-sudo docker build -t udsotfhwastol/connectedvcs-tools:<tag> .
-```
+    - If using SSL certificates, you may look up instructions to generate a keystore and SSL certficiates with your certificate authority (CA) of choice. In this case, the [Dockerfile](/Dockerfile) will need to be updated to copy your applicable keystore information to the image. **NOTE**: Only the last two lines in the Dockerfile will need to be updated.
+    ```
+    sudo docker build -t usdotfhwastol/connectedvcs-tools:<tag> --build-arg USE_SSL=true .
+    ```
+
+    - If running the tool without certificates, the default Dockerfile may be used as is.
+    ```
+    sudo docker build -t usdotfhwastol/connectedvcs-tools:<tag> --build-arg USE_SSL=false .
+    ```
 
 ### Run Image with SSL certificate
 ```
-sudo docker run -d -p 443:443 udsotfhwastol/connectedvcs-tools:<tag>
+sudo docker run -d -p 443:443 usdotfhwastol/connectedvcs-tools:<tag>
 ```
 
 ### Run Image without SSL certificate
 ```
-sudo docker run -d -p 8080:8080 udsotfhwastol/connectedvcs-tools:<tag>
+sudo docker run -d -p 8080:8080 usdotfhwastol/connectedvcs-tools:<tag>
 ```
 
 ## Access the ConnectedVCS Tools Interface
