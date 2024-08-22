@@ -14,30 +14,30 @@ public class DDateTime extends DDate {
         this.offset = null;
     }
     
-    public DDateTime(Integer hour, Integer minute, Integer second, Integer offset) {
+    public DDateTime(int hour, int minute, int second, int offset) {
         this.hour = hour;
         this.minute = minute; 
         this.second = second;
         this.offset = offset;
     }
 
-    public Integer getHour() {
+    public int getHour() {
         return hour;
     }
     
-    public Integer getMinute() {
+    public int getMinute() {
         return minute;
     }
 
-    public Integer getSecond() {
+    public int getSecond() {
         return second;
     }
 
-    public Integer getOffset() {
+    public int getOffset() {
         return offset;
     }
 
-    public void setHour(Integer hour) {
+    public void setHour(int hour) {
         this.hour = hour;
     }
     

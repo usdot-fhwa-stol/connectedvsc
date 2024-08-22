@@ -1,0 +1,35 @@
+{
+    "mapData": {
+      "minuteOfTheYear": 385179,
+      "layerType": "intersectionData",
+      "timeOfCalculation": {
+        "day": 1,
+        "month": 2,
+        "year" : 2024
+      },
+      "intersectionGeometry": {
+        "referencePoint": {
+          "descriptiveIntersctionName": "Potomac School Rd & Dolley Madison Blvd",
+          "layerID": "1",
+          "intersectionID": "45571",
+          "msgCount": "105",
+          "masterLaneWidth": "366",
+          "referenceLat": 38.94346938863933,
+          "referenceLon": -77.15159208520186,
+          "referenceElevation": "45"
+        },
+        "referencePointChild": {},
+        "verifiedPoint": {
+          "verifiedMapLat": 38.94355700614207,
+          "verifiedMapLon": -77.15138823731643,
+          "verifiedMapElevation": "45",
+          "verifiedSurveyedLat": "38.94355700614207",
+          "verifiedSurveyedLon": "-77.15138823731643",
+          "verifiedSurveyedElevation": "45"
+        }
+      }
+    },
+    "messageType": "Frame+RGA",
+    "nodeOffsets": "Tight",
+    "enableElevation": true
+}

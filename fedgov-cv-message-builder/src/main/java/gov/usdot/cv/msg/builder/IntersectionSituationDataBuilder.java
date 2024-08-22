@@ -145,15 +145,16 @@ public class IntersectionSituationDataBuilder {
 		// MessageFrame mf = null;
 		// GenerateType generateType = GenerateType.ISD;
 		GenerateType generateType = GenerateType.FramePlusMap;
+		IntersectionInputData isdInputData = new IntersectionInputData();
 		try {
-			IntersectionInputData isdInputData = JSONMapper.jsonStringToPojo(intersectionData,
+			isdInputData = JSONMapper.jsonStringToPojo(intersectionData,
 					IntersectionInputData.class);
-			isdInputData.validate();
+			//isdInputData.validate();
 			isdInputData.applyLatLonOffset();
 			generateType = isdInputData.getGenerateType();
 			logger.debug("generateType: " + generateType);
-			md = buildMapData(isdInputData);
-			rd = buildRGAData(isdInputData);
+			
+			
 			// TODO: temporarily commented out
 			// sr = buildSpatRecord(isdInputData);
 			// isd = buildISD(isdInputData, md, sr);
@@ -176,6 +177,7 @@ public class IntersectionSituationDataBuilder {
 				case ISD:
 					break;
 				case Map:
+					md = buildMapData(isdInputData);
 					logger.debug("in MAP: " );
 					// Removing the first 8 characters from the MessageFrame provides the MAP message
 					// This was tested manually by removing the characters from MessageFrame and testing using the decoder
@@ -183,6 +185,7 @@ public class IntersectionSituationDataBuilder {
 					readableString = md.toString();
 					break;
 				case RGA: 
+					rd = buildRGAData(isdInputData);
 				 	logger.debug("in RGA: " );
 					hexString = (J2945Helper.getHexString(rd)).substring(8);
 					readableString = rd.toString();
@@ -190,11 +193,13 @@ public class IntersectionSituationDataBuilder {
 				case SPaT:
 					break;
 				case FramePlusMap:
+					md = buildMapData(isdInputData);
 					logger.debug("in FramePlusMap: ");
 					hexString = J2735Helper.getHexString(md);
 					readableString = md.toString();
 					break;
 				case FramePlusRGA:
+					rd = buildRGAData(isdInputData);
 					logger.debug("in RGA: " );
 					hexString = (J2945Helper.getHexString(rd)).substring(8);
 					readableString = rd.toString();
@@ -270,17 +275,17 @@ public class IntersectionSituationDataBuilder {
 		//RoadGeometryRefIDInfo
 		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
 
-		//DataSetContentIdentification
-		baseLayer.setContentVer(isdInputData.mapData.contentVer);
+		// //DataSetContentIdentification
+		// baseLayer.setContentVer(isdInputData.mapData.contentVer);
 
 		DDateTime dDateTime = new DDateTime();
-		dDateTime.setHour(contentDateTime.hour);
-		dDateTime.setMinute(contentDateTime.minute);
-		dDateTime.setSecond(contentDateTime.second);
-		dDateTime.setDay(contentDateTime.day);
-		dDateTime.setMonth(contentDateTime.month);
-		dDateTime.setYear(contentDateTime.year);
-		baseLayer.setContentDateTime(dDateTime);
+		// dDateTime.setHour(contentDateTime.hour);
+		// dDateTime.setMinute(contentDateTime.minute);
+		// dDateTime.setSecond(contentDateTime.second);
+		// dDateTime.setDay(contentDateTime.day);
+		// dDateTime.setMonth(contentDateTime.month);
+		// dDateTime.setYear(contentDateTime.year);
+		// baseLayer.setContentDateTime(dDateTime);
 		
 		return baseLayer;
 	}

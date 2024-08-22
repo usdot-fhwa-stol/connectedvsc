@@ -48,12 +48,12 @@ public class IntersectionInputData {
 	public static final short INVALID_ELEVATION = -4096;
 	
 	public long minuteOfTheYear;
-	public TimeOfCalculation timeOfCalculation;
-	public ContentDateTime contentDateTime;
-	public Integer majorVer;
-	public Integer minorVer;
-	public String relativeToRdAuthID;
-	public Integer contentVer;
+	// public TimeOfCalculation timeOfCalculation;
+	// public ContentDateTime contentDateTime;
+	// public Integer majorVer;
+	// public Integer minorVer;
+	// public String relativeToRdAuthID;
+	// public Integer contentVer;
 	public MapData mapData;
 	public String messageType = "Frame+Map";
 	public OffsetEncodingType nodeOffsets = OffsetEncodingType.Standard;
@@ -249,39 +249,6 @@ public class IntersectionInputData {
 					"referenceLat", referenceLat,
 					"referenceLon", referenceLon,
 					"referenceElevation", getReferenceElevation());
-		}
-	}
-	
-
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class TimeOfCalculation {
-		public int day;
-		public int month;
-		public int year; 
-
-		@Override
-		public String toString() {
-			return "TimeOfCalculation [day=" + day
-					+ ", month=" + month
-					+ ", year=" + year
-					+ "]";
-		}
-	}
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class ContentDateTime extends TimeOfCalculation {
-		public int hour;
-		public int minute;
-		public int second; 
-
-		@Override
-		public String toString() {
-			return "TimeOfCalculation [day=" + day
-					+ ", month=" + month
-					+ ", year=" + year
-					+ ", hour=" + hour
-					+ ", minute=" + minute
-					+ ", second=" + second
-					+ "]";
 		}
 	}
 	
@@ -498,6 +465,39 @@ public class IntersectionInputData {
 	}
 	
 	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class TimeOfCalculation {
+		public int day;
+		public int month;
+		public int year; 
+
+		@Override
+		public String toString() {
+			return "TimeOfCalculation [day=" + day
+					+ ", month=" + month
+					+ ", year=" + year
+					+ "]";
+		}
+	}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class ContentDateTime extends TimeOfCalculation {
+		public int hour;
+		public int minute;
+		public int second; 
+
+		@Override
+		public String toString() {
+			return "TimeOfCalculation [day=" + day
+					+ ", month=" + month
+					+ ", year=" + year
+					+ ", hour=" + hour
+					+ ", minute=" + minute
+					+ ", second=" + second
+					+ "]";
+		}
+	}
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class IntersectionGeometry {
 		public ReferencePoint referencePoint;
 		public VerifiedPoint verifiedPoint;
@@ -513,8 +513,6 @@ public class IntersectionInputData {
 					+ "]";
 		}		
 	}
-	
-	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class LaneList {
 		public Approach[] approach;
