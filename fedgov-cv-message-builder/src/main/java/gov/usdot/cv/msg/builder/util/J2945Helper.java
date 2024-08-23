@@ -31,6 +31,7 @@ public class J2945Helper {
 
 	public static byte[] getBytes(RGAData message) {
 		Encoder encoder = new Encoder();
+		logger.debug("Getting bytes from J2945 helper:  ");
 		ByteArrayObject encodedMsg = encoder.encode(message);
 		return encodedMsg.getMessage();
 	}
