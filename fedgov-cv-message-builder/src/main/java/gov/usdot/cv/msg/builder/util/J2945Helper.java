@@ -15,8 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class J2945Helper {
-
-	private static final Logger logger = LogManager.getLogger(J2945Helper.class);
 	
 	public static String getHexString(RGAData message) 
 	{
@@ -27,7 +25,6 @@ public class J2945Helper {
 
 	public static byte[] getBytes(RGAData message) {
 		Encoder encoder = new Encoder();
-		logger.debug("Getting bytes from J2945 helper:  ");
 		ByteArrayObject encodedMsg = encoder.encode(message);
 		return encodedMsg.getMessage();
 	}

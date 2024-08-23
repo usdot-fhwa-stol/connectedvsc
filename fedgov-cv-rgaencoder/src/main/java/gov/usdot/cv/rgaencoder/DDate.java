@@ -28,33 +28,33 @@ public class DDate {
         this.day = null;
     }
     
-    public DDate(int year, int month, int day) {
+    public DDate(Integer year, Integer month, Integer day) {
         this.year = year;
         this.month = month; 
         this.day = day;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
     
-    public int getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public int getDay() {
+    public Integer getDay() {
         return day;
     }
 
-    public void setYear(int year){
+    public void setYear(Integer year){
         this.year = year;
     }
     
-    public void setMonth(int month){
+    public void setMonth(Integer month){
         this.month = month;
     }
 
-    public void setDay(int day){
+    public void setDay(Integer day){
         this.day = day;
     }
 
