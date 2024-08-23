@@ -1,7 +1,7 @@
 # Running ConnectedVCS Tools Locally
 If you are running ConnectedVCS Tools locally, you can use the following instructions:
 
-**NOTE:** Bing Maps is now deprecated and new users are no longer allowed to create API keys. We will be migrating to Azure Maps and updating this documentation soon.
+**NOTE:** Bing Maps is now deprecated and new users are no longer allowed to create API keys. We will be migrating to a different map provider and updating this documentation soon.
 
 ## Prerequisites
 ConnectedVCS Tools has been developed using Ubuntu 20.04 and Ubuntu 22.04. Further testing with other operating systems is needed before guidance is created. For the moment, please use Ubuntu 20.04 or later [Ubuntu LTS Release](https://releases.ubuntu.com/).
@@ -57,8 +57,8 @@ mv /tmp/web.xml.tmp fedgov-cv-ISDcreator-webapp/src/main/webapp/WEB-INF/web.xml
 
 ## Local Build Instructions
 
-1. Note: Placeholder for Azure Maps API key generation.
-2. Enter Azure Maps API key and username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js).
+1. Note: Placeholder for map API key generation.
+2. Enter a map API key and username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js).
 3. Create a new Google Maps API Key using the [Google Maps Platform](https://developers.google.com/maps/documentation/javascript/get-api-key#create-api-keys).
     - Please read the [Google Maps API Key Guidance](/docs/GoogleMaps_API_Key_Guidance.md).
 4. Enter your key to the end of the Geocomplete src link (indicated by "YOUR_API_KEY") at the [index.html](/fedgov-cv-ISDcreator-webapp/src/main/webapp/index.html)
