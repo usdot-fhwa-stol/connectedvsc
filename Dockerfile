@@ -1,10 +1,12 @@
 FROM gradle:7.4.2-jdk8 AS gradle-build
 RUN ls -la && pwd
 FROM maven:3.8.5-jdk-8-slim AS mvn-build
-ADD . /root
+COPY . /root
 
 # Install gettext to use envsubst
-RUN apt-get update && apt-get install -y gettext-base
+RUN apt-get update && \
+    apt-get install -y gettext-base && \
+    apt-get clean
 
 # Update the web.xml based on SSL selection
 RUN if [ "$USE_SSL" = "true" ]; then \
@@ -42,15 +44,15 @@ USER root
 ENV LD_LIBRARY_PATH=/var/lib/jetty/webapps/third_party_lib
 RUN ldconfig
 
-RUN cd /var/lib/jetty \
-    && echo 'log4j2.version=2.23.1' >> start.d/logging-log4j2.ini
-RUN java -jar $JETTY_HOME/start.jar --create-files
+RUN cd /var/lib/jetty && \
+    echo 'log4j2.version=2.23.1' >> start.d/logging-log4j2.ini && \
+    java -jar "$JETTY_HOME"/start.jar --create-files
 
 # Conditionally add SSL or non-SSL based on the USE_SSL environment variable
 RUN if [ "$USE_SSL" = "true" ]; then \
-        java -jar $JETTY_HOME/start.jar --add-to-start=https; \
+        java -jar "$JETTY_HOME"/start.jar --add-to-start=https; \
     else \
-        java -jar $JETTY_HOME/start.jar --add-to-start=http; \
+        java -jar "$JETTY_HOME"/start.jar --add-to-start=http; \
     fi
 
 ## If using SSL, change the following two lines to include your keystore files and ssl.ini (sample available in /docs/Sample_ssl.ini):
