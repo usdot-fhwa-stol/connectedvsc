@@ -70,8 +70,8 @@ public class IntersectionInputData {
 	public GenerateType getGenerateType() {
 		return GenerateType.fromType(messageType);
 	}
-	
-	public void validate() {
+
+	public void validatePoints() {
 		ReferencePoint referencePoint = mapData.intersectionGeometry.referencePoint;
 		VerifiedPoint verifiedPoint = mapData.intersectionGeometry.verifiedPoint;
 		if (referencePoint == null) {
@@ -88,6 +88,11 @@ public class IntersectionInputData {
 			validateLat("verifiedPoint.verifiedSurveyedLat", verifiedPoint.verifiedSurveyedLat);
 			validateLon("verifiedPoint.verifiedSurveyedLon", verifiedPoint.verifiedSurveyedLon);
 		}
+	}
+	
+	public void validate() {
+		validatePoints(); 
+		
 		Approach[] approaches = mapData.intersectionGeometry.laneList.approach;
 		if (approaches == null) {
 			throw new IllegalArgumentException("approaches cannot be null");
@@ -181,38 +186,38 @@ public class IntersectionInputData {
 		referencePoint.referenceLon += lonOffset;
 		referencePoint.referenceElevation += elvOffset;
 		
-
-		Approach[] intersectionApproaches = mapData.intersectionGeometry.laneList.approach; 
-		for(int i = 0; i < intersectionApproaches.length; i++) {
-			if(intersectionApproaches[i].approachID != CrosswalkLane.CROSSWALK_APPROACH_ID) {
-				DrivingLane[] drivingLanes = intersectionApproaches[i].drivingLanes;
-				for(int j = 0; j < drivingLanes.length; j++) {
-					if(!drivingLanes[j].isComputed) {
-						LaneNode[] laneNodes = drivingLanes[j].laneNodes;
-						for(int k = 0; k < laneNodes.length; k++) {
-							laneNodes[k].nodeLat += latOffset;
-							laneNodes[k].nodeLong += lonOffset;
-							laneNodes[k].nodeElev += elvOffset;				
+		if(mapData.intersectionGeometry.laneList.approach && mapData.intersectionGeometry.laneList.approach != null) {
+			Approach[] intersectionApproaches = mapData.intersectionGeometry.laneList.approach; 
+			for(int i = 0; i < intersectionApproaches.length; i++) {
+				if(intersectionApproaches[i].approachID != CrosswalkLane.CROSSWALK_APPROACH_ID) {
+					DrivingLane[] drivingLanes = intersectionApproaches[i].drivingLanes;
+					for(int j = 0; j < drivingLanes.length; j++) {
+						if(!drivingLanes[j].isComputed) {
+							LaneNode[] laneNodes = drivingLanes[j].laneNodes;
+							for(int k = 0; k < laneNodes.length; k++) {
+								laneNodes[k].nodeLat += latOffset;
+								laneNodes[k].nodeLong += lonOffset;
+								laneNodes[k].nodeElev += elvOffset;				
+							}
 						}
 					}
 				}
-			}
-			else {
-				// Pedestrian Crosswalk approach
-				CrosswalkLane[] crosswalkLanes = intersectionApproaches[i].crosswalkLanes;
-				for(int j = 0; j < crosswalkLanes.length; j++) {
-					if(!crosswalkLanes[j].isComputed) {
-						LaneNode[] laneNodes = crosswalkLanes[j].laneNodes;
-						for(int k = 0; k < laneNodes.length; k++) {
-							laneNodes[k].nodeLat += latOffset;
-							laneNodes[k].nodeLong += lonOffset;
-							laneNodes[k].nodeElev += elvOffset;				
+				else {
+					// Pedestrian Crosswalk approach
+					CrosswalkLane[] crosswalkLanes = intersectionApproaches[i].crosswalkLanes;
+					for(int j = 0; j < crosswalkLanes.length; j++) {
+						if(!crosswalkLanes[j].isComputed) {
+							LaneNode[] laneNodes = crosswalkLanes[j].laneNodes;
+							for(int k = 0; k < laneNodes.length; k++) {
+								laneNodes[k].nodeLat += latOffset;
+								laneNodes[k].nodeLong += lonOffset;
+								laneNodes[k].nodeElev += elvOffset;				
+							}
 						}
 					}
 				}
 			}
 		}
-		
 	}
 	
 	public static short convertElevation(double elevation) {

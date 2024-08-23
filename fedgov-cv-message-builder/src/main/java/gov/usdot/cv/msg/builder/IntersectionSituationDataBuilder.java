@@ -149,8 +149,6 @@ public class IntersectionSituationDataBuilder {
 		try {
 			isdInputData = JSONMapper.jsonStringToPojo(intersectionData,
 					IntersectionInputData.class);
-			//isdInputData.validate();
-			isdInputData.applyLatLonOffset();
 			generateType = isdInputData.getGenerateType();
 			logger.debug("generateType: " + generateType);
 			
@@ -172,11 +170,13 @@ public class IntersectionSituationDataBuilder {
 
 		try {
 			String hexString = "00";
+			isdInputData.applyLatLonOffset();
 			String readableString = "Unexpected type: " + generateType;
 			switch (generateType) {
 				case ISD:
 					break;
 				case Map:
+					isdInputData.validate();
 					md = buildMapData(isdInputData);
 					logger.debug("in MAP: " );
 					// Removing the first 8 characters from the MessageFrame provides the MAP message
@@ -185,6 +185,7 @@ public class IntersectionSituationDataBuilder {
 					readableString = md.toString();
 					break;
 				case RGA: 
+					isdInputData.validatePoints();
 					rd = buildRGAData(isdInputData);
 				 	logger.debug("in RGA: " );
 					hexString = (J2945Helper.getHexString(rd)).substring(8);
@@ -193,12 +194,14 @@ public class IntersectionSituationDataBuilder {
 				case SPaT:
 					break;
 				case FramePlusMap:
+					isdInputData.validate();
 					md = buildMapData(isdInputData);
 					logger.debug("in FramePlusMap: ");
 					hexString = J2735Helper.getHexString(md);
 					readableString = md.toString();
 					break;
 				case FramePlusRGA:
+					isdInputData.validatePoints();
 					rd = buildRGAData(isdInputData);
 					logger.debug("in RGA: " );
 					hexString = (J2945Helper.getHexString(rd)).substring(8);
