@@ -34,7 +34,7 @@
         }
       }
     },
-    "messageType": "Frame+RGA",
+    "messageType": "RGA",
     "nodeOffsets": "Tight",
     "enableElevation": true
 }

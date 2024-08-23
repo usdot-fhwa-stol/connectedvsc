@@ -188,7 +188,7 @@ public class IntersectionSituationDataBuilder {
 					isdInputData.validatePoints();
 					rd = buildRGAData(isdInputData);
 				 	logger.debug("in RGA: " );
-					hexString = (J2945Helper.getHexString(rd)).substring(8);
+					hexString = J2945Helper.getHexString(rd).substring(8);
 					readableString = rd.toString();
 					break;
 				case SPaT:
@@ -204,7 +204,7 @@ public class IntersectionSituationDataBuilder {
 					isdInputData.validatePoints();
 					rd = buildRGAData(isdInputData);
 					logger.debug("in RGA: " );
-					hexString = (J2945Helper.getHexString(rd)).substring(8);
+					hexString = J2945Helper.getHexString(rd);
 					readableString = rd.toString();
 					break;
 				case FramePlusSPaT :
