@@ -41,15 +41,15 @@ public class DDateTime extends DDate {
         this.hour = hour;
     }
     
-    public void setMinute(Integereger minute) {
+    public void setMinute(Integer minute) {
         this.minute = minute;
     }
 
-    public void setSecond(Integereger second) {
+    public void setSecond(Integer second) {
         this.second = second;
     }
     
-    public void setOffset(Integereger offset) {
+    public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
