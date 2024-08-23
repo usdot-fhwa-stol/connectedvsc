@@ -44,8 +44,8 @@ USER root
 ENV LD_LIBRARY_PATH=/var/lib/jetty/webapps/third_party_lib
 RUN ldconfig
 
-RUN cd /var/lib/jetty && \
-    echo 'log4j2.version=2.23.1' >> start.d/logging-log4j2.ini && \
+WORKDIR /var/lib/jetty
+RUN echo 'log4j2.version=2.23.1' >> start.d/logging-log4j2.ini && \
     java -jar "$JETTY_HOME"/start.jar --create-files
 
 # Conditionally add SSL or non-SSL based on the USE_SSL environment variable
