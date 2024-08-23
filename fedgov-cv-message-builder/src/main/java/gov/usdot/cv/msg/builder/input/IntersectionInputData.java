@@ -186,7 +186,7 @@ public class IntersectionInputData {
 		referencePoint.referenceLon += lonOffset;
 		referencePoint.referenceElevation += elvOffset;
 		
-		if(mapData.intersectionGeometry.laneList.approach && mapData.intersectionGeometry.laneList.approach != null) {
+		if(mapData.intersectionGeometry.laneList != null) {
 			Approach[] intersectionApproaches = mapData.intersectionGeometry.laneList.approach; 
 			for(int i = 0; i < intersectionApproaches.length; i++) {
 				if(intersectionApproaches[i].approachID != CrosswalkLane.CROSSWALK_APPROACH_ID) {

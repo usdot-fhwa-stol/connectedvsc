@@ -278,17 +278,17 @@ public class IntersectionSituationDataBuilder {
 		//RoadGeometryRefIDInfo
 		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
 
-		// //DataSetContentIdentification
-		// baseLayer.setContentVer(isdInputData.mapData.contentVer);
+		//DataSetContentIdentification
+		baseLayer.setContentVer(isdInputData.mapData.contentVer);
 
 		DDateTime dDateTime = new DDateTime();
-		// dDateTime.setHour(contentDateTime.hour);
-		// dDateTime.setMinute(contentDateTime.minute);
-		// dDateTime.setSecond(contentDateTime.second);
-		// dDateTime.setDay(contentDateTime.day);
-		// dDateTime.setMonth(contentDateTime.month);
-		// dDateTime.setYear(contentDateTime.year);
-		// baseLayer.setContentDateTime(dDateTime);
+		dDateTime.setHour(contentDateTime.hour);
+		dDateTime.setMinute(contentDateTime.minute);
+		dDateTime.setSecond(contentDateTime.second);
+		dDateTime.setDay(timeOfCalculation.day);
+		dDateTime.setMonth(timeOfCalculation.month);
+		dDateTime.setYear(timeOfCalculation.year);
+		baseLayer.setContentDateTime(dDateTime);
 		
 		return baseLayer;
 	}
