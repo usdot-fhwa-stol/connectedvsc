@@ -132,6 +132,13 @@ public class IntersectionSituationDataBuilderTest {
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 
+    @Test
+    public void rgaBaseLayerMessageWithFramePlusRGATypeTest() {
+        String filePath = "src/test/resources/samplerga.json";
+        String expectedHexString = "00";
+        runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
+    }
+
     public void runIntersectionSituationDataBuilderTests(String filePath, String expectedHexString) {
         try {
             String jsonContent = new String(Files.readAllBytes(Paths.get(filePath)));

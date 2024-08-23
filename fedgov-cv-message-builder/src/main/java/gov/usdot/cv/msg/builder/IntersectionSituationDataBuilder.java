@@ -38,6 +38,7 @@ import gov.usdot.cv.msg.builder.exception.MessageBuildException;
 import gov.usdot.cv.msg.builder.exception.MessageEncodeException;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.Approach;
+import gov.usdot.cv.msg.builder.input.IntersectionInputData.ContentDateTime;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.LaneConnection;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.CrosswalkLane;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.DrivingLane;
@@ -47,14 +48,20 @@ import gov.usdot.cv.msg.builder.input.IntersectionInputData.ReferencePoint;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.ReferencePointChild;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.SpatData;
 import gov.usdot.cv.msg.builder.input.IntersectionInputData.State;
+import gov.usdot.cv.msg.builder.input.IntersectionInputData.TimeOfCalculation;
 import gov.usdot.cv.msg.builder.message.IntersectionMessage;
 import gov.usdot.cv.msg.builder.util.BitStringHelper;
 import gov.usdot.cv.msg.builder.util.GeoPoint;
 import gov.usdot.cv.msg.builder.util.J2735Helper;
+import gov.usdot.cv.msg.builder.util.J2945Helper;
 import gov.usdot.cv.msg.builder.util.JSONMapper;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.BaseLayer;
+import gov.usdot.cv.rgaencoder.DDate;
+import gov.usdot.cv.rgaencoder.DDateTime;
+import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
 import gov.usdot.cv.mapencoder.ConnectingLane;
@@ -129,6 +136,8 @@ public class IntersectionSituationDataBuilder {
 		IntersectionMessage im = new IntersectionMessage();
 		logger.debug("User Input: " + intersectionData);
 		MapData md = null;
+		RGAData rd = null;
+
 		// TODO: temporarily commented out
 		// SpatRecord sr = null;
 		// SPAT spat = null;
@@ -136,14 +145,14 @@ public class IntersectionSituationDataBuilder {
 		// MessageFrame mf = null;
 		// GenerateType generateType = GenerateType.ISD;
 		GenerateType generateType = GenerateType.FramePlusMap;
+		IntersectionInputData isdInputData = new IntersectionInputData();
 		try {
-			IntersectionInputData isdInputData = JSONMapper.jsonStringToPojo(intersectionData,
+			isdInputData = JSONMapper.jsonStringToPojo(intersectionData,
 					IntersectionInputData.class);
-			isdInputData.validate();
-			isdInputData.applyLatLonOffset();
 			generateType = isdInputData.getGenerateType();
 			logger.debug("generateType: " + generateType);
-			md = buildMapData(isdInputData);
+			
+			
 			// TODO: temporarily commented out
 			// sr = buildSpatRecord(isdInputData);
 			// isd = buildISD(isdInputData, md, sr);
@@ -161,28 +170,47 @@ public class IntersectionSituationDataBuilder {
 
 		try {
 			String hexString = "00";
+			isdInputData.applyLatLonOffset();
 			String readableString = "Unexpected type: " + generateType;
 			switch (generateType) {
 				case ISD:
 					break;
 				case Map:
+					isdInputData.validate();
+					md = buildMapData(isdInputData);
 					logger.debug("in MAP: " );
 					// Removing the first 8 characters from the MessageFrame provides the MAP message
 					// This was tested manually by removing the characters from MessageFrame and testing using the decoder
 					hexString = (J2735Helper.getHexString(md)).substring(8);
 					readableString = md.toString();
 					break;
+				case RGA: 
+					isdInputData.validatePoints();
+					rd = buildRGAData(isdInputData);
+				 	logger.debug("in RGA: " );
+					hexString = J2945Helper.getHexString(rd).substring(8);
+					readableString = rd.toString();
+					break;
 				case SPaT:
 					break;
 				case FramePlusMap:
+					isdInputData.validate();
+					md = buildMapData(isdInputData);
 					logger.debug("in FramePlusMap: ");
 					hexString = J2735Helper.getHexString(md);
 					readableString = md.toString();
 					break;
+				case FramePlusRGA:
+					isdInputData.validatePoints();
+					rd = buildRGAData(isdInputData);
+					logger.debug("in RGA: " );
+					hexString = J2945Helper.getHexString(rd);
+					readableString = rd.toString();
+					break;
 				case FramePlusSPaT :
 					break;
 				case SpatRecord:
-					break;
+					break; 
 			}
 			im.setHexString(hexString);
 			im.setReadableString(readableString);
@@ -210,6 +238,59 @@ public class IntersectionSituationDataBuilder {
 		mapData.setLayerID(isdInputData.mapData.intersectionGeometry.referencePoint.layerID);
 		mapData.setIntersections(buildIntersections(isdInputData));
 		return mapData;
+	}
+
+	
+	private RGAData buildRGAData(IntersectionInputData isdInputData) {
+		RGAData rgaData = new RGAData();
+		rgaData.setBaseLayer(buildBaseLayer(isdInputData));
+		return rgaData;
+	}
+
+	public BaseLayer buildBaseLayer(IntersectionInputData isdInputData) {
+		BaseLayer baseLayer = new BaseLayer();
+		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
+		TimeOfCalculation timeOfCalculation = isdInputData.mapData.timeOfCalculation;
+		ContentDateTime contentDateTime = isdInputData.mapData.contentDateTime;
+
+		//DataSetFormatVersionInfo
+		baseLayer.setMajorVer(isdInputData.mapData.majorVer);
+		baseLayer.setMinorVer(isdInputData.mapData.minorVer);
+
+		//ReferencePointInfo
+		Position3D position3d = new Position3D();
+		position3d.setLongitude(J2735Helper.convertGeoCoordinateToInt(referencePoint.referenceLon));
+		position3d.setLatitude(J2735Helper.convertGeoCoordinateToInt(referencePoint.referenceLat));
+		if (referencePoint.referenceElevation != 0.00) {
+			position3d.setElevationExists(true);
+			position3d.setElevation((float) referencePoint.getReferenceElevation());
+		} else {
+			position3d.setElevationExists(false);
+		}
+		baseLayer.setLocation(position3d);
+
+		DDate dDate = new DDate();
+		dDate.setDay(timeOfCalculation.day);
+		dDate.setMonth(timeOfCalculation.month);
+		dDate.setYear(timeOfCalculation.year);
+		baseLayer.setTimeOfCalculation(dDate);
+
+		//RoadGeometryRefIDInfo
+		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
+
+		//DataSetContentIdentification
+		baseLayer.setContentVer(isdInputData.mapData.contentVer);
+
+		DDateTime dDateTime = new DDateTime();
+		dDateTime.setHour(contentDateTime.hour);
+		dDateTime.setMinute(contentDateTime.minute);
+		dDateTime.setSecond(contentDateTime.second);
+		dDateTime.setDay(timeOfCalculation.day);
+		dDateTime.setMonth(timeOfCalculation.month);
+		dDateTime.setYear(timeOfCalculation.year);
+		baseLayer.setContentDateTime(dDateTime);
+		
+		return baseLayer;
 	}
 
 	public IntersectionGeometry[] buildIntersections(IntersectionInputData isdInputData) {

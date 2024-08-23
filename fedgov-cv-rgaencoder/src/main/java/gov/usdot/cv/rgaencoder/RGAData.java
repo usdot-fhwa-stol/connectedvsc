@@ -17,38 +17,27 @@
 package gov.usdot.cv.rgaencoder; 
 
 public class RGAData {
-    private Integer majorVer;
-    private Integer minorVer;
+    private BaseLayer baseLayer;
     
     public RGAData()
     {
-        this.majorVer = null;
-        this.minorVer = null;
+        this.baseLayer = null;
     }
     
-    public RGAData(int majorVer, int minorVer) {
-        this.majorVer = majorVer;
-        this.minorVer = minorVer;
+    public RGAData(BaseLayer baseLayer) {
+        this.baseLayer = baseLayer;
     }
 
-    public int getMajorVer() {
-        return majorVer;
+    public BaseLayer getBaseLayer() {
+        return baseLayer;
     }
 
-    public int getMinorVer() {
-        return minorVer;
-    }
-
-    public void setMajorVer(Integer majorVer){
-        this.majorVer = majorVer;
-    }
-
-    public void setMinorVer(Integer minorVer){
-        this.minorVer = minorVer;
+    public void setBaseLayer(BaseLayer baseLayer){
+        this.baseLayer = baseLayer;
     }
 
     @Override
     public String toString() {
-        return "RGAData [majorVer=" + majorVer + ", minorVer=" + minorVer + "]";
+        return "RGAData [baseLayer" + baseLayer + "]";
     }
 }
