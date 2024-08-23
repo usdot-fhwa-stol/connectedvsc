@@ -73,6 +73,6 @@ public class RGAEncodeTest {
     public void rgaEncodeTester() {
         ByteArrayObject res = encoder.encode(mockRGA);
         byte[] expected = { 0, 43, 2, 64, 0 };
-        //Assert.assertArrayEquals(expected, res.getMessage());
+        Assert.assertArrayEquals(expected, res.getMessage());
     }
 }

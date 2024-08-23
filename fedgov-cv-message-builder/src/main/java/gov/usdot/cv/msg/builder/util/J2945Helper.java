@@ -17,10 +17,6 @@ import org.apache.logging.log4j.Logger;
 public class J2945Helper {
 
 	private static final Logger logger = LogManager.getLogger(J2945Helper.class);
-	private static final String START_CURLY_BRACKET = "{";
-
-	// This constant is used to convert the given LAT/LON to J2945 format
-	private static final int LAT_LONG_CONVERSION_FACTOR = 10000000;
 	
 	public static String getHexString(RGAData message) 
 	{

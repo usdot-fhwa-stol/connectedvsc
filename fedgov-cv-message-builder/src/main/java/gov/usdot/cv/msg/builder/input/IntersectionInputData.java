@@ -48,12 +48,6 @@ public class IntersectionInputData {
 	public static final short INVALID_ELEVATION = -4096;
 	
 	public long minuteOfTheYear;
-	// public TimeOfCalculation timeOfCalculation;
-	// public ContentDateTime contentDateTime;
-	// public Integer majorVer;
-	// public Integer minorVer;
-	// public String relativeToRdAuthID;
-	// public Integer contentVer;
 	public MapData mapData;
 	public String messageType = "Frame+Map";
 	public OffsetEncodingType nodeOffsets = OffsetEncodingType.Standard;
