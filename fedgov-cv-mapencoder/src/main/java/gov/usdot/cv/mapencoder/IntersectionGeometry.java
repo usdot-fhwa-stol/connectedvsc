@@ -20,6 +20,10 @@ public class IntersectionGeometry {
     public String name;
     private boolean nameExists;
     private IntersectionReferenceID id;
+    private boolean fullRdAuthIDExists;
+    private String fullRdAuthID;
+    private boolean relativeRdAuthIDExists;
+    private String relativeRdAuthID;
     public int revision;
     private Position3D refPoint;
     private int laneWidth;
@@ -34,7 +38,7 @@ public class IntersectionGeometry {
     public IntersectionGeometry() {
     }
 
-    public IntersectionGeometry(String name, boolean nameExists, IntersectionReferenceID id, int revision,
+    public IntersectionGeometry(String name, boolean nameExists, IntersectionReferenceID id, boolean fullRdAuthIDExists, String fullRdAuthID, boolean relativeRdAuthIDExists, String relativeRdAuthID, int revision,
                             Position3D refPoint, int laneWidth, boolean laneWidthExists,
                             SpeedLimitList speedLimits, boolean speedLimitsExists,
                             LaneList laneSet, PreemptPriorityList preemptPriorityData,
@@ -42,6 +46,10 @@ public class IntersectionGeometry {
         this.name = name;
         this.nameExists = nameExists;
         this.id = id;
+        this.fullRdAuthIDExists = fullRdAuthIDExists;
+        this.fullRdAuthID = fullRdAuthID;
+        this.relativeRdAuthIDExists = relativeRdAuthIDExists;
+        this.relativeRdAuthID = relativeRdAuthID;
         this.revision = revision;
         this.refPoint = refPoint;
         this.laneWidth = laneWidth;
@@ -76,6 +84,38 @@ public class IntersectionGeometry {
 
     public void setId(IntersectionReferenceID id) {
         this.id = id;
+    }
+
+    public boolean isFullRdAuthIDExists() {
+        return fullRdAuthIDExists;
+    }
+
+    public void setFullRdAuthIDExists(boolean fullRdAuthIDExists) {
+        this.fullRdAuthIDExists = fullRdAuthIDExists;
+    }
+
+    public String getFullRdAuthID() {
+        return fullRdAuthID;
+    }
+
+    public void setFullRdAuthID(String fullRdAuthID) {
+        this.fullRdAuthID = fullRdAuthID;
+    }
+
+    public boolean isRelativeRdAuthIDExists() {
+        return relativeRdAuthIDExists;
+    }
+
+    public void setRelativeRdAuthIDExists(boolean relativeRdAuthIDExists) {
+        this.relativeRdAuthIDExists = relativeRdAuthIDExists;
+    }
+
+    public String getRelativeRdAuthID() {
+        return relativeRdAuthID;
+    }
+
+    public void setRelativeRdAuthID(String relativeRdAuthID) {
+        this.relativeRdAuthID = relativeRdAuthID;
     }
 
     public int getRevision() {
@@ -156,6 +196,10 @@ public class IntersectionGeometry {
                 "name='" + name + '\'' +
                 ", nameExists=" + nameExists +
                 ", id=" + id +
+                ", fullRdAuthIDExists=" + fullRdAuthIDExists +
+                ", fullRdAuthID=" + fullRdAuthID +
+                ", relativeRdAuthIDExists=" + relativeRdAuthIDExists +
+                ", relativeRdAuthID=" + relativeRdAuthID + 
                 ", revision=" + revision +
                 ", refPoint=" + refPoint +
                 ", laneWidth=" + laneWidth +
