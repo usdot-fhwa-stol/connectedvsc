@@ -139,6 +139,20 @@ public class IntersectionSituationDataBuilderTest {
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 
+    @Test
+    public void mapMessageWithFullRAIDTest() {
+        String filePath = "src/test/resource/samplemap6.json";
+        String expectedHexString = ""
+        runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
+    }
+
+    @Test
+    public void mapMessageWithRelRAIDTest() {
+        String filePath = "src/test/resource/samplemap7.json";
+        String expectedHexString = ""
+        runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
+    }
+
     public void runIntersectionSituationDataBuilderTests(String filePath, String expectedHexString) {
         try {
             String jsonContent = new String(Files.readAllBytes(Paths.get(filePath)));

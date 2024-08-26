@@ -318,6 +318,10 @@ public class IntersectionSituationDataBuilder {
 			intersectionReferenceID.setRegionExists(false);
 			
 		}
+
+		// Set full RAID or relative RAID
+
+		if (intersection.)
 	
 		intersection.setId(intersectionReferenceID);
 		

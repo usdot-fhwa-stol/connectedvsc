@@ -224,6 +224,7 @@ public class IntersectionInputData {
 	public static class ReferencePoint {
 		public String descriptiveIntersctionName;
 		public int intersectionID;
+		//add RAID here
 		public int regionID;
 		public int layerID;
 		public int msgCount;
@@ -499,6 +500,7 @@ public class IntersectionInputData {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class IntersectionGeometry {
 		public ReferencePoint referencePoint;
+		// or add RAID here
 		public VerifiedPoint verifiedPoint;
 		public ReferencePointChild referencePointChild;
 		public LaneList laneList;
