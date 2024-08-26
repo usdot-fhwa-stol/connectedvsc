@@ -180,6 +180,12 @@ public class MapEncodeTest {
         when(mockIntersectionReferenceID.getRegion()).thenReturn(12);
         when(mockIntersectionReferenceID.getId()).thenReturn(11);
         when(mockIntersectionGeometry.getId()).thenReturn(mockIntersectionReferenceID);
+
+        // RAID
+        when(mockIntersectionGeometry.isFullRdAuthIDExists()).thenReturn(true);
+        when(mockIntersectionGeometry.getFullRdAuthID()).thenReturn("Test Full ID");
+        when(mockIntersectionGeometry.isRelRdAuthIDExists()).thenReturn(true);
+        when(mockIntersectionGeometry.getRelRdAuthID()).thenReturn("Test Rel ID");
         
         when(mockIntersectionGeometry.getRevision()).thenReturn(22);
 
