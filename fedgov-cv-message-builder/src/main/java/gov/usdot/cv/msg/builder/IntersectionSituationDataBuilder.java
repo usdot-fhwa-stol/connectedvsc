@@ -321,7 +321,6 @@ public class IntersectionSituationDataBuilder {
 
 		// Set full RAID or relative RAID
 
-		if (intersection.)
 	
 		intersection.setId(intersectionReferenceID);
 		
