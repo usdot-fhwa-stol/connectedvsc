@@ -159,7 +159,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				roadAuthorityID.present = RoadAuthorityID_PR_fullRdAuthID;
 				roadAuthorityID.choice.fullRdAuthID = (RoadAuthorityID_PR_fullRdAuthID)fullRdAuthID;
 			} else {
-				roadAuthorityID.present = LaneTypeAttributes_PR_NOTHING;
+				roadAuthorityID.present = RoadAuthorityID_PR_NOTHING;
 			}
 
 			// Check if relative RAID exists
@@ -175,7 +175,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				roadAuthorityID.present = RoadAuthorityID_PR_relRdAuthID;
 				roadAuthorityID.choice.relRdAuthID = (RoadAuthorityID_PR_relRdAuthID)relRdAuthID;
 			} else {
-				roadAuthorityID.present = LaneTypeAttributes_PR_NOTHING;
+				roadAuthorityID.present = RoadAuthorityID_PR_NOTHING;
 			}
 
 			// Check if intersection region exists
