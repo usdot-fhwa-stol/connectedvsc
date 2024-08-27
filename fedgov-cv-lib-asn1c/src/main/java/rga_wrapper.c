@@ -45,7 +45,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
     ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0, message, buffer, buffer_size);
 	if (ec.encoded == -1)
 	{
-		printf("Cause of failure %s \n", ec.failed_type->name)
+		printf("Cause of failure %s \n", ec.failed_type->name);
 		printf("Unsuccessful!\n");
 		return NULL;
 	}
