@@ -20,6 +20,8 @@ public class IntersectionGeometry {
     public String name;
     private boolean nameExists;
     private IntersectionReferenceID id;
+    // Should these be extracted into a different Java file as: 
+    // private RoadAuthorityID roadAuthorityID; ??
     private boolean fullRdAuthIDExists;
     private String fullRdAuthID;
     private boolean relRdAuthIDExists;

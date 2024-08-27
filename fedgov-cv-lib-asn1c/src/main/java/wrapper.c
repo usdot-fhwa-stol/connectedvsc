@@ -142,28 +142,40 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			intersectionId = (long)geomId;
 			intersection->id.id = intersectionId;
 
+		
+			RoadAuthorityID_t roadAuthorityID;
+
 			// Check if full RAID exists
 			jmethodID isFullRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isFullRdAuthIDExists", "()Z");
 			jboolean fullRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isFullRdAuthIDExists);
 
-			// Get full RAID
+			
 			if (fullRdAuthIDExists)
 			{
+				// Get full RAID
 				jmethodID getfullRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getFullRdAuthID", "()Ljava/lang/String;");
 				jstring fullRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getFullRdAuthID);
-				// run the the octetString descriptive name logic?
+
+				roadAuthorityID.present = RoadAuthorityID_PR_fullRdAuthID;
+				roadAuthorityID.choice.fullRdAuthID = (RoadAuthorityID_PR_fullRdAuthID)fullRdAuthID;
+			} else {
+				roadAuthorityID.present = LaneTypeAttributes_PR_NOTHING;
 			}
 
 			// Check if relative RAID exists
 			jmethodID isRelRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isRelRdAuthIDExists", "()Z");
 			jboolean relRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isRelRdAuthIDExists);
 
-			// Get relative RAID
 			if(relRdAuthIDExists)
 			{
+				// Get relative RAID
 				jmethodID getRelRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getRelRdAuthID", "()Ljava/lang/String;");
 				jstring relRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getRelRdAuthID);
-				// same question as above
+
+				roadAuthorityID.present = RoadAuthorityID_PR_relRdAuthID;
+				roadAuthorityID.choice.relRdAuthID = (RoadAuthorityID_PR_relRdAuthID)relRdAuthID;
+			} else {
+				roadAuthorityID.present = LaneTypeAttributes_PR_NOTHING;
 			}
 
 			// Check if intersection region exists
