@@ -59,33 +59,36 @@
  */
 
 async function tileAge() {
-    const apiKey = await getApiKey();
+//    const apiKey = await getApiKey();
+const apiKey ="Alf63Te4RMhyO3l1rAo-s1y9Fd1fEpbUT74G8_nrN42lmbNDaOkVE0WcyfYpvFML";
 
     var convertedLonLat = new OpenLayers.LonLat(map.getCenter().lon, map.getCenter().lat).transform(toProjection, fromProjection);
     var current_zoom = map.getZoom();
     if (current_zoom > 18) {
         current_zoom = 18;
     }
-    $.ajax({
-        url: "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/" + convertedLonLat.lat + "," + convertedLonLat.lon + "?uriScheme=https&zl=" + current_zoom + "&key=" + apiKey,
-        dataType: "jsonp",
-        jsonp: "jsonp",
-        success: function (result) {
-            try {
-                var start = (result.resourceSets[0].resources[0].vintageStart).split(" ");
-                var end = (result.resourceSets[0].resources[0].vintageEnd).split(" ");
-                $('#tileAge .start').text(start[1] + "/" + start[2]);
-                $('#tileAge .end').text(end[1] + "/" + end[2]);
-            }
-            catch (err) {
-                $('#tileAge .start').text("");
-                $('#tileAge .end').text("");
-            }
-        },
-        error: function (error) {
-            console.log("Location error: ", error);
-        }
-    });
+//    $.ajax({
+//        url: "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/" + convertedLonLat.lat + "," + convertedLonLat.lon + "?uriScheme=https&zl=" + current_zoom + "&key=" + apiKey,
+//        dataType: "jsonp",
+//        jsonp: "jsonp",
+//        success: function (result) {
+//            try {
+//                var start = (result.resourceSets[0].resources[0].vintageStart).split(" ");
+//                var end = (result.resourceSets[0].resources[0].vintageEnd).split(" ");
+//                $('#tileAge .start').text(start[1] + "/" + start[2]);
+                $('#tileAge .start').text("Sep/2022");
+//                $('#tileAge .end').text(end[1] + "/" + end[2]);
+                $('#tileAge .end').text("Oct/2022");
+//            }
+//            catch (err) {
+//                $('#tileAge .start').text("");
+//                $('#tileAge .end').text("");
+//            }
+//        },
+//        error: function (error) {
+//            console.log("Location error: ", error);
+//        }
+//    });
 
 }
 

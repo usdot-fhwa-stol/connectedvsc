@@ -397,6 +397,54 @@ var help_notes = [
 		min: "-99.95",
 		units: "Steps of 0.05 percent",
 		description: "Expand or contract lane along the Y axis."
-	}
+	},
+        {
+                value: "major_version",
+                title: "Major version",
+                max: "15",
+                min: "0",
+                units: "N/A",
+                description: "It indicates that changes have been made to the content regarding the user of the contents of the dataset such that the new dataset is incompatble with prior versions of the dataset. Integer (0...15)."
+        },
+        {
+                value: "minor_version",
+                title: "Minor version",
+                max: "64",
+                min: "0",
+                units: "N/A",
+                description: "It indicates that the dataset has changed but still compatible with prior versions of the dataset."
+        },
+        {
+                value: "road_authority_id",
+                title: "Road authority identifier",
+                max: "NA",
+                min: "NA",
+                units: "N/A",
+                description: "Possibel enumeration constant: joint-iso-itu-t (2) country (16) us (840) organization (1) sae (114566) v2x-communications (1) technical-committees (1) v2x-core (5) technical-reports (1) j2735 (2735) part-0 (0) asn1-module (1) common (38) version-1 (1) version-minor-1 (1)"
+        },
+        {
+                value: "mapped_geometry_id",
+                title: "Mapped geometry identifier",
+                max: "NA",
+                min: "NA",
+                units: "N/A",
+                description: "Uniquely identify a mapped location managed by an authority."
+        },
+        {
+                value: "content_version",
+                title: "Content version",
+                max: "32",
+                min: "0",
+                units: "N/A",
+                description: "Provides a version number which pertains to a combination of the dataset contents and the content values. INTEGER (0..32)"
+        },
+        {
+                value: "content_date_time",
+                title: "Content date time",
+                max: "NA",
+                min: "NA",
+                units: "Datetime",
+                description: "Timestamp corresponding to the contents in format yyyy, mm, dd, hh, mm, ss (sss+)"
+        }
     
 ];

@@ -31,7 +31,7 @@ $(document).ready(function() {
      */
 
     $('#address-search').geocomplete().bind("geocode:result", function(event, result){
-
+            
         var search_lat = result.geometry.location.lat();
         var search_lon = result.geometry.location.lng();
 
@@ -178,6 +178,10 @@ $(document).ready(function() {
 
     $("#speedForm_add").click(function(){
         resetSpeedDropdowns();
+    });
+    
+    $(".datetimepicker").each(function(){
+        $(this).datetimepicker();
     });
 
 });
