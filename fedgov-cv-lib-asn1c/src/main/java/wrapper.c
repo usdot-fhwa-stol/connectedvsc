@@ -143,12 +143,16 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			intersection->id.id = intersectionId;
 
 		
-			RoadAuthorityID_t roadAuthorityID;
+			RoadAuthorityID_t *roadAuthorityId = calloc(1, sizeof(RoadAuthorityID_t));
 
 			// Check if full RAID exists
 			jmethodID isFullRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isFullRdAuthIDExists", "()Z");
 			jboolean fullRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isFullRdAuthIDExists);
 
+
+			// Check if relative RAID exists
+			jmethodID isRelRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isRelRdAuthIDExists", "()Z");
+			jboolean relRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isRelRdAuthIDExists);
 			
 			if (fullRdAuthIDExists)
 			{
@@ -156,27 +160,22 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				jmethodID getfullRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getFullRdAuthID", "()Ljava/lang/String;");
 				jstring fullRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getFullRdAuthID);
 
-				roadAuthorityID.present = RoadAuthorityID_PR_fullRdAuthID;
-				roadAuthorityID.choice.fullRdAuthID = (RoadAuthorityID_PR_fullRdAuthID)fullRdAuthID;
-			} else {
-				roadAuthorityID.present = RoadAuthorityID_PR_NOTHING;
-			}
-
-			// Check if relative RAID exists
-			jmethodID isRelRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isRelRdAuthIDExists", "()Z");
-			jboolean relRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isRelRdAuthIDExists);
-
-			if(relRdAuthIDExists)
-			{
+				// Set RAID pointer's PRESENT and CHOICE
+				roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
+				roadAuthorityID->choice.fullRdAuthID = fullRdAuthID;
+			} else if (relRdAuthIDExists) {
 				// Get relative RAID
 				jmethodID getRelRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getRelRdAuthID", "()Ljava/lang/String;");
 				jstring relRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getRelRdAuthID);
 
-				roadAuthorityID.present = RoadAuthorityID_PR_relRdAuthID;
-				roadAuthorityID.choice.relRdAuthID = (RoadAuthorityID_PR_relRdAuthID)relRdAuthID;
+				// Set RAID pointer's PRESENT and CHOICE
+				roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
+				roadAuthorityID->choice.relRdAuthID = relRdAuthID;
 			} else {
 				roadAuthorityID.present = RoadAuthorityID_PR_NOTHING;
 			}
+
+			intersection->roadAuthorityID = roadAuthorityID;
 
 			// Check if intersection region exists
 			jmethodID isRegionExists = (*env)->GetMethodID(env, intersectionReferenceIdClass, "isRegionExists", "()Z");
