@@ -162,7 +162,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 
 				// Set RAID pointer's PRESENT and CHOICE
 				roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
-				roadAuthorityID->choice.fullRdAuthID = fullRdAuthID;
+				roadAuthorityID->choice.fullRdAuthID = (FullRoadAuthorityID_t)fullRdAuthID;
 			} else if (relRdAuthIDExists) {
 				// Get relative RAID
 				jmethodID getRelRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getRelRdAuthID", "()Ljava/lang/String;");
@@ -170,7 +170,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 
 				// Set RAID pointer's PRESENT and CHOICE
 				roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
-				roadAuthorityID->choice.relRdAuthID = relRdAuthID;
+				roadAuthorityID->choice.relRdAuthID = (RelativeRoadAuthorityID_t)relRdAuthID;
 			} else {
 				roadAuthorityID.present = RoadAuthorityID_PR_NOTHING;
 			}
