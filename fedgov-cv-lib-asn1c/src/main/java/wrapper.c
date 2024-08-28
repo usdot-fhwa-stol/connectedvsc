@@ -194,7 +194,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			// Get Intersection Revision
 			jmethodID getRevision = (*env)->GetMethodID(env, intersectionClass, "getRevision", "()I");
 			jint revision = (*env)->CallIntMethod(env, intersectionObj, getRevision);
-			intersection->revision = (DSRC_MsgCount_t)((long)revision);
+			intersection->revision = (Common_MsgCount_t)((long)revision);
 
 			// Get Intersection Ref Point
 			jmethodID getRefPoint = (*env)->GetMethodID(env, intersectionClass, "getRefPoint", "()Lgov/usdot/cv/mapencoder/Position3D;");
@@ -209,8 +209,8 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			jdouble latitude = (*env)->CallDoubleMethod(env, position3DObj, getLatitude);
 			jdouble longitude = (*env)->CallDoubleMethod(env, position3DObj, getLongitude);
 
-			refPoint.lat = (Latitude_t)((long)latitude);
-			refPoint.Long = (Longitude_t)((long)longitude);
+			refPoint.lat = (Common_Latitude_t)((long)latitude);
+			refPoint.Long = (Common_Longitude_t)((long)longitude);
 
 			// Check if elevation exists
 			jmethodID isElevationExists = (*env)->GetMethodID(env, position3DClass, "isElevationExists", "()Z");
@@ -221,7 +221,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				jmethodID getElevation = (*env)->GetMethodID(env, position3DClass, "getElevation", "()F");
 				jfloat elevation = (*env)->CallFloatMethod(env, position3DObj, getElevation);
 
-				DSRC_Elevation_t *dsrcElevation = calloc(1, sizeof(DSRC_Elevation_t));
+				Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
 				*dsrcElevation = (long)elevation;
 				refPoint.elevation = dsrcElevation;
 			}
@@ -803,8 +803,8 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 							jint nodeLLMd64bLon = (*env)->CallIntMethod(env, nodeLatLonObj, getNodeLLMd64bLon);
 
 							nodeXy->delta.present = NodeOffsetPointXY_PR_node_LatLon;
-							nodeXy->delta.choice.node_LatLon.lon = (Longitude_t)((long)nodeLLMd64bLon);
-							nodeXy->delta.choice.node_LatLon.lat = (Latitude_t)((long)nodeLLMd64bLat);
+							nodeXy->delta.choice.node_LatLon.lon = (Common_Longitude_t)((long)nodeLLMd64bLon);
+							nodeXy->delta.choice.node_LatLon.lat = (Common_Latitude_t)((long)nodeLLMd64bLat);
 						}
 						else if (nodeOffsetPointXYChoice == NODE_REGIONAL)
 						{
