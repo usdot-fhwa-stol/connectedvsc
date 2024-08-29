@@ -143,7 +143,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			intersection->id.id = intersectionId;
 
 		
-			RoadAuthorityID_t *roadAuthorityId = calloc(1, sizeof(RoadAuthorityID_t));
+			RoadAuthorityID_t *roadAuthorityID = calloc(1, sizeof(RoadAuthorityID_t));
 
 			// Check if full RAID exists
 			jmethodID isFullRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isFullRdAuthIDExists", "()Z");
@@ -157,22 +157,47 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			if (fullRdAuthIDExists)
 			{
 				// Get full RAID
-				jmethodID getfullRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getFullRdAuthID", "()Ljava/lang/String;");
+				jmethodID getFullRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getFullRdAuthID", "()Ljava/lang/String;");
 				jstring fullRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getFullRdAuthID);
+				const char *fullRdAuthIDStr = (*env)->GetStringUTFChars(env, fullRdAuthID, 0);
+
+				size_t fullRdAuthIDStrLen = strlen(fullRdAuthIDStr);
+
+				ASN__PRIMITIVE_TYPE_t primType;
+				primType.buf = (uint8_t *)calloc(1, (fullRdAuthIDStrLen + 1));
+
+				for (size_t n = 0; n < fullRdAuthIDStrLen; n++)
+				{
+					primType.buf[n] = (uint8_t)fullRdAuthIDStr[n];
+				}
+				primType.size = fullRdAuthIDStrLen;
 
 				// Set RAID pointer's PRESENT and CHOICE
 				roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
-				roadAuthorityID->choice.fullRdAuthID = (FullRoadAuthorityID_t)fullRdAuthID;
+				roadAuthorityID->choice.fullRdAuthID = primType;
 			} else if (relRdAuthIDExists) {
 				// Get relative RAID
 				jmethodID getRelRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getRelRdAuthID", "()Ljava/lang/String;");
 				jstring relRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getRelRdAuthID);
 
+				const char *relRdAuthIDStr = (*env)->GetStringUTFChars(env, relRdAuthID, 0);
+
+				size_t relRdAuthIDStrLen = strlen(relRdAuthIDStr);
+
+				ASN__PRIMITIVE_TYPE_t primType;
+				primType.buf = (uint8_t *)calloc(1, (relRdAuthIDStrLen + 1));
+
+				for (size_t n = 0; n < relRdAuthIDStrLen; n++)
+				{
+					primType.buf[n] = (uint8_t)relRdAuthIDStr[n];
+				}
+				primType.size = relRdAuthIDStrLen;
+
 				// Set RAID pointer's PRESENT and CHOICE
 				roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
-				roadAuthorityID->choice.relRdAuthID = (RelativeRoadAuthorityID_t)relRdAuthID;
+				roadAuthorityID->choice.relRdAuthID = primType;
 			} else {
-				roadAuthorityID.present = RoadAuthorityID_PR_NOTHING;
+				roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
 			}
 
 			intersection->roadAuthorityID = roadAuthorityID;

@@ -320,8 +320,14 @@ public class IntersectionSituationDataBuilder {
 		}
 
 		// Set full RAID or relative RAID
-
-	
+		if (referencePoint.fullRdAuthID != null && !referencePoint.fullRdAuthID.isEmpty()) {
+			intersection.setFullRdAuthIDExists(true);
+			intersection.setFullRdAuthID(referencePoint.fullRdAuthID);
+		} else if (referencePoint.relRdAuthID != null && !referencePoint.relRdAuthID.isEmpty()) {
+			intersection.setRelRdAuthIDExists(true);
+			intersection.setRelRdAuthID(referencePoint.relRdAuthID);
+		}
+		
 		intersection.setId(intersectionReferenceID);
 		
 		// Set Intersection Revision

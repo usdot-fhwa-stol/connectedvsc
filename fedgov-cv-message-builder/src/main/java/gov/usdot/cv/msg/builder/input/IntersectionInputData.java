@@ -224,7 +224,8 @@ public class IntersectionInputData {
 	public static class ReferencePoint {
 		public String descriptiveIntersctionName;
 		public int intersectionID;
-		//add RAID here
+		public String fullRdAuthID;
+		public String relRdAuthID;
 		public int regionID;
 		public int layerID;
 		public int msgCount;
@@ -242,6 +243,8 @@ public class IntersectionInputData {
 			return String.format("ReferencePoint [%s=%s,%s=%d,%s=%d,%s=%d,%s=%d,%s=%g,%s=%g,%s=%d,%s=%s,", 
 					"descriptiveIntersctionName", descriptiveIntersctionName,
 					"intersectionID", intersectionID,
+					"fullRdAuthID", fullRdAuthID,
+					"relRdAuthID", relRdAuthID,
 					"regionID", regionID,					
 					"layerID", layerID,
 					"msgCount", msgCount,
@@ -500,7 +503,6 @@ public class IntersectionInputData {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class IntersectionGeometry {
 		public ReferencePoint referencePoint;
-		// or add RAID here
 		public VerifiedPoint verifiedPoint;
 		public ReferencePointChild referencePointChild;
 		public LaneList laneList;
