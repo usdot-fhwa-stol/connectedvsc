@@ -416,11 +416,11 @@ var help_notes = [
 	},
 	{
 		value: "road_authority_id",
-		title: "Road Authority Identifier (RGA Only)",
+		title: "Road Authority Identifier",
 		max: "NA",
 		min: "NA",
 		units: "N/A",
-		description: "Possibel enumeration constant: joint-iso-itu-t (2) country (16) us (840) organization (1) sae (114566) v2x-communications (1) technical-committees (1) v2x-core (5) technical-reports (1) j2735 (2735) part-0 (0) asn1-module (1) common (38) version-1 (1) version-minor-1 (1)"
+		description: "This data frame defines the Object Identifier (OID) of the Road Authority."
 	},
 	{
 		value: "mapped_geometry_id",

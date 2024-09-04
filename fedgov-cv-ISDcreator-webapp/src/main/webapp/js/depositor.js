@@ -397,24 +397,24 @@ function createMessageJSON()
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
                 "intersectionID": feature.attributes.intersectionID,
-                "regionID": feature.attributes.regionID,                
+                "regionID": feature.attributes.regionID,
                 "msgCount": feature.attributes.revisionNum,
                 "masterLaneWidth": feature.attributes.masterLaneWidth,
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
-                "referenceElevation": feature.attributes.elevation
+                "referenceElevation": feature.attributes.elevation,
+                "roadAuthorityId": feature.attributes.roadAuthorityId,
             };
+
             //Only populate JSON with RGA fields when the RGA toggle is enabled
-            console.log(rga_enabled);
-            if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js         
-                reference["roadAuthorityId"]= feature.attributes.roadAuthorityId;
+            if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js   
                 reference["majorVersion"]=feature.attributes.majorVersion;
                 reference["minorVersion"]= feature.attributes.minorVersion;
                 reference["mappedGeometryId"]= feature.attributes.mappedGeometryId;
                 reference["contentVersion"]= feature.attributes.contentVersion;
                 reference["contentDateTime"]= feature.attributes.contentDateTime;
+                validate_required_rga_fields(feature);
             }
-            console.log(reference);
 
             var referenceChild = {
                 "speedLimitType": feature.attributes.speedLimitType
@@ -473,6 +473,24 @@ function createMessageJSON()
     return isdMessage;
 }
 
+/***
+ * @brief According to J2945_A RGA definition,  majorVersion, minorVersion, mappedGeometryId, contentVersion, contentDateTime are required
+ */
+function validate_required_rga_fields(feature){    
+    let map_fields_descriptions= {
+        "majorVersion": "RGA message no major version defined",
+        "minorVersion": "RGA message no minor version defined",
+        "mappedGeometryId": "RGA message no mapped geometry ID defined",
+        "contentVersion": "RGA message no content version defined",
+        "contentDateTime": "RGA message no content datetime defined",
+    }
+    for (const [key, value] of Object.entries(map_fields_descriptions)){
+        if (feature.attributes[key]== undefined || feature.attributes[key] == ""){
+            $("#message_deposit").prop('disabled', true);
+            $('#alert_placeholder').append('<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ value +'</span></div>');
+        }
+    }
+}
 
 /**
  * Purpose: pretty terrible error check

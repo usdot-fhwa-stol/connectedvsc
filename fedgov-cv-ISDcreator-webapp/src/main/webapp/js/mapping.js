@@ -568,6 +568,7 @@ async function init() {
                 $(".master_lane_width").hide();
                 $(".intersection_name").hide();
                 show_rga_fields(hide=true);
+				$('.road_authority_id').hide();
                 $(".approach_name").hide();
                 $(".shared_with").hide();
                 $(".btnClone").hide();
@@ -1749,6 +1750,7 @@ function referencePointWindow(feature){
     
     //Show additional RGA related fields
     show_rga_fields(hide=false);
+	$('.road_authority_id').show();
     
     $(".master_lane_width").show();
     $(".intersection_name").show();
@@ -1777,6 +1779,7 @@ function referencePointWindow(feature){
         $('.intersection-info-tab').hide();        
         
         show_rga_fields(hide=true);
+		$('.road_authority_id').hide();
 	}
         
         if(feature.attributes.marker.name == "Reference Point Marker"){    
@@ -1898,6 +1901,16 @@ function enable_rga_fields(enable=true){
     }else{     
          $(".extra_rga_field_input").prop('disabled', true);
     }
+	add_rga_fields_validation(enable);
+}
+
+function add_rga_fields_validation(enable=true){
+	if(enable){
+		$("input:text.required").attr('data-parsley-required', true);
+	}else{
+		$("input:text.required").attr('data-parsley-required', false);
+	}
+	
 }
 
 /**
