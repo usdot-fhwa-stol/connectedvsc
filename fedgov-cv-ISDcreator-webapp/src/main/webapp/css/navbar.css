@@ -10,7 +10,11 @@ body{padding-top: 50px;}
     width: 0;
     height: 0;
 }
-
+.rga_label{
+    display: block;
+    padding: 15px 0px 0px 10px;
+    color: #999999
+}
 #message_data{
 	position:absolute;
     top: 80px;

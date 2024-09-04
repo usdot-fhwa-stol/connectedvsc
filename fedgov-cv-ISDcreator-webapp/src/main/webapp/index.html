@@ -28,6 +28,7 @@
 	<!-- OTHER -->
 	<link rel="stylesheet" href="css/navbar.css" type="text/css">
 	<link rel="stylesheet" href="css/sidebar.css" type="text/css">
+        <link rel="stylesheet" href="css/switch.css" type="text/css">
 	<link rel="stylesheet" href="css/jquery-ui.css" type="text/css">
 	<link rel="stylesheet" href="css/jquery.datetimepicker.min.css" type="text/css">
 	<link href="external/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
@@ -62,6 +63,16 @@
 					</form>
 				</div>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><div class="rga_label">RGA Enabled</div></li>
+                    <li style="padding: 10px 0px">                     
+                        <div class="onoffswitch">
+                            <input class="onoffswitch-checkbox" type="checkbox" role="switch" onclick="set_rga_status()" id="rga_switch"><!-- Switch to enable or disable RGA -->
+                            <label class="onoffswitch-label" for="rga_switch">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
 					<li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">File <span class="caret"></span></a>
 			          <ul class="dropdown-menu" role="menu">
@@ -394,34 +405,34 @@
 							  <div class="col-sm-7"><input class="form-control" id="intersection" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
 							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="intersection_id"></i></div>
 							</div>
-                                                        <div class="row major_version">
+                                                        <div class="row major_version extra_rga_field">
                                                             <div class="col-sm-4"><label for="major_version">Major Version:</label></div>
-                                                            <div class="col-sm-7"><input class="form-control" id="major_version" placeholder="0 to 15" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 15]" data-parsley-pattern-message="This value must be an integer."></div>
+                                                            <div class="col-sm-7"><input class="form-control extra_rga_field_input" id="major_version" placeholder="0 to 15" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 15]" data-parsley-pattern-message="This value must be an integer."></div>
                                                             <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="major_version"></i></div>
                                                         </div>
-                                                        <div class="row minor_version">
+                                                        <div class="row minor_version extra_rga_field">
                                                             <div class="col-sm-4"><label for="major_version">Minor Version:</label></div>
-                                                            <div class="col-sm-7"><input class="form-control" id="minor_version" placeholder="0 to 64" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 64]" data-parsley-pattern-message="This value must be an integer."></div>
+                                                            <div class="col-sm-7"><input class="form-control extra_rga_field_input" id="minor_version" placeholder="0 to 64" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 64]" data-parsley-pattern-message="This value must be an integer."></div>
                                                             <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="minor_version"></i></div>
                                                         </div>
-                                                        <div class="row road_authority_id">
+                                                        <div class="row road_authority_id extra_rga_field">
                                                             <div class="col-sm-4"><label for="road_authority_id">Road Authority ID:</label></div>
-                                                            <div class="col-sm-7"><input class="form-control" id="road_authority_id" placeholder="0"></div>
+                                                            <div class="col-sm-7"><input class="form-control extra_rga_field_input" id="road_authority_id" placeholder="0"></div>
                                                             <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="road_authority_id"></i></div>
                                                         </div>
-                                                        <div class="row mapped_geometry_id">
-                                                            <div class="col-sm-4"><label for="road_authority_id">Mapped Geometry ID:</label></div>
-                                                            <div class="col-sm-7"><input class="form-control" id="mapped_geometry_id" placeholder="0" ></div>
+                                                        <div class="row mapped_geometry_id extra_rga_field">
+                                                            <div class="col-sm-4"><label for="mapped_geometry_id">Mapped Geometry ID:</label></div>
+                                                            <div class="col-sm-7"><input class="form-control extra_rga_field_input" id="mapped_geometry_id" placeholder="0" ></div>
                                                             <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="mapped_geometry_id"></i></div>
                                                         </div>
-                                                        <div class="row content_version">
+                                                        <div class="row content_version extra_rga_field">
                                                             <div class="col-sm-4"><label for="content_version">Content Version:</label></div>
-                                                            <div class="col-sm-7"><input class="form-control" id="content_version" placeholder="0" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 32]" data-parsley-pattern-message="This value must be an integer."></div>
+                                                            <div class="col-sm-7"><input class="form-control extra_rga_field_input" id="content_version" placeholder="0" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 32]" data-parsley-pattern-message="This value must be an integer."></div>
                                                             <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="content_version"></i></div>
                                                         </div>
-                                                        <div class="row content_date_time">
+                                                        <div class="row content_date_time extra_rga_field">
                                                             <div class="col-sm-4"><label for="content_date_time">Content Date Time:</label></div>
-                                                            <div class="col-sm-7"><input class="form-control datetimepicker" id="content_date_time" placeholder="yyyy/mm/dd hh:mm"></div>
+                                                            <div class="col-sm-7"><input class="form-control datetimepicker extra_rga_field_input" id="content_date_time" placeholder="yyyy/mm/dd hh:mm"></div>
                                                             <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="content_date_time"></i></div>
                                                         </div>
 							<div class="row elev" data-toggle="tooltip" title="in meters">

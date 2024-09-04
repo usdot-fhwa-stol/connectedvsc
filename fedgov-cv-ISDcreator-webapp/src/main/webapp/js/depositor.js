@@ -389,7 +389,6 @@ function createMessageJSON()
             errors.addMarker(new OpenLayers.Marker(latlon.transform(fromProjection, toProjection),icon));
         }
     }
-
     for ( var f = 0; f < vectors.features.length; f++) {
         var feature = vectors.features[f];
         if (vectors.features[f].attributes.marker.name == "Reference Point Marker") {
@@ -398,13 +397,24 @@ function createMessageJSON()
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
                 "intersectionID": feature.attributes.intersectionID,
-                "regionID": feature.attributes.regionID,
+                "regionID": feature.attributes.regionID,                
                 "msgCount": feature.attributes.revisionNum,
                 "masterLaneWidth": feature.attributes.masterLaneWidth,
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
                 "referenceElevation": feature.attributes.elevation
+            };
+            //Only populate JSON with RGA fields when the RGA toggle is enabled
+            console.log(rga_enabled);
+            if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js         
+                reference["roadAuthorityId"]= feature.attributes.roadAuthorityId;
+                reference["majorVersion"]=feature.attributes.majorVersion;
+                reference["minorVersion"]= feature.attributes.minorVersion;
+                reference["mappedGeometryId"]= feature.attributes.mappedGeometryId;
+                reference["contentVersion"]= feature.attributes.contentVersion;
+                reference["contentDateTime"]= feature.attributes.contentDateTime;
             }
+            console.log(reference);
 
             var referenceChild = {
                 "speedLimitType": feature.attributes.speedLimitType
