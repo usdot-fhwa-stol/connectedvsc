@@ -66,25 +66,22 @@ async function getApiKey() {
 	}
 
 	try {
-//		const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
-//		const text = await res.text();
-//
-//		// Extract the API key from the file content
-//		const regex = /const\s+apiKey\s*=\s*"([^"]+)"/;
-//		const match = regex.exec(text);
-//		cachedApiKey = match?.[1];
-//
-//		if (!cachedApiKey) {
-//			throw new Error('API key not found in the file');
-//		}
-                cachedApiKey ="Alf63Te4RMhyO3l1rAo-s1y9Fd1fEpbUT74G8_nrN42lmbNDaOkVE0WcyfYpvFML";
+		const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+		const text = await res.text();
+
+		// Extract the API key from the file content
+		const regex = /const\s+apiKey\s*=\s*"([^"]+)"/;
+		const match = regex.exec(text);
+		cachedApiKey = match?.[1];
+
+		if (!cachedApiKey) {
+			throw new Error('API key not found in the file');
+		}
 		return cachedApiKey;
 	} catch (error) {
-		//console.error('Failed to fetch API key:', error);
+		console.error('Failed to fetch API key:', error);
                 
-		//throw new Error('Failed to fetch API key');
-                cachedApiKey ="Alf63Te4RMhyO3l1rAo-s1y9Fd1fEpbUT74G8_nrN42lmbNDaOkVE0WcyfYpvFML";
-                return cachedApiKey;
+		throw new Error('Failed to fetch API key');
 	}
 }
 
@@ -94,21 +91,19 @@ async function getUsername() {
 	}
 
 	try {
-//		const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
-//		const text = await res.text();
-//
-//		// Extract the API key from the file content
-//		const regex = /const\s+geoNamesUserName\s*=\s*"([^"]+)"/;
-//		const match = regex.exec(text);
-//		cachedUsername = match?.[1];
-//
-//		if (!cachedUsername) {
-//			throw new Error('API key not found in the file');
-//		}
-            cachedUsername="dev_test1";
+		const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+		const text = await res.text();
+
+		// Extract the API key from the file content
+		const regex = /const\s+geoNamesUserName\s*=\s*"([^"]+)"/;
+		const match = regex.exec(text);
+		cachedUsername = match?.[1];
+
+		if (!cachedUsername) {
+			throw new Error('API key not found in the file');
+		}
 		return cachedUsername;
 	} catch (error) {
-            cachedUsername="dev_test1";
 		console.error('Failed to fetch API key:', error);
 		throw new Error('Failed to fetch API key');
 	}
@@ -145,7 +140,6 @@ async function init() {
      */
 
 	const apiKey = await getApiKey();
-//const apiKey="Alf63Te4RMhyO3l1rAo-s1y9Fd1fEpbUT74G8_nrN42lmbNDaOkVE0WcyfYpvFML";
 
 	map = new OpenLayers.Map('map', {
         allOverlays: false,
@@ -2070,7 +2064,6 @@ function populateAttributeWindow(temp_lat, temp_lon){
 async function populateRefWindow(feature, lat, lon)
 {
 	const apiKey = await getApiKey();
-//const apiKey="Alf63Te4RMhyO3l1rAo-s1y9Fd1fEpbUT74G8_nrN42lmbNDaOkVE0WcyfYpvFML";
 	const geoNamesUserName = await getUsername();
 
 	$.ajax({
@@ -2423,8 +2416,6 @@ function getCookie(cname) {
 
 async function getElevation(dot, latlon, i, j, callback){
 	const apiKey = await getApiKey();
-        
-//const apiKey="Alf63Te4RMhyO3l1rAo-s1y9Fd1fEpbUT74G8_nrN42lmbNDaOkVE0WcyfYpvFML";
 
     $.ajax({
         url: elevation_url + latlon.lat + ',' + latlon.lon + '&key=' + apiKey,
