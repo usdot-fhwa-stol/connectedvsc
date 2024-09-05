@@ -181,7 +181,11 @@ $(document).ready(function() {
     });
     
     $(".datetimepicker").each(function(){
-        $(this).datetimepicker();
+        $(this).datetimepicker(
+            {
+            format:'d/m/Y H:m:s'
+            }
+        );
     });
 
 });

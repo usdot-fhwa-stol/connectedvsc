@@ -406,15 +406,23 @@ function createMessageJSON()
                 "roadAuthorityId": feature.attributes.roadAuthorityId,
             };
 
+            var data_frame_rga_base_layer_fields = {} //Ensure to clear the data for each call
             //Only populate JSON with RGA fields when the RGA toggle is enabled
-            if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js   
-                reference["majorVersion"]=feature.attributes.majorVersion;
-                reference["minorVersion"]= feature.attributes.minorVersion;
-                reference["mappedGeometryId"]= feature.attributes.mappedGeometryId;
-                reference["contentVersion"]= feature.attributes.contentVersion;
-                reference["contentDateTime"]= feature.attributes.contentDateTime;
+            if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js
+                data_frame_rga_base_layer_fields["majorVersion"]=parseInt(feature.attributes.majorVersion);
+                data_frame_rga_base_layer_fields["minorVersion"]= parseInt(feature.attributes.minorVersion);
+                data_frame_rga_base_layer_fields["contentVersion"]= parseInt(feature.attributes.contentVersion);
+                let date_time = parse_datetime_str(feature.attributes.contentDateTime);
+                data_frame_rga_base_layer_fields["timeOfCalculation"] = date_time.date;
+                data_frame_rga_base_layer_fields["contentDateTime"] = date_time.time;
+
+                //Add mapped geometry ID to intersection geometry reference point
+                reference["mappedGeomID"] = feature.attributes.mappedGeometryId;
+
+                //Validate RGA required fields
                 validate_required_rga_fields(feature);
             }
+
 
             var referenceChild = {
                 "speedLimitType": feature.attributes.speedLimitType
@@ -461,8 +469,9 @@ function createMessageJSON()
     var mapData = {
         "minuteOfTheYear": minuteOfTheYear,
         "layerType": "intersectionData",
+        ...data_frame_rga_base_layer_fields,
         "intersectionGeometry": intersectionGeometry,
-        "spatData": spat
+        "spatData": spat,
     }
 
     isdMessage.mapData = mapData;
@@ -471,6 +480,32 @@ function createMessageJSON()
     isdMessage.enableElevation = $("#enable_elevation").is(":checked");
 
     return isdMessage;
+}
+
+function parse_datetime_str(datetimestring){
+    let temp_datetime = datetimestring.split(/\s/);
+    try{
+        let temp_date = temp_datetime[0]
+        let temp_time = temp_datetime[1]
+        temp_date = temp_date.split(/\//)
+        temp_time = temp_time.split(/\:/)
+        let date_time = {
+            date: {
+                "day": temp_date[0],
+                "month": temp_date[1],
+                "year": temp_date[2],
+            },
+            time:{
+                "hour": temp_time[0],
+                "minute": temp_time[1],
+                "second": temp_time[2]??"0",
+            }
+        }
+        return date_time;
+    }catch(e){
+        console.error("Incorrect datetime forat! Expected datetime format is: d/m/Y H:m:s");
+        console.error(e);
+    }    
 }
 
 /***
