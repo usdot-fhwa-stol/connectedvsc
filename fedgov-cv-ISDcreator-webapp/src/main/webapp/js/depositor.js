@@ -471,7 +471,7 @@ function createMessageJSON()
         "layerType": "intersectionData",
         ...data_frame_rga_base_layer_fields,
         "intersectionGeometry": intersectionGeometry,
-        "spatData": spat,
+        "spatData": spat
     }
 
     isdMessage.mapData = mapData;
@@ -503,7 +503,7 @@ function parse_datetime_str(datetimestring){
         }
         return date_time;
     }catch(e){
-        console.error("Incorrect datetime forat! Expected datetime format is: d/m/Y H:m:s");
+        console.error("Incorrect datetime format! Expected datetime format is: d/m/Y H:m:s");
         console.error(e);
     }    
 }
