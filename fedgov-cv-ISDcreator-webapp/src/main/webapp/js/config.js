@@ -397,6 +397,53 @@ var help_notes = [
 		min: "-99.95",
 		units: "Steps of 0.05 percent",
 		description: "Expand or contract lane along the Y axis."
+	},
+	{
+		value: "major_version",
+		title: "Major Version (RGA Only)",
+		max: "15",
+		min: "0",
+		units: "N/A",
+		description: "It indicates that changes have been made to the content regarding the user of the contents of the dataset such that the new dataset is incompatble with prior versions of the dataset. Integer (0...15)."
+	},
+	{
+		value: "minor_version",
+		title: "Minor Version (RGA Only)",
+		max: "64",
+		min: "0",
+		units: "N/A",
+		description: "It indicates that the dataset has changed but still compatible with prior versions of the dataset."
+	},
+	{
+		value: "road_authority_id",
+		title: "Road Authority Identifier",
+		max: "NA",
+		min: "NA",
+		units: "N/A",
+		description: "This data frame defines the Object Identifier (OID) of the Road Authority."
+	},
+	{
+		value: "mapped_geometry_id",
+		title: "Mapped Geometry Identifier (RGA Only)",
+		max: "NA",
+		min: "NA",
+		units: "N/A",
+		description: "Uniquely identify a mapped location managed by an authority."
+	},
+	{
+		value: "content_version",
+		title: "Content Version (RGA Only)",
+		max: "32",
+		min: "0",
+		units: "N/A",
+		description: "Provides a version number which pertains to a combination of the dataset contents and the content values. INTEGER (0..32)"
+	},
+	{
+		value: "content_date_time",
+		title: "Content Date Time (RGA Only)",
+		max: "NA",
+		min: "NA",
+		units: "Datetime",
+		description: "Timestamp corresponding to the contents in format yyyy, mm, dd, hh, mm, ss (sss+)"
 	}
-    
 ];

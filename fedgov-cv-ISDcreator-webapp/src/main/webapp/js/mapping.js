@@ -44,6 +44,21 @@ var bingServerResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
 	38.218514137268066, 19.109257068634033, 9.554628534317017,
 	4.777314267158508, 2.388657133579254, 1.194328566789627,
 	0.5971642833948135, 0.29858214169740677];
+/***
+ * A global variable to store current RGA toggle status. 
+ * Some UI fields are disabled or enabled depends on the current RGA status.
+ * @type Boolean Indicator whether RGA fields are enabled.
+ */
+var rga_enabled=false;
+
+function set_rga_status() {
+    if($('#rga_switch').is(":checked")){
+        rga_enabled = true;
+    }else{
+        rga_enabled = false;
+    }
+    enable_rga_fields(enable=rga_enabled);
+}
 
 async function getApiKey() {
 	if (cachedApiKey) {
@@ -62,10 +77,10 @@ async function getApiKey() {
 		if (!cachedApiKey) {
 			throw new Error('API key not found in the file');
 		}
-
 		return cachedApiKey;
 	} catch (error) {
 		console.error('Failed to fetch API key:', error);
+                
 		throw new Error('Failed to fetch API key');
 	}
 }
@@ -87,7 +102,6 @@ async function getUsername() {
 		if (!cachedUsername) {
 			throw new Error('API key not found in the file');
 		}
-
 		return cachedUsername;
 	} catch (error) {
 		console.error('Failed to fetch API key:', error);
@@ -547,6 +561,8 @@ async function init() {
                 $('.phases').hide();
                 $(".master_lane_width").hide();
                 $(".intersection_name").hide();
+                show_rga_fields(hide=true);
+				$('.road_authority_id').hide();
                 $(".approach_name").hide();
                 $(".shared_with").hide();
                 $(".btnClone").hide();
@@ -1725,6 +1741,11 @@ function referencePointWindow(feature){
 	$(".region").show();
 	$(".elev").show();
     $(".revision").show();
+    
+    //Show additional RGA related fields
+    show_rga_fields(hide=false);
+	$('.road_authority_id').show();
+    
     $(".master_lane_width").show();
     $(".intersection_name").show();
     if (selected == "child"){
@@ -1749,8 +1770,16 @@ function referencePointWindow(feature){
         $(".master_lane_width").hide();
         $(".intersection_name").hide();
         $(".approach_name").hide();
-        $('.intersection-info-tab').hide();
+        $('.intersection-info-tab').hide();        
+        
+        show_rga_fields(hide=true);
+		$('.road_authority_id').hide();
 	}
+        
+        if(feature.attributes.marker.name == "Reference Point Marker"){    
+            //Enable or disable rga fields on reference point marker depend on whether current RGA toggle is enabled/disabled.
+            enable_rga_fields(enable=rga_enabled);
+        }
 	
 	$('#revision').val(revisionNum);
 	if (! selected_marker.attributes.elevation){
@@ -1787,6 +1816,42 @@ function referencePointWindow(feature){
     } else {
         $("#region").val(selected_marker.attributes.regionID);
     }
+    
+    if (! selected_marker.attributes.majorVersion){
+        $("#major_version").val("");
+    } else {
+        $("#major_version").val(selected_marker.attributes.majorVersion);
+    }
+    
+    if (! selected_marker.attributes.minorVersion){
+        $("#minor_version").val("");
+    } else {
+        $("#minor_version").val(selected_marker.attributes.minorVersion);
+    }
+    
+    if (! selected_marker.attributes.roadAuthorityId){
+        $("#road_authority_id").val("");
+    } else {
+        $("#road_authority_id").val(selected_marker.attributes.roadAuthorityId);
+    }
+    
+    if (! selected_marker.attributes.mappedGeometryId){
+        $("#mapped_geometry_id").val("");
+    } else {
+        $("#mapped_geometry_id").val(selected_marker.attributes.mappedGeometryId);
+    }
+    
+    if (! selected_marker.attributes.contentVersion){
+        $("#content_version").val("");
+    } else {
+        $("#content_version").val(selected_marker.attributes.contentVersion);
+    }
+    
+    if (! selected_marker.attributes.contentDateTime){
+        $("#content_date_time").val("");
+    } else {
+        $("#content_date_time").val(selected_marker.attributes.contentDateTime);
+    }
 
     if (selected == "child"){
 		if(feature.attributes.marker.name != "Reference Point Marker") {
@@ -1811,6 +1876,36 @@ function referencePointWindow(feature){
 	$("#attributes").show();
 }
 
+ /***
+  * @brief Show and hide RGA related fields. 
+  * Note: extra RGA fields in addition to MAP message should only appear at the "Reference Point" dialog.
+  * @param {type} Boolean show or hide RGA fields
+  */
+function show_rga_fields(hide=true){
+    if(hide){        
+       $(".extra_rga_field").hide();
+    }else{        
+       $(".extra_rga_field").show();
+    }
+}
+
+function enable_rga_fields(enable=true){    
+    if(enable){        
+         $(".extra_rga_field_input").prop('disabled', false);
+    }else{     
+         $(".extra_rga_field_input").prop('disabled', true);
+    }
+	add_rga_fields_validation(enable);
+}
+
+function add_rga_fields_validation(enable=true){
+	if(enable){
+		$("input:text.required").attr('data-parsley-required', true);
+	}else{
+		$("input:text.required").attr('data-parsley-required', false);
+	}
+	
+}
 
 /**
  * Purpose: if lat/long is modified, it changes the location
@@ -2224,6 +2319,12 @@ $(".btnDone").click(function(){
 					selected_marker.attributes.intersectionID = $("#intersection").val();
 					intersectionID = $("#intersection").val();
 					selected_marker.attributes.regionID = $("#region").val();
+					selected_marker.attributes.roadAuthorityId = $("#road_authority_id").val();
+					selected_marker.attributes.majorVersion = $("#major_version").val();
+					selected_marker.attributes.minorVersion = $("#minor_version").val();
+					selected_marker.attributes.mappedGeometryId = $("#mapped_geometry_id").val();
+					selected_marker.attributes.contentVersion = $("#content_version").val();
+					selected_marker.attributes.contentDateTime = $("#content_date_time").val();
 					selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
 					selected_marker.attributes.revisionNum = revisionNum;
 				}
