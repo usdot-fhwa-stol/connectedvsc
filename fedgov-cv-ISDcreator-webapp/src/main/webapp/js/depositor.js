@@ -491,14 +491,14 @@ function parse_datetime_str(datetimestring){
         temp_time = temp_time.split(/\:/)
         let date_time = {
             date: {
-                "day": temp_date[0],
-                "month": temp_date[1],
-                "year": temp_date[2],
+                "day": parseInt(temp_date[0]),
+                "month": parseInt(temp_date[1]),
+                "year": parseInt(temp_date[2]),
             },
             time:{
-                "hour": temp_time[0],
-                "minute": temp_time[1],
-                "second": temp_time[2]??"0",
+                "hour": parseInt(temp_time[0]),
+                "minute": parseInt(temp_time[1]),
+                "second": parseInt(temp_time[2]??0),
             }
         }
         return date_time;

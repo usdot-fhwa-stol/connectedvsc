@@ -574,7 +574,7 @@ function deleteTrace(){
 		alert("Stencil Deleted");
 	}
 	else{
-//	    alert("No stencil to delete.")
+	    alert("No stencil to delete.")
 	}
 }
 
