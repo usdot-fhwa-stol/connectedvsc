@@ -316,10 +316,23 @@ public class IntersectionSituationDataBuilder {
 			intersectionReferenceID.setRegion(referencePoint.regionID);
 		} else {
 			intersectionReferenceID.setRegionExists(false);
-			
 		}
 	
 		intersection.setId(intersectionReferenceID);
+
+		// Set full RAID or relative RAID when RRID is 0
+		if (referencePoint.fullRdAuthID != null) {
+			intersection.setRelRdAuthIDExists(false);
+			intersection.setFullRdAuthIDExists(true);
+			intersection.setFullRdAuthID(referencePoint.fullRdAuthID);
+		} else if (referencePoint.relRdAuthID != null) {
+			intersection.setFullRdAuthIDExists(false);
+			intersection.setRelRdAuthIDExists(true);
+			intersection.setRelRdAuthID(referencePoint.relRdAuthID);
+		} else {
+			intersection.setFullRdAuthIDExists(false);
+			intersection.setRelRdAuthIDExists(false);
+		}
 		
 		// Set Intersection Revision
 		intersection.setRevision(referencePoint.msgCount);
