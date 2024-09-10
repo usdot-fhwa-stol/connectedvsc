@@ -320,19 +320,20 @@ public class IntersectionSituationDataBuilder {
 	
 		intersection.setId(intersectionReferenceID);
 
-		// Set full RAID or relative RAID when RRID is 0
-		if (referencePoint.fullRdAuthID != null) {
-			intersection.setRelRdAuthIDExists(false);
-			intersection.setFullRdAuthIDExists(true);
-			intersection.setFullRdAuthID(referencePoint.fullRdAuthID);
-		} else if (referencePoint.relRdAuthID != null) {
-			intersection.setFullRdAuthIDExists(false);
-			intersection.setRelRdAuthIDExists(true);
-			intersection.setRelRdAuthID(referencePoint.relRdAuthID);
-		} else {
-			intersection.setFullRdAuthIDExists(false);
-			intersection.setRelRdAuthIDExists(false);
-		}
+		if(referencePoint.roadAuthorityIdType != null) {
+			if (referencePoint.roadAuthorityIdType.equals("Full")) {
+				intersection.setRelRdAuthIDExists(false);
+				intersection.setFullRdAuthIDExists(true);
+				intersection.setFullRdAuthID(referencePoint.roadAuthorityId);
+			} else if (referencePoint.roadAuthorityIdType.equals("Relative")) {
+				intersection.setFullRdAuthIDExists(false);
+				intersection.setRelRdAuthIDExists(true);
+				intersection.setRelRdAuthID(referencePoint.roadAuthorityId);
+			} else {
+				intersection.setFullRdAuthIDExists(false);
+				intersection.setRelRdAuthIDExists(false);
+			}
+		}	
 		
 		// Set Intersection Revision
 		intersection.setRevision(referencePoint.msgCount);

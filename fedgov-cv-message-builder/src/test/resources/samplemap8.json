@@ -6,7 +6,8 @@
         "referencePoint": {
           "descriptiveIntersctionName": "Temporary Name",
           "intersectionID": "2580",
-          "fullRdAuthID": "1",
+          "roadAuthorityIdType": "Full",
+          "roadAuthorityId": "1",
           "msgCount": "2",
           "masterLaneWidth": "366",
           "referenceLat": 42.30151225703397,
