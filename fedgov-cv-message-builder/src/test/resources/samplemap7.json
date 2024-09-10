@@ -15,11 +15,6 @@
         "referencePointChild": {
           "speedLimitType": [
             {
-                "speedLimitType": "Speed Limit Type",
-                "velocity": ""
-            
-            },
-            {
                 "speedLimitType": "Truck Max Speed",
                 "velocity": "90"
             }

@@ -316,10 +316,24 @@ public class IntersectionSituationDataBuilder {
 			intersectionReferenceID.setRegion(referencePoint.regionID);
 		} else {
 			intersectionReferenceID.setRegionExists(false);
-			
 		}
 	
 		intersection.setId(intersectionReferenceID);
+
+		if(referencePoint.roadAuthorityIdType != null) {
+			if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("full")) {
+				intersection.setRelRdAuthIDExists(false);
+				intersection.setFullRdAuthIDExists(true);
+				intersection.setFullRdAuthID(referencePoint.roadAuthorityId);
+			} else if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("relative")) {
+				intersection.setFullRdAuthIDExists(false);
+				intersection.setRelRdAuthIDExists(true);
+				intersection.setRelRdAuthID(referencePoint.roadAuthorityId);
+			} else {
+				intersection.setFullRdAuthIDExists(false);
+				intersection.setRelRdAuthIDExists(false);
+			}
+		}	
 		
 		// Set Intersection Revision
 		intersection.setRevision(referencePoint.msgCount);
