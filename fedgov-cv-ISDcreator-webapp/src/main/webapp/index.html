@@ -397,7 +397,7 @@
 							</div>
 							<div class="row region">
 								<div class="col-sm-4"><label for="region">Region ID:</label></div>
-								<div class="col-sm-7"><input class="form-control" id="region" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
+                                                                <div class="col-sm-7"><input class="form-control" id="region" placeholder="0 to 65535" onchange="onRegionIdChangeCallback(this.value);" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="region_id"></i></div>
 							</div>
 							<div class="row intersection">
@@ -414,6 +414,17 @@
 								<div class="col-sm-4"><label for="major_version">Minor Version:</label></div>
 								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="minor_version" placeholder="0 to 64" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 64]" data-parsley-pattern-message="This value must be an integer."></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="minor_version"></i></div>
+							</div>
+							<div class="row road_authority_id_type">
+								<div class="col-sm-4"><label for="road_authority_id_type">Road Authority ID Type:</label></div>
+								<div class="col-sm-7">
+									<select name="road_authority_id_type" class="form-control" onchange="onRoadAuthorityIdTypeChangeCallback(this.value)" id = "road_authority_id_type">
+										<option value="full">Full</option>
+										<option value="relative">Relative</option>
+										<option value="">NA</option>
+									</select>
+								</div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="road_authority_id_type"></i></div>
 							</div>
 							<div class="row road_authority_id">
 								<div class="col-sm-4"><label for="road_authority_id">Road Authority ID:</label></div>
