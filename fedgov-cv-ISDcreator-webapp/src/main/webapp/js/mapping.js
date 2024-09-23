@@ -453,6 +453,9 @@ async function init() {
 		        	$(".verified_long").hide();
 		        	$(".intersection").hide();
 					$(".region").hide();
+					show_rga_fields(hide=true);
+					$('.road_authority_id').hide();
+					$('.road_authority_id_type').hide();
 		        	$(".elev").hide();
 		        	$(".verified_elev").hide();
 		        	$(".lane_width").hide();
@@ -563,6 +566,7 @@ async function init() {
                 $(".intersection_name").hide();
                 show_rga_fields(hide=true);
 				$('.road_authority_id').hide();
+				$('.road_authority_id_type').hide();
                 $(".approach_name").hide();
                 $(".shared_with").hide();
                 $(".btnClone").hide();
@@ -1357,6 +1361,9 @@ function placeComputedLane(newDotFeature) {
 			$(".approach_type").hide();
 			$(".intersection").hide();
 			$(".region").hide();
+			show_rga_fields(hide=true);
+			$('.road_authority_id').hide();
+			$('.road_authority_id_type').hide();
 			$(".revision").hide();
 			$('.phases').hide();
 			$(".master_lane_width").hide();
@@ -1745,6 +1752,7 @@ function referencePointWindow(feature){
     //Show additional RGA related fields
     show_rga_fields(hide=false);
 	$('.road_authority_id').show();
+	$('.road_authority_id_type').show();
     
     $(".master_lane_width").show();
     $(".intersection_name").show();
@@ -1774,6 +1782,7 @@ function referencePointWindow(feature){
         
         show_rga_fields(hide=true);
 		$('.road_authority_id').hide();
+		$('.road_authority_id_type').hide();
 	}
         
         if(feature.attributes.marker.name == "Reference Point Marker"){    
@@ -1833,6 +1842,12 @@ function referencePointWindow(feature){
         $("#road_authority_id").val("");
     } else {
         $("#road_authority_id").val(selected_marker.attributes.roadAuthorityId);
+    }
+
+	if (! selected_marker.attributes.roadAuthorityIdType){
+        $("#road_authority_id_type").val("");
+    } else {
+        $("#road_authority_id_type").val(selected_marker.attributes.roadAuthorityIdType);
     }
     
     if (! selected_marker.attributes.mappedGeometryId){
