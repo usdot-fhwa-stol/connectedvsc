@@ -2319,6 +2319,7 @@ $(".btnDone").click(function(){
 					selected_marker.attributes.intersectionID = $("#intersection").val();
 					intersectionID = $("#intersection").val();
 					selected_marker.attributes.regionID = $("#region").val();
+					selected_marker.attributes.roadAuthorityIdType = $("#road_authority_id_type").val();
 					selected_marker.attributes.roadAuthorityId = $("#road_authority_id").val();
 					selected_marker.attributes.majorVersion = $("#major_version").val();
 					selected_marker.attributes.minorVersion = $("#minor_version").val();
@@ -2526,7 +2527,24 @@ function toggleWidthArray() {
     if (isNegative.value){
         alert("Width deltas sum to less than zero on lane " + lanes.features[isNegative.lane].attributes.laneNumber + " at node " + isNegative.node + "!");
     }
+}
 
+function onRegionIdChangeCallback(regionId){
+    if(!isNaN(regionId) && parseFloat(regionId)===0){
+        $("#road_authority_id").attr('data-parsley-required', true);
+        $("#road_authority_id_type").attr('data-parsley-required', true);
+    }else{
+        $("#road_authority_id").attr('data-parsley-required', false);
+        $("#road_authority_id_type").attr('data-parsley-required', false);
+    }
+}
+
+function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType){
+	if(roadAuthorityIdType!==""){
+		$("#road_authority_id").attr('data-parsley-required', true);
+	}else{
+		$("#road_authority_id").attr('data-parsley-required', false);
+	}
 }
 
 function isOdd(num) { return (num % 2) == 1;}
