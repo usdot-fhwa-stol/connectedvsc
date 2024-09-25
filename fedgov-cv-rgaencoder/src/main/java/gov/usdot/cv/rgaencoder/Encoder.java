@@ -47,13 +47,13 @@
       * @return encoded RGA message
       */
 
-     public native byte[] encodeRGA(int majorVer, int minorVer);
+     public native byte[] encodeRGA(BaseLayer baseLayer);
  
      //
      public ByteArrayObject encode(RGAData message) {
          logger.debug("Encoding the RGA message " + message.toString() + "!");
  
-         byte[] encodeMsg = encodeRGA(2, 1);
+         byte[] encodeMsg = encodeRGA(message.getBaseLayer());
  
          if (encodeMsg == null) {
              // cannot encode RGA message
