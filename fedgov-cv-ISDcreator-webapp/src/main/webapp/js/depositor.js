@@ -404,6 +404,7 @@ function createMessageJSON()
                 "referenceLon": feature.attributes.LonLat.lon,
                 "referenceElevation": feature.attributes.elevation,
                 "roadAuthorityId": feature.attributes.roadAuthorityId,
+                "roadAuthorityIdType": feature.attributes.roadAuthorityIdType,
             };
 
             var data_frame_rga_base_layer_fields = {} //Ensure to clear the data for each call

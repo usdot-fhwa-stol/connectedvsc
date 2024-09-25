@@ -414,13 +414,21 @@ var help_notes = [
 		units: "N/A",
 		description: "It indicates that the dataset has changed but still compatible with prior versions of the dataset."
 	},
+        {
+		value: "road_authority_id_type",
+		title: "Road Authority Identifier Type",
+		max: "NA",
+		min: "NA",
+		units: "N/A",
+		description: "This Road Authority Identifier Type indicates whether the Road Authority ID is full or relative. If no type specified and region id is not zero, Road Authority ID is optional."
+	},
 	{
 		value: "road_authority_id",
 		title: "Road Authority Identifier",
 		max: "NA",
 		min: "NA",
 		units: "N/A",
-		description: "This data frame defines the Object Identifier (OID) of the Road Authority."
+		description: "This data frame defines the Object Identifier (OID) of the Road Authority. Road authority ID is mandatory if region id (roadRegulatoryID) is set to 0."
 	},
 	{
 		value: "mapped_geometry_id",
