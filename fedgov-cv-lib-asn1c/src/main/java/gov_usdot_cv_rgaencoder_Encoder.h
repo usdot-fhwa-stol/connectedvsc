@@ -28,7 +28,7 @@ extern "C" {
  * Method:    encodeRGA
  */
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jobject);
 #ifdef __cplusplus
 }
 #endif

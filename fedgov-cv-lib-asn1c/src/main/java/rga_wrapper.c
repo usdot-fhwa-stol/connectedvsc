@@ -20,7 +20,7 @@
 #include "MessageFrame.h"
 #include <stdint.h>
 
-JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIEnv *env, jobject baseLayer)
+JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIEnv *env, jobject cls, jobject baseLayer)
 {
     printf("\n ***Inside the rga_wrapper.c file **** \n");
 	uint8_t buffer[2302];
@@ -41,17 +41,17 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
     // set default Message Frame Value for RoadGeometryAndAttributes
 	message->value.present = MessageFrame__value_PR_RoadGeometryAndAttributes;
 
-	RGABaseLayer_t base_Layer;
+	//RGABaseLayer_t base_Layer;
 	
-	jobject baseLayerObj = (jobject)(*env)->CallObjectMethod(env, baseLayer, 0);
-	jclass baseLayerClass = (*env)->GetObjectClass(env, baseLayerObj);
+	// jobject baseLayerObj = (jobject)(*env)->CallObjectMethod(env, baseLayer, 0);
+	// jclass baseLayerClass = (*env)->GetObjectClass(env, baseLayerObj);
 
-	// Data Set Format Version Info (Major and Minor Version)
-	RGADataSetFormatVersionInfo_t dataSetFmtVerInfo;
+	// // Data Set Format Version Info (Major and Minor Version)
+	// RGADataSetFormatVersionInfo_t dataSetFmtVerInfo;
 
-	jmethodID getMajorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMajorVersion", "()I");
-	jint majorVersion = (*env)->CallIntMethod(env, baseLayerObj, getMajorVersion);
-	printf("majorVersion is %d", majorVersion);
+	// jmethodID getMajorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMajorVersion", "()I");
+	// jint majorVersion = (*env)->CallIntMethod(env, baseLayerObj, getMajorVersion);
+	// printf("majorVersion is %d", majorVersion);
 	// jmethodID getMinorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMinorVersion", "()I");
 	// jint minorVersion = (*env)->CallIntMethod(env, baseLayerObj, getMinorVersion);
 
