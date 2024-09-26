@@ -20,8 +20,8 @@ import gov.usdot.cv.mapencoder.Position3D;
 
 public class BaseLayer {
     //DataSetFormatVersionInfo
-    private Integer majorVer;
-    private Integer minorVer;
+    private int majorVer;
+    private int minorVer;
 
     //ReferencePointInfo
     private Position3D location;
@@ -31,21 +31,21 @@ public class BaseLayer {
     private String relativeToRdAuthID;
 
     //DataSetContentIdentification
-    private Integer contentVer;
+    private int contentVer;
     private DDateTime contentDateTime;
 
     public BaseLayer()
     {
-        this.majorVer = null;
-        this.minorVer = null;
+        this.majorVer = 0;
+        this.minorVer = 0;
         this.location = null;
         this.timeOfCalculation = null;
         this.relativeToRdAuthID = null;
-        this.contentVer = null;
+        this.contentVer = 0;
         this.contentDateTime = null;
     }
     
-    public BaseLayer(Integer majorVer, Integer minorVer, Position3D location, DDate timeOfCalculation, String relativeToRdAuthID, Integer contentVer, DDateTime contentDateTime) {
+    public BaseLayer(int majorVer, int minorVer, Position3D location, DDate timeOfCalculation, String relativeToRdAuthID, int contentVer, DDateTime contentDateTime) {
         this.majorVer = majorVer;
         this.minorVer = minorVer;
         this.location = location;
@@ -55,11 +55,11 @@ public class BaseLayer {
         this.contentDateTime = contentDateTime;
     }
 
-    public Integer getMajorVer() {
+    public int getMajorVer() {
         return majorVer;
     }
 
-    public Integer getMinorVer() {
+    public int getMinorVer() {
         return minorVer;
     }
 
@@ -75,7 +75,7 @@ public class BaseLayer {
         return relativeToRdAuthID;
     }
 
-    public Integer getContentVer() {
+    public int getContentVer() {
         return contentVer;
     }
 
@@ -83,11 +83,11 @@ public class BaseLayer {
         return contentDateTime;
     }
 
-    public void setMajorVer(Integer majorVer) {
+    public void setMajorVer(int majorVer) {
         this.majorVer = majorVer;
     }
 
-    public void setMinorVer(Integer minorVer) {
+    public void setMinorVer(int minorVer) {
         this.minorVer = minorVer;
     }
 
@@ -103,7 +103,7 @@ public class BaseLayer {
         this.relativeToRdAuthID = relativeToRdAuthID;
     }
 
-    public void setContentVer(Integer contentVer) {
+    public void setContentVer(int contentVer) {
         this.contentVer = contentVer;
     }
 

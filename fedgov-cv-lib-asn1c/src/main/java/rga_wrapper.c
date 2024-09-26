@@ -22,12 +22,12 @@
 
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIEnv *env, jobject cls, jobject baseLayer)
 {
-    printf("\n ***Inside the rga_wrapper.c file **** \n");
+	printf("\n ***Inside the rga_wrapper.c file **** \n");
 	uint8_t buffer[2302];
 	size_t buffer_size = sizeof(buffer);
 	asn_enc_rval_t ec;
 
-    MessageFrame_t *message;
+	MessageFrame_t *message;
 
 	message = calloc(1, sizeof(MessageFrame_t));
 	if (!message)
@@ -35,118 +35,124 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 		return NULL;
 	}
 
-	// set default value of messageId of DSRCmsgID_roadGeometryAndAttributes 
+	// set default value of messageId of DSRCmsgID_roadGeometryAndAttributes
 	message->messageId = 43;
 
-    // set default Message Frame Value for RoadGeometryAndAttributes
+	// set default Message Frame Value for RoadGeometryAndAttributes
 	message->value.present = MessageFrame__value_PR_RoadGeometryAndAttributes;
 
-	//RGABaseLayer_t base_Layer;
-	
-	// jobject baseLayerObj = (jobject)(*env)->CallObjectMethod(env, baseLayer, 0);
-	// jclass baseLayerClass = (*env)->GetObjectClass(env, baseLayerObj);
+	RGABaseLayer_t rgaBaseLayer;
 
-	// // Data Set Format Version Info (Major and Minor Version)
-	// RGADataSetFormatVersionInfo_t dataSetFmtVerInfo;
+	jclass baseLayerClass = (*env)->GetObjectClass(env, baseLayer);
 
-	// jmethodID getMajorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMajorVersion", "()I");
-	// jint majorVersion = (*env)->CallIntMethod(env, baseLayerObj, getMajorVersion);
-	// printf("majorVersion is %d", majorVersion);
-	// jmethodID getMinorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMinorVersion", "()I");
-	// jint minorVersion = (*env)->CallIntMethod(env, baseLayerObj, getMinorVersion);
+	// Data Set Format Version Info (Major and Minor Version)
+	RGADataSetFormatVersionInfo_t dataSetFmtVerInfo;
 
-	// dataSetFmtVerInfo.majorVersion = (long)majorVersion;
-	// dataSetFmtVerInfo.minorVersion = (long)minorVersion;
+	jmethodID getMajorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMajorVer", "()I");
+	jint majorVersion = (*env)->CallIntMethod(env, baseLayer, getMajorVersion);
+	printf("major version is %d \n", majorVersion);
 
-	// base_Layer.dataSetFmtVerInfo = dataSetFmtVerInfo;
+	jmethodID getMinorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMinorVer", "()I");
+	jint minorVersion = (*env)->CallIntMethod(env, baseLayer, getMinorVersion);
+	printf("minor version is %d \n", minorVersion);
 
-	// //Reference Point Info (Reference Point and Time Of Calculation)
-	// ReferencePointInfo_t refPointInfo;
+	dataSetFmtVerInfo.majorVersion = (long)majorVersion;
+	dataSetFmtVerInfo.minorVersion = (long)minorVersion;
 
-	// jmethodID getLocation = (*env)->GetMethodID(env, baseLayerClass, "getLocation", "()Lgov/usdot/cv/mapencoder/Position3D;");
-	// jobject locationObj = (*env)->CallObjectMethod(env, baseLayerObj, getLocation);
-	// Position3D_t location;
-	// jclass locationClass = (*env)->GetObjectClass(env, locationObj);
+	rgaBaseLayer.dataSetFmtVerInfo = dataSetFmtVerInfo;
 
-	// jmethodID getLatitude = (*env)->GetMethodID(env, locationClass, "getLatitude", "()D");
-	// jmethodID getLongitude = (*env)->GetMethodID(env, locationClass, "getLongitude", "()D");
+	// Reference Point Info (Reference Point and Time Of Calculation)
+	ReferencePointInfo_t refPointInfo;
 
-	// jdouble latitude = (*env)->CallDoubleMethod(env, locationObj, getLatitude);
-	// jdouble longitude = (*env)->CallDoubleMethod(env, locationObj, getLongitude);
+	jmethodID getLocation = (*env)->GetMethodID(env, baseLayerClass, "getLocation", "()Lgov/usdot/cv/mapencoder/Position3D;");
+	jobject locationObj = (*env)->CallObjectMethod(env, baseLayer, getLocation);
+	Position3D_t location;
+	jclass locationClass = (*env)->GetObjectClass(env, locationObj);
 
-	// location.lat = (Common_Latitude_t)((long)latitude);
-	// location.Long = (Common_Longitude_t)((long)longitude);
+	jmethodID getLatitude = (*env)->GetMethodID(env, locationClass, "getLatitude", "()D");
+	jmethodID getLongitude = (*env)->GetMethodID(env, locationClass, "getLongitude", "()D");
 
-	// // Check if elevation exists
-	// jmethodID isElevationExists = (*env)->GetMethodID(env, locationClass, "isElevationExists", "()Z");
-	// jboolean elevationExists = (*env)->CallBooleanMethod(env, locationObj, isElevationExists);
+	jdouble latitude = (*env)->CallDoubleMethod(env, locationObj, getLatitude);
+	jdouble longitude = (*env)->CallDoubleMethod(env, locationObj, getLongitude);
 
-	// if (elevationExists)
-	// {
-	// 	jmethodID getElevation = (*env)->GetMethodID(env, locationClass, "getElevation", "()F");
-	// 	jfloat elevation = (*env)->CallFloatMethod(env, locationObj, getElevation);
+	printf("latitude  is %f \n", latitude);
+	printf("longitude  is %f \n", longitude);
 
-	// 	Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
-	// 	*dsrcElevation = (long)elevation;
-	// 	location.elevation = dsrcElevation;
-	// }
-	// else
-	// {
-	// 	location.elevation = NULL;
-	// }
-	// location.regional = NULL;
-	// refPointInfo.location = location;
+	location.lat = (Common_Latitude_t)((long)latitude);
+	location.Long = (Common_Longitude_t)((long)longitude);
+
+	// Check if elevation exists
+	jmethodID isElevationExists = (*env)->GetMethodID(env, locationClass, "isElevationExists", "()Z");
+	jboolean elevationExists = (*env)->CallBooleanMethod(env, locationObj, isElevationExists);
+
+	if (elevationExists)
+	{
+		jmethodID getElevation = (*env)->GetMethodID(env, locationClass, "getElevation", "()F");
+		jfloat elevation = (*env)->CallFloatMethod(env, locationObj, getElevation);
+		printf("elevation  is %f \n", elevation);
+
+		Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
+		*dsrcElevation = (long)elevation;
+		location.elevation = dsrcElevation;
+	}
+	else
+	{
+		location.elevation = NULL;
+	}
+	location.regional = NULL;
+	refPointInfo.location = location;
 
 	// DDate_t timeOfCalculation;
 
-	//Road Geometry Ref ID Info (relativeToRdAuthID)
-	// RoadGeometryRefIDInfo_t rdGeoRefID;
+	// Road Geometry Ref ID Info (relativeToRdAuthID)
+	//  RoadGeometryRefIDInfo_t rdGeoRefID;
 
 	// MappedGeometryID_t mappedGeomID;
-	
-	//Data Set Content Identification (Content Version and Content Date Time)
-	// DataSetContentIdentification_t rgaContentIdentification;
 
-	// jmethodID getContentVer = (*env)->GetMethodID(env, baseLayerClass, "getContentVer", "()I");
-	// jint contentVer  = (*env)->CallIntMethod(env, baseLayerObj, getContentVer);
-	
-	// rgaContentIdentification.contentVer = (long)contentVer;
+	// Data Set Content Identification (Content Version and Content Date Time)
+	DataSetContentIdentification_t rgaContentIdentification;
+
+	jmethodID getContentVer = (*env)->GetMethodID(env, baseLayerClass, "getContentVer", "()I");
+	jint contentVer = (*env)->CallIntMethod(env, baseLayer, getContentVer);
+	printf("contentVer  is %d \n", contentVer);
+
+	rgaContentIdentification.contentVer = (long)contentVer;
 	// DDateTime_t contentDateTime;
 
-    // ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0, message, buffer, buffer_size);
-	// if (ec.encoded == -1)
-	// {
-	// 	printf("Cause of failure %s \n", ec.failed_type->name);
-	// 	printf("Unsuccessful!\n");
-	// 	return NULL;
-	// }
-	// printf("Successful!\n");
+	ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0, message, buffer, buffer_size);
+	if (ec.encoded == -1)
+	{
+		printf("Cause of failure %s \n", ec.failed_type->name);
+		printf("Unsuccessful!\n");
+		return NULL;
+	}
+	printf("Successful!\n");
 
-	// jsize length = ec.encoded / 8;
-	// jbyteArray outJNIArray = (*env)->NewByteArray(env, length);
-	// if (outJNIArray == NULL)
-	// {
-	// 	return NULL;
-	// }
+	jsize length = ec.encoded / 8;
+	jbyteArray outJNIArray = (*env)->NewByteArray(env, length);
+	if (outJNIArray == NULL)
+	{
+		return NULL;
+	}
 
-	// (*env)->SetByteArrayRegion(env, outJNIArray, 0, length, buffer);
+	(*env)->SetByteArrayRegion(env, outJNIArray, 0, length, buffer);
 
-	// free(message);
+	free(message);
 
-	// // Get a pointer to the array elements
-	// jbyte *elements = (*env)->GetByteArrayElements(env, outJNIArray, NULL);
+	// Get a pointer to the array elements
+	jbyte *elements = (*env)->GetByteArrayElements(env, outJNIArray, NULL);
 
-	// if (elements == NULL)
-	// {
-	// 	return; // Error handling, if necessary
-	// }
+	if (elements == NULL)
+	{
+		return; // Error handling, if necessary
+	}
 
-	// // Loop through and print each element
-	// for (jsize i = 0; i < length; i++)
-	// {
-	// 	printf("Element %d: %d\n", i, elements[i]);
-	// }
-	// (*env)->ReleaseByteArrayElements(env, outJNIArray, elements, JNI_ABORT);
+	// Loop through and print each element
+	for (jsize i = 0; i < length; i++)
+	{
+		printf("Element %d: %d\n", i, elements[i]);
+	}
+	(*env)->ReleaseByteArrayElements(env, outJNIArray, elements, JNI_ABORT);
 
-	// return outJNIArray;
+	return outJNIArray;
 }
