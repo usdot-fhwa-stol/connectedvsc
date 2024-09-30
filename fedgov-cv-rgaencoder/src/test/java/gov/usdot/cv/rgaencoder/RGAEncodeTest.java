@@ -33,22 +33,22 @@ public class RGAEncodeTest {
     RGAData mockRGA;
     BaseLayer mockBaseLayer;
     Position3D mockLocation;
-    // DDate mockTimeOfCalculation;
-    // DDateTime mockContentDateTime;
+    DDate mockTimeOfCalculation;
+    DDateTime mockContentDateTime;
     
     @Before
     public void setup() {
         mockRGA = mock(RGAData.class); 
         mockBaseLayer = mock(BaseLayer.class);
         mockLocation = mock(Position3D.class);
-        // mockTimeOfCalculation = mock(DDate.class);
-        // mockContentDateTime = mock(DDateTime.class);
+        mockTimeOfCalculation = mock(DDate.class);
+        mockContentDateTime = mock(DDateTime.class);
 
         encoder = new Encoder();
 
         when(mockBaseLayer.getMajorVer()).thenReturn(22);
         when(mockBaseLayer.getMinorVer()).thenReturn(11);
-        // // when(mockBaseLayer.getRelativeToRdAuthID()).thenReturn("a");
+        when(mockBaseLayer.getRelativeToRdAuthID()).thenReturn("a");
         when(mockBaseLayer.getContentVer()).thenReturn(13);
 
         //location
@@ -57,16 +57,20 @@ public class RGAEncodeTest {
         when(mockLocation.isElevationExists()).thenReturn(true);
         when(mockLocation.getElevation()).thenReturn((float)13.12);
 
-        // //TimeOfCalculation
-        // when(mockTimeOfCalculation.getMonth()).thenReturn(8);
-        // when(mockTimeOfCalculation.getDay()).thenReturn(21);
-        // when(mockTimeOfCalculation.getYear()).thenReturn(2024);
+        //TimeOfCalculation
+        when(mockTimeOfCalculation.getMonth()).thenReturn(8);
+        when(mockTimeOfCalculation.getDay()).thenReturn(21);
+        when(mockTimeOfCalculation.getYear()).thenReturn(2024);
 
-        // //ContentDateTime
-        // when(mockContentDateTime.getHour()).thenReturn(13);
-        // when(mockContentDateTime.getMinute()).thenReturn(51);
-        // when(mockContentDateTime.getSecond()).thenReturn(20);
+        //ContentDateTime
+        when(mockContentDateTime.getHour()).thenReturn(13);
+        when(mockContentDateTime.getMinute()).thenReturn(51);
+        when(mockContentDateTime.getSecond()).thenReturn(20);
+        
         when(mockBaseLayer.getLocation()).thenReturn(mockLocation);
+        when(mockBaseLayer.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation);
+        when(mockBaseLayer.getContentDateTime()).thenReturn(mockContentDateTime);
+
         when(mockRGA.getBaseLayer()).thenReturn(mockBaseLayer);
     }
 

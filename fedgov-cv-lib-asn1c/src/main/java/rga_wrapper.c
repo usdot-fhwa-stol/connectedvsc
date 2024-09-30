@@ -102,12 +102,59 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	location.regional = NULL;
 	refPointInfo.location = location;
 
-	// DDate_t timeOfCalculation;
+	DDate_t timeOfCalculation;
+
+	jmethodID getTimeOfCalc = (*env)->GetMethodID(env, baseLayerClass, "getTimeOfCalculation", "()Lgov/usdot/cv/rgaencoder/DDate;");
+	jobject timeOfCalcObj = (*env)->CallObjectMethod(env, baseLayer, getTimeOfCalc);
+	jclass timeOfCalculationClass = (*env)->GetObjectClass(env, timeOfCalcObj);
+
+	jmethodID getYear = (*env)->GetMethodID(env, timeOfCalculationClass, "getYear", "()I");
+	jmethodID getMonth = (*env)->GetMethodID(env, timeOfCalculationClass, "getMonth", "()I");
+	jmethodID getDay = (*env)->GetMethodID(env, timeOfCalculationClass, "getDay", "()I");
+
+	jint year = (*env)->CallIntMethod(env, timeOfCalcObj, getYear);
+	jint month = (*env)->CallIntMethod(env, timeOfCalcObj, getMonth);
+	jint day = (*env)->CallIntMethod(env, timeOfCalcObj, getDay);
+
+	printf("year  is %d \n", year);
+	printf("month  is %d \n", month);
+	printf("day  is %d \n", day);
+
+
+	timeOfCalculation.year = (DYear_t)((long)year);
+	timeOfCalculation.month = (DMonth_t)((long)month);
+	timeOfCalculation.day = (DDay_t)((long)day);
+
+	refPointInfo.timeOfCalculation = timeOfCalculation;
+
+	rgaBaseLayer.refPointInfo = refPointInfo;
 
 	// Road Geometry Ref ID Info (relativeToRdAuthID)
-	//  RoadGeometryRefIDInfo_t rdGeoRefID;
+	RoadGeometryRefIDInfo_t rdGeoRefID;
 
-	// MappedGeometryID_t mappedGeomID;
+	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()Ljava/lang/String;");
+	jstring relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
+
+	const char *relToRdAuthIDStr = (*env)->GetStringUTFChars(env, relativeToRdAuthID, 0);
+	printf("ID  is %s \n", relToRdAuthIDStr);
+
+	size_t relToRdAuthIDStrLen = strlen(relToRdAuthIDStr);
+
+	ASN__PRIMITIVE_TYPE_t relToRdAuthIDPrimType;
+	relToRdAuthIDPrimType.buf = (uint8_t *)calloc(1, (relToRdAuthIDStrLen + 1));
+
+	for (size_t l = 0; l < relToRdAuthIDStrLen; l++)
+	{
+		relToRdAuthIDPrimType.buf[l] = (uint8_t)relToRdAuthIDStr[l];
+	}
+	relToRdAuthIDPrimType.size = relToRdAuthIDStrLen;
+
+	MappedGeometryID_t mappedGeomID;
+	mappedGeomID.present = MappedGeometryID_PR_relativeToRdAuthID;
+	mappedGeomID.choice.relativeToRdAuthID = relToRdAuthIDPrimType;
+	
+	rdGeoRefID.mappedGeomID = mappedGeomID;
+	rgaBaseLayer.rdGeomRefID = rdGeoRefID;
 
 	// Data Set Content Identification (Content Version and Content Date Time)
 	DataSetContentIdentification_t rgaContentIdentification;
@@ -117,8 +164,46 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	printf("contentVer  is %d \n", contentVer);
 
 	rgaContentIdentification.contentVer = (long)contentVer;
-	// DDateTime_t contentDateTime;
 
+	DDateTime_t contentDateTime;
+
+	jmethodID getContentDateTime = (*env)->GetMethodID(env, baseLayerClass, "getContentDateTime", "()Lgov/usdot/cv/rgaencoder/DDateTime;");
+	jobject contentDateTimeObj = (*env)->CallObjectMethod(env, baseLayer, getContentDateTime);
+	jclass contentDateTimeClass = (*env)->GetObjectClass(env, contentDateTimeObj);
+
+	jmethodID getHour = (*env)->GetMethodID(env, contentDateTimeClass, "getHour", "()I");
+	jmethodID getMinute = (*env)->GetMethodID(env, contentDateTimeClass, "getMinute", "()I");
+	jmethodID getSecond = (*env)->GetMethodID(env, contentDateTimeClass, "getSecond", "()I");
+
+	jint hour = (*env)->CallIntMethod(env, contentDateTimeObj, getHour);
+	jint minute = (*env)->CallIntMethod(env, contentDateTimeObj, getMinute);
+	jint second = (*env)->CallIntMethod(env, contentDateTimeObj, getSecond);
+
+	DHour_t *ddtHour = calloc(1, sizeof(DHour_t));
+	DMinute_t *ddtMinute = calloc(1, sizeof(DMinute_t));
+	DSecond_t *ddtSecond = calloc(1, sizeof(DSecond_t));
+
+	*ddtHour = (long)hour;
+	*ddtMinute = (long)minute;
+	*ddtSecond = (long)second;
+	
+	contentDateTime.hour = ddtHour;
+	contentDateTime.minute = ddtMinute;
+	contentDateTime.second = ddtSecond;
+
+	rgaContentIdentification.contentDateTime = contentDateTime;
+
+	printf("hour  is %d \n", hour);
+	printf("minute  is %d \n", minute);
+	printf("second  is %d \n", second);
+
+	rgaBaseLayer.rgaContentIdentification = rgaContentIdentification;
+
+	RGADataSet_t rgaDataSet;
+	rgaDataSet.baseLayer = rgaBaseLayer;
+
+	message->value.choice.RoadGeometryAndAttributes.dataSetSet = rgaDataSet;
+	
 	ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0, message, buffer, buffer_size);
 	if (ec.encoded == -1)
 	{

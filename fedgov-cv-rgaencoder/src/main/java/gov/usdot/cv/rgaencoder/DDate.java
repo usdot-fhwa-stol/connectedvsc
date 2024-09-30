@@ -17,44 +17,44 @@
 package gov.usdot.cv.rgaencoder;
 
 public class DDate {
-    private Integer year;
-    private Integer month;
-    private Integer day;
+    private int year;
+    private int month;
+    private int day;
     
     public DDate()
     {
-        this.year = null;
-        this.month = null; 
-        this.day = null;
+        this.year = 0;
+        this.month = 0; 
+        this.day = 0;
     }
     
-    public DDate(Integer year, Integer month, Integer day) {
+    public DDate(int year, int month, int day) {
         this.year = year;
         this.month = month; 
         this.day = day;
     }
 
-    public Integer getYear() {
+    public int getYear() {
         return year;
     }
     
-    public Integer getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public Integer getDay() {
+    public int getDay() {
         return day;
     }
 
-    public void setYear(Integer year){
+    public void setYear(int year){
         this.year = year;
     }
     
-    public void setMonth(Integer month){
+    public void setMonth(int month){
         this.month = month;
     }
 
-    public void setDay(Integer day){
+    public void setDay(int day){
         this.day = day;
     }
 
