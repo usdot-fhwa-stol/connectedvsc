@@ -50,11 +50,9 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 	jmethodID getMajorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMajorVer", "()I");
 	jint majorVersion = (*env)->CallIntMethod(env, baseLayer, getMajorVersion);
-	printf("major version is %d \n", majorVersion);
 
 	jmethodID getMinorVersion = (*env)->GetMethodID(env, baseLayerClass, "getMinorVer", "()I");
 	jint minorVersion = (*env)->CallIntMethod(env, baseLayer, getMinorVersion);
-	printf("minor version is %d \n", minorVersion);
 
 	dataSetFmtVerInfo.majorVersion = (long)majorVersion;
 	dataSetFmtVerInfo.minorVersion = (long)minorVersion;
@@ -75,9 +73,6 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	jdouble latitude = (*env)->CallDoubleMethod(env, locationObj, getLatitude);
 	jdouble longitude = (*env)->CallDoubleMethod(env, locationObj, getLongitude);
 
-	printf("latitude  is %f \n", latitude);
-	printf("longitude  is %f \n", longitude);
-
 	location.lat = (Common_Latitude_t)((long)latitude);
 	location.Long = (Common_Longitude_t)((long)longitude);
 
@@ -89,7 +84,6 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	{
 		jmethodID getElevation = (*env)->GetMethodID(env, locationClass, "getElevation", "()F");
 		jfloat elevation = (*env)->CallFloatMethod(env, locationObj, getElevation);
-		printf("elevation  is %f \n", elevation);
 
 		Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
 		*dsrcElevation = (long)elevation;
@@ -100,6 +94,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 		location.elevation = NULL;
 	}
 	location.regional = NULL;
+	
 	refPointInfo.location = location;
 
 	DDate_t timeOfCalculation;
@@ -116,14 +111,9 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	jint month = (*env)->CallIntMethod(env, timeOfCalcObj, getMonth);
 	jint day = (*env)->CallIntMethod(env, timeOfCalcObj, getDay);
 
-	printf("year  is %d \n", year);
-	printf("month  is %d \n", month);
-	printf("day  is %d \n", day);
-
-
-	timeOfCalculation.year = (DYear_t)((long)year);
-	timeOfCalculation.month = (DMonth_t)((long)month);
-	timeOfCalculation.day = (DDay_t)((long)day);
+	timeOfCalculation.year = (long)year;
+	timeOfCalculation.month = (long)month;
+	timeOfCalculation.day = (long)day;
 
 	refPointInfo.timeOfCalculation = timeOfCalculation;
 
@@ -132,15 +122,75 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	// Road Geometry Ref ID Info (relativeToRdAuthID)
 	RoadGeometryRefIDInfo_t rdGeoRefID;
 
-	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()Ljava/lang/String;");
-	jstring relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
+	RoadAuthorityID_t *roadAuthorityID = calloc(1, sizeof(RoadAuthorityID_t));
 
-	const char *relToRdAuthIDStr = (*env)->GetStringUTFChars(env, relativeToRdAuthID, 0);
-	printf("ID  is %s \n", relToRdAuthIDStr);
+	// Check if full RAID exists
+	jmethodID isFullRdAuthIDExists = (*env)->GetMethodID(env, baseLayerClass, "isFullRdAuthIDExists", "()Z");
+	jboolean fullRdAuthIDExists = (*env)->CallBooleanMethod(env, baseLayer, isFullRdAuthIDExists);
 
-	size_t relToRdAuthIDStrLen = strlen(relToRdAuthIDStr);
 
-	ASN__PRIMITIVE_TYPE_t relToRdAuthIDPrimType;
+	// Check if relative RAID exists
+	jmethodID isRelRdAuthIDExists = (*env)->GetMethodID(env, baseLayerClass, "isRelRdAuthIDExists", "()Z");
+	jboolean relRdAuthIDExists = (*env)->CallBooleanMethod(env, baseLayer, isRelRdAuthIDExists);
+	
+	if (fullRdAuthIDExists)
+	{
+		// Get full RAID
+		jmethodID getFullRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getFullRdAuthID", "()[I");
+		jintArray fullRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getFullRdAuthID);
+		const int *fullRdAuthIDStr = (*env)->GetIntArrayElements(env, fullRdAuthID, NULL);
+
+		jsize len = (*env)->GetArrayLength(env, fullRdAuthID);
+		size_t fullRdAuthIDStrLen = len;
+
+		ASN__PRIMITIVE_TYPE_t primType;
+		primType.buf = (uint8_t *)calloc(1, (fullRdAuthIDStrLen + 1));
+
+		for (size_t n = 0; n < fullRdAuthIDStrLen; n++)
+		{
+			primType.buf[n] = (uint8_t)fullRdAuthIDStr[n];
+		}
+		primType.size = fullRdAuthIDStrLen;
+
+		// Set RAID pointer's PRESENT and CHOICE
+		roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
+		roadAuthorityID->choice.fullRdAuthID = primType;
+		rdGeoRefID.rdAuthorityID = roadAuthorityID;
+	} else if (relRdAuthIDExists) {
+		// Get relative RAID
+		jmethodID getRelRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelRdAuthID", "()[I");
+		jintArray relRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelRdAuthID);
+
+		const int *relRdAuthIDStr = (*env)->GetIntArrayElements(env, relRdAuthID, NULL);
+
+		jsize len  = (*env)->GetArrayLength(env, relRdAuthID);
+
+		size_t relRdAuthIDStrLen = len;
+		ASN__PRIMITIVE_TYPE_t primType;
+		primType.buf = (uint8_t *)calloc(1, (relRdAuthIDStrLen + 1));
+
+		for (size_t n = 0; n < relRdAuthIDStrLen; n++)
+		{
+			primType.buf[n] = (uint8_t)relRdAuthIDStr[n];
+		}
+		primType.size = relRdAuthIDStrLen;
+
+		// Set RAID pointer's PRESENT and CHOICE
+		roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
+		roadAuthorityID->choice.relRdAuthID = primType;
+		rdGeoRefID.rdAuthorityID = roadAuthorityID;
+	} else {
+		roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
+	}
+	rdGeoRefID.rdAuthorityID = roadAuthorityID;
+
+	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()[I"); 
+	jintArray relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
+	const int *relToRdAuthIDStr = (*env)->GetIntArrayElements(env, relativeToRdAuthID, NULL);
+	jsize relToAuthIDLen = (*env)->GetArrayLength(env, relativeToRdAuthID);
+	size_t relToRdAuthIDStrLen = relToAuthIDLen;
+
+	RELATIVE_OID_t relToRdAuthIDPrimType;
 	relToRdAuthIDPrimType.buf = (uint8_t *)calloc(1, (relToRdAuthIDStrLen + 1));
 
 	for (size_t l = 0; l < relToRdAuthIDStrLen; l++)
@@ -161,7 +211,6 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 	jmethodID getContentVer = (*env)->GetMethodID(env, baseLayerClass, "getContentVer", "()I");
 	jint contentVer = (*env)->CallIntMethod(env, baseLayer, getContentVer);
-	printf("contentVer  is %d \n", contentVer);
 
 	rgaContentIdentification.contentVer = (long)contentVer;
 
@@ -182,28 +231,48 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	DHour_t *ddtHour = calloc(1, sizeof(DHour_t));
 	DMinute_t *ddtMinute = calloc(1, sizeof(DMinute_t));
 	DSecond_t *ddtSecond = calloc(1, sizeof(DSecond_t));
+	DYear_t *ddtYear = calloc(1,sizeof(DYear_t));
+	DMonth_t *ddtMonth = calloc(1, sizeof(DMonth_t));
+	DDay_t *ddtDay = calloc(1, sizeof(DDay_t));
+	DOffset_t *ddtOffset = calloc(1, sizeof(DOffset_t));
 
+	*ddtYear = (long)year;
+	*ddtMonth = (long)month;
+	*ddtDay = (long)day;
 	*ddtHour = (long)hour;
 	*ddtMinute = (long)minute;
 	*ddtSecond = (long)second;
+	*ddtOffset = (long)0;
 	
+	contentDateTime.year = ddtYear;
+	contentDateTime.month = ddtMonth;
+	contentDateTime.day = ddtDay;
 	contentDateTime.hour = ddtHour;
 	contentDateTime.minute = ddtMinute;
 	contentDateTime.second = ddtSecond;
+	contentDateTime.offset = ddtOffset;
 
 	rgaContentIdentification.contentDateTime = contentDateTime;
-
-	printf("hour  is %d \n", hour);
-	printf("minute  is %d \n", minute);
-	printf("second  is %d \n", second);
 
 	rgaBaseLayer.rgaContentIdentification = rgaContentIdentification;
 
 	RGADataSet_t rgaDataSet;
 	rgaDataSet.baseLayer = rgaBaseLayer;
+	rgaDataSet.geometryContainer = NULL;
+	rgaDataSet.movementsContainer = NULL;
+	rgaDataSet.wayUseContainer = NULL;
+	rgaDataSet.signalControlSupportContainer = NULL;
 
-	message->value.choice.RoadGeometryAndAttributes.dataSetSet = rgaDataSet;
-	
+	RGADataSet_t *rgaDataSetList = calloc(1, sizeof(RGADataSet_t));
+	RoadGeometryAndAttributes_t *roadGeomAndAttr = calloc(1, sizeof(RoadGeometryAndAttributes_t));
+
+	if (rgaDataSetList)
+	{
+		*rgaDataSetList = rgaDataSet;
+		ASN_SEQUENCE_ADD(&roadGeomAndAttr->dataSetSet.list, rgaDataSetList);
+	}
+	message->value.choice.RoadGeometryAndAttributes = *roadGeomAndAttr;
+
 	ec = uper_encode_to_buffer(&asn_DEF_MessageFrame, 0, message, buffer, buffer_size);
 	if (ec.encoded == -1)
 	{

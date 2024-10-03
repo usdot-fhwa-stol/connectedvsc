@@ -28,7 +28,11 @@ public class BaseLayer {
     private DDate timeOfCalculation;
 
     //RoadGeometryRefIDInfo
-    private String relativeToRdAuthID;
+    private boolean fullRdAuthIDExists;
+    private int[] fullRdAuthID;
+    private boolean relRdAuthIDExists;
+    private int[] relRdAuthID;
+    private int[] relativeToRdAuthID;
 
     //DataSetContentIdentification
     private int contentVer;
@@ -40,16 +44,24 @@ public class BaseLayer {
         this.minorVer = 0;
         this.location = null;
         this.timeOfCalculation = null;
+        this.fullRdAuthIDExists = false;
+        this.fullRdAuthID = null; 
+        this.relRdAuthIDExists = false;
+        this.relRdAuthID = null;
         this.relativeToRdAuthID = null;
         this.contentVer = 0;
         this.contentDateTime = null;
     }
     
-    public BaseLayer(int majorVer, int minorVer, Position3D location, DDate timeOfCalculation, String relativeToRdAuthID, int contentVer, DDateTime contentDateTime) {
+    public BaseLayer(int majorVer, int minorVer, Position3D location, DDate timeOfCalculation, int[] fullRdAuthID, boolean relRdAuthIDExists, int[] relRdAuthID, int[] relativeToRdAuthID, int contentVer, DDateTime contentDateTime) {
         this.majorVer = majorVer;
         this.minorVer = minorVer;
         this.location = location;
         this.timeOfCalculation = timeOfCalculation;
+        this.fullRdAuthIDExists = fullRdAuthIDExists;
+        this.fullRdAuthID = fullRdAuthID;
+        this.relRdAuthIDExists = relRdAuthIDExists;
+        this.relRdAuthID = relRdAuthID;
         this.relativeToRdAuthID = relativeToRdAuthID;
         this.contentVer = contentVer;
         this.contentDateTime = contentDateTime;
@@ -70,9 +82,45 @@ public class BaseLayer {
     public DDate getTimeOfCalculation() {
         return timeOfCalculation;
     }
+
+    public boolean isFullRdAuthIDExists() {
+        return fullRdAuthIDExists;
+    }
+
+    public void setFullRdAuthIDExists(boolean fullRdAuthIDExists) {
+        this.fullRdAuthIDExists = fullRdAuthIDExists;
+    }
+
+    public int[] getFullRdAuthID() {
+        return fullRdAuthID;
+    }
+
+    public void setFullRdAuthID(int[] fullRdAuthID) {
+        this.fullRdAuthID = fullRdAuthID;
+    }
+
+    public boolean isRelRdAuthIDExists() {
+        return relRdAuthIDExists;
+    }
+
+    public void setRelRdAuthIDExists(boolean relRdAuthIDExists) {
+        this.relRdAuthIDExists = relRdAuthIDExists;
+    }
+
+    public int[] getRelRdAuthID() {
+        return relRdAuthID;
+    }
+
+    public void setRelRdAuthID(int[] relRdAuthID) {
+        this.relRdAuthID = relRdAuthID;
+    }
     
-    public String getRelativeToRdAuthID() {
+    public int[] getRelativeToRdAuthID() {
         return relativeToRdAuthID;
+    }
+
+    public void setRelativeToRdAuthID(int[] relativeToRdAuthID) {
+        this.relativeToRdAuthID = relativeToRdAuthID;
     }
 
     public int getContentVer() {
@@ -97,10 +145,6 @@ public class BaseLayer {
 
     public void setTimeOfCalculation(DDate timeOfCalculation) {
         this.timeOfCalculation = timeOfCalculation;
-    }
-
-    public void setRelativeToRdAuthID(String relativeToRdAuthID) {
-        this.relativeToRdAuthID = relativeToRdAuthID;
     }
 
     public void setContentVer(int contentVer) {

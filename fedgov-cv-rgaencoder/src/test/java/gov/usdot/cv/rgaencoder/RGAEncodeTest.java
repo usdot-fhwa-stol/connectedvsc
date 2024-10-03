@@ -48,9 +48,15 @@ public class RGAEncodeTest {
 
         when(mockBaseLayer.getMajorVer()).thenReturn(22);
         when(mockBaseLayer.getMinorVer()).thenReturn(11);
-        when(mockBaseLayer.getRelativeToRdAuthID()).thenReturn("a");
-        when(mockBaseLayer.getContentVer()).thenReturn(13);
 
+        // RAID
+        when(mockBaseLayer.isFullRdAuthIDExists()).thenReturn(false);
+        when(mockBaseLayer.getFullRdAuthID()).thenReturn(new int[]{1, 2, 3});
+        when(mockBaseLayer.isRelRdAuthIDExists()).thenReturn(true);
+        when(mockBaseLayer.getRelRdAuthID()).thenReturn(new int[]{1, 2, 3});
+
+        when(mockBaseLayer.getRelativeToRdAuthID()).thenReturn(new int[]{8, 47, 3192});
+    
         //location
         when(mockLocation.getLatitude()).thenReturn((double)7.2);
         when(mockLocation.getLongitude()).thenReturn((double)11.1);
@@ -61,6 +67,8 @@ public class RGAEncodeTest {
         when(mockTimeOfCalculation.getMonth()).thenReturn(8);
         when(mockTimeOfCalculation.getDay()).thenReturn(21);
         when(mockTimeOfCalculation.getYear()).thenReturn(2024);
+
+        when(mockBaseLayer.getContentVer()).thenReturn(13);
 
         //ContentDateTime
         when(mockContentDateTime.getHour()).thenReturn(13);
