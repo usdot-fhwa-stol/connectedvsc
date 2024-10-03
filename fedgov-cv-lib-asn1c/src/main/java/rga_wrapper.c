@@ -182,7 +182,8 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	} else {
 		roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
 	}
-	rdGeoRefID.rdAuthorityID = roadAuthorityID;
+	//rdGeoRefID.rdAuthorityID = roadAuthorityID;
+	rdGeoRefID.rdAuthorityID = NULL;
 
 	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()[I"); 
 	jintArray relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
