@@ -182,6 +182,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 		rdGeoRefID.rdAuthorityID = roadAuthorityID;
 	} else {
 		roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
+		rdGeoRefID.rdAuthorityID = NULL;
 	}
 
 	//TODO: SET RAID correctly once implemention is updated in the UI and backend for MAP & RGA.
