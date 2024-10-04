@@ -133,6 +133,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	jmethodID isRelRdAuthIDExists = (*env)->GetMethodID(env, baseLayerClass, "isRelRdAuthIDExists", "()Z");
 	jboolean relRdAuthIDExists = (*env)->CallBooleanMethod(env, baseLayer, isRelRdAuthIDExists);
 	
+	//TODO: RAID Type must be updated to OBJECT_IDENTIFIER_t.
 	if (fullRdAuthIDExists)
 	{
 		// Get full RAID
@@ -182,27 +183,34 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	} else {
 		roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
 	}
+
+	//TODO: SET RAID correctly once implemention is updated in the UI and backend for MAP & RGA.
+
 	//rdGeoRefID.rdAuthorityID = roadAuthorityID;
 	rdGeoRefID.rdAuthorityID = NULL;
 
 	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()[I"); 
 	jintArray relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
 	const int *relToRdAuthIDStr = (*env)->GetIntArrayElements(env, relativeToRdAuthID, NULL);
-	jsize relToAuthIDLen = (*env)->GetArrayLength(env, relativeToRdAuthID);
-	size_t relToRdAuthIDStrLen = relToAuthIDLen;
 
-	RELATIVE_OID_t relToRdAuthIDPrimType;
-	relToRdAuthIDPrimType.buf = (uint8_t *)calloc(1, (relToRdAuthIDStrLen + 1));
+	size_t relToAuthIDLen = (*env)->GetArrayLength(env, relativeToRdAuthID);
 
-	for (size_t l = 0; l < relToRdAuthIDStrLen; l++)
+	//NOTE - Current implementation takes into account the following .h files:
+	// RELATIVE-OID.h, OBJECT_IDENTIFIER.h, and asn_codecs_prim.h
+	// in order to set MappedGeomID.
+
+	RELATIVE_OID_t relativeOID;
+	relativeOID.buf = (uint8_t *)calloc(1, (relToAuthIDLen + 1));
+
+	for (size_t l = 0; l < relToAuthIDLen; l++)
 	{
-		relToRdAuthIDPrimType.buf[l] = (uint8_t)relToRdAuthIDStr[l];
+		relativeOID.buf[l] = (uint8_t)relToRdAuthIDStr[l];
 	}
-	relToRdAuthIDPrimType.size = relToRdAuthIDStrLen;
+	relativeOID.size = relToAuthIDLen;
 
 	MappedGeometryID_t mappedGeomID;
 	mappedGeomID.present = MappedGeometryID_PR_relativeToRdAuthID;
-	mappedGeomID.choice.relativeToRdAuthID = relToRdAuthIDPrimType;
+	mappedGeomID.choice.relativeToRdAuthID = relativeOID;
 	
 	rdGeoRefID.mappedGeomID = mappedGeomID;
 	rgaBaseLayer.rdGeomRefID = rdGeoRefID;
