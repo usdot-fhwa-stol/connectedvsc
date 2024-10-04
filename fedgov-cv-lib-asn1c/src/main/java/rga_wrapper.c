@@ -191,7 +191,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()[I"); 
 	jintArray relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
-	const int *relToRdAuthIDStr = (*env)->GetIntArrayElements(env, relativeToRdAuthID, NULL);
+	const int *relToRdAuthID = (*env)->GetIntArrayElements(env, relativeToRdAuthID, NULL);
 
 	size_t relToAuthIDLen = (*env)->GetArrayLength(env, relativeToRdAuthID);
 
@@ -204,7 +204,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 	for (size_t l = 0; l < relToAuthIDLen; l++)
 	{
-		relativeOID.buf[l] = (uint8_t)relToRdAuthIDStr[l];
+		relativeOID.buf[l] = (uint8_t)relToRdAuthID[l];
 	}
 	relativeOID.size = relToAuthIDLen;
 
