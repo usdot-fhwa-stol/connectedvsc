@@ -445,7 +445,7 @@ public class IntersectionInputData {
 		public ContentDateTime contentDateTime;
 		public int majorVer;
 		public int minorVer;
-		public String relativeToRdAuthID;
+		public int[] relativeToRdAuthID;
 		public int contentVer;
 		public String layerType;
 		public IntersectionGeometry intersectionGeometry;

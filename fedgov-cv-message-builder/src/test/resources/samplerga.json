@@ -12,6 +12,7 @@
         "minute": 2,
         "second" : 32
       },
+      "relativeToRdAuthID": [1, 2, 3],
       "intersectionGeometry": {
         "referencePoint": {
           "descriptiveIntersctionName": "Potomac School Rd & Dolley Madison Blvd",
