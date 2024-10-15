@@ -115,7 +115,6 @@ async function getUsername() {
 
 async function GetHiddenMap() {
 	let apiKey = await getApiKey();
-	//"AjicerIt5MpzLjpjIIeC9tPTfYspCXApgBxWIEWEZ4AtBYByxJ7BBiiefwAZtCBD"
 	let hiddenMap = new Microsoft.Maps.Map('#myHiddenMap', {
 		credentials: apiKey
 	});
