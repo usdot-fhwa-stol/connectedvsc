@@ -393,6 +393,13 @@ function createMessageJSON()
         var feature = vectors.features[f];
         if (vectors.features[f].attributes.marker.name == "Reference Point Marker") {
 
+            let regex = /([0-9]+(\.[0-9]+)*)/i;
+            if (regex.test(feature.attributes.roadAuthorityId)) {
+                continue
+            } else {
+                console.error("Incorrect format for Road Authority ID! Expected format should be XX.XX.XX");
+            }
+
             var reference = {
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
@@ -403,7 +410,7 @@ function createMessageJSON()
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
                 "referenceElevation": feature.attributes.elevation,
-                "roadAuthorityId": feature.attributes.roadAuthorityId,
+                "roadAuthorityId": feature.attributes.roadAuthorityId.split("."),
                 "roadAuthorityIdType": feature.attributes.roadAuthorityIdType,
             };
 
