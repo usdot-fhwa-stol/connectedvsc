@@ -393,11 +393,6 @@ function createMessageJSON()
         var feature = vectors.features[f];
         if (vectors.features[f].attributes.marker.name == "Reference Point Marker") {
 
-            if (feature.attributes.roadAuthorityId == undefined) {
-                $("#message_deposit").prop('disabled', true);
-                $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Need to include Road Authority ID before encoding" +'</span></div>');
-            }
-
             var reference = {
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
@@ -408,7 +403,7 @@ function createMessageJSON()
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
                 "referenceElevation": feature.attributes.elevation,
-                "roadAuthorityId": feature.attributes.roadAuthorityId.split("."),
+                "roadAuthorityId": feature.attributes.roadAuthorityId?.split("."),
                 "roadAuthorityIdType": feature.attributes.roadAuthorityIdType,
             };
 
