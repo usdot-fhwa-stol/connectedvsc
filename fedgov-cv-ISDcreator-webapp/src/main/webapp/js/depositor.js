@@ -393,11 +393,9 @@ function createMessageJSON()
         var feature = vectors.features[f];
         if (vectors.features[f].attributes.marker.name == "Reference Point Marker") {
 
-            let regex = /([0-9]+(\.[0-9]+)*)/i;
-            if (regex.test(feature.attributes.roadAuthorityId)) {
-                continue
-            } else {
-                console.error("Incorrect format for Road Authority ID! Expected format should be XX.XX.XX");
+            if (feature.attributes.roadAuthorityId == undefined) {
+                $("#message_deposit").prop('disabled', true);
+                $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Need to include Road Authority ID before encoding" +'</span></div>');
             }
 
             var reference = {
