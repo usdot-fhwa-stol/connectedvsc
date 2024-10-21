@@ -11,7 +11,6 @@
     var fromProjection, toProjection;
     var temp_lat, temp_lon, selected_marker, selected_layer;
     var intersection_url = '//api.geonames.org/findNearestIntersectionJSON';
-    var elevation_url = 'https://dev.virtualearth.net/REST/v1/Elevation/List?hts=ellipsoid&points=';
 	var google_elevation_url='/msp/googlemap/api/elevation';
     var computingLane = false;
     var computedLaneSource;
