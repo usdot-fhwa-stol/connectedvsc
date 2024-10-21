@@ -58,7 +58,7 @@
  * @event: sets tile age text on DOM
  */
 
-function tileAge(cachedSessionKey) {
+function tileAge() {
 
     var convertedLonLat = new OpenLayers.LonLat(map.getCenter().lon,map.getCenter().lat).transform(toProjection, fromProjection);
     var current_zoom =  map.getZoom();
@@ -66,7 +66,7 @@ function tileAge(cachedSessionKey) {
         current_zoom = 18;
     }
     $.ajax({
-        url: "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/" + convertedLonLat.lat + "," + convertedLonLat.lon + "?uriScheme=https&zl=" + current_zoom + "&key=" + cachedSessionKey,
+        url: "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/" + convertedLonLat.lat + "," + convertedLonLat.lon + "?uriScheme=https&zl=" + current_zoom + "&key=" + apiKey,
         dataType: "jsonp",
         jsonp: "jsonp",
         success: function (result) {
