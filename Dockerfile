@@ -20,7 +20,6 @@ RUN cd /root/fedgov-cv-TIMcreator-webapp \
     && mvn install -DskipTests
 RUN cd /root/fedgov-cv-map-services-proxy \
     && mvn clean install -DskipTests
-RUN jar cvf /root/private-resources.war -C /root/private-resources .
 RUN jar cvf /root/root.war -C /root/root .
 
 FROM jetty:9.4.46-jre8-slim
