@@ -52,9 +52,6 @@ public class GoogleElevationsService {
 
     public GoogleElevationResponse parseElevationResponse(String response){
         try {
-            if(response==null){
-                return null;
-            }
             ObjectMapper objMapper = new ObjectMapper();
             JsonNode rootNode = objMapper.readTree(response);
             if(rootNode.has("results") && rootNode.get("results").get(0) != null){

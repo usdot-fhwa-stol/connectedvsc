@@ -45,4 +45,18 @@ public class GoogleElevationsServiceTest {
         GoogleElevationResponse data =  service.parseElevationResponse(response);
         assertEquals(null, data);
     }
+
+    @Test
+    void parseElevationInvalidResponse(){
+        String response = "{\"results\": 0}";
+        GoogleElevationResponse data =  service.parseElevationResponse(response);
+        assertEquals(null, data);
+    }
+
+    @Test
+    void parseElevationInvalidResponseParsing(){
+        String response = "{\"results\":[{\"invalidJson\"}]";
+        GoogleElevationResponse data =  service.parseElevationResponse(response);
+        assertEquals(null, data);
+    }
 }

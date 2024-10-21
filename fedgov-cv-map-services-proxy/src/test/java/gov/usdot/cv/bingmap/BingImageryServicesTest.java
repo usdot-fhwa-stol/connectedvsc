@@ -52,4 +52,18 @@ public class BingImageryServicesTest {
         BingImageryMetadata data =  service.parseImageryMetadataResponse(response);
         assertEquals(null, data);
     }
+
+    @Test
+    void parseImageryMetadataInvalidResponseParsing(){
+        String response = "{\"resourceSets\":[{\"estimatedTotal\":1,\"resources\":[{\"invalid\"}]";
+        BingImageryMetadata data =  service.parseImageryMetadataResponse(response);
+        assertEquals(null, data);
+    }
+
+    @Test
+    void parseImageryMetadataInvalidResponseMapping(){
+        String response = "{\"resourceSets\":[{\"estimatedTotal\":1,\"resources\":[{\"invalid\":12}]";
+        BingImageryMetadata data =  service.parseImageryMetadataResponse(response);
+        assertEquals(null, data);
+    }
 }
