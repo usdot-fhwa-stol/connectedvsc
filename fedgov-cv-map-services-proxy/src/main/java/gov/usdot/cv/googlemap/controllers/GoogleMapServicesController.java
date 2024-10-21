@@ -1,7 +1,9 @@
 package gov.usdot.cv.googlemap.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +27,10 @@ public class GoogleMapServicesController {
     public ResponseEntity<GoogleElevationResponse> getElevation(@PathVariable String latitude, @PathVariable String longitude){
         GoogleElevationResponse eData = elevationsService.getElevation(latitude, longitude, googleMapProp.get_api_key());
         if(eData==null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(eData, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(eData, headers, HttpStatus.OK);
     }
 }

@@ -9,15 +9,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class BingImageryMetadata{
    private String imageUrl;
    private String imageUrlSubdomains;
-   private String imageWidth;
-   private String imageHeight;
+   private Integer imageWidth;
+   private Integer imageHeight;
    private String vintageStart;
    private String vintageEnd;
-   private String zoomMin;
-   private String zoomMax;
+   private Integer zoomMin;
+   private Integer zoomMax;
 
    public BingImageryMetadata(){}
-   public BingImageryMetadata(String imageUrl, String imageUrlSubdomains, String imageWidth, String imageHeight, String vintageStart, String vintageEnd, String zoomMin, String zoomMax )
+   public BingImageryMetadata(String imageUrl, String imageUrlSubdomains, Integer imageWidth, Integer imageHeight, String vintageStart, String vintageEnd, Integer zoomMin, Integer zoomMax )
    {
         this.imageUrl = imageUrl;
         this.imageUrlSubdomains = imageUrlSubdomains;
@@ -45,19 +45,19 @@ public class BingImageryMetadata{
         this.imageUrlSubdomains = imageUrlSubdomains;
     }
 
-    public String getImageWidth() {
+    public Integer getImageWidth() {
         return this.imageWidth;
     }
 
-    public void setImageWidth(String imageWidth) {
+    public void setImageWidth(Integer imageWidth) {
         this.imageWidth = imageWidth;
     }
 
-    public String getImageHeight() {
+    public Integer getImageHeight() {
         return this.imageHeight;
     }
 
-    public void setImageHeight(String imageHeight) {
+    public void setImageHeight(Integer imageHeight) {
         this.imageHeight = imageHeight;
     }
 
@@ -77,19 +77,19 @@ public class BingImageryMetadata{
         this.vintageEnd = vintageEnd;
     }
 
-    public String getZoomMin() {
+    public Integer getZoomMin() {
         return this.zoomMin;
     }
 
-    public void setZoomMin(String zoomMin) {
+    public void setZoomMin(Integer zoomMin) {
         this.zoomMin = zoomMin;
     }
 
-    public String getZoomMax() {
+    public Integer getZoomMax() {
         return this.zoomMax;
     }
 
-    public void setZoomMax(String zoomMax) {
+    public void setZoomMax(Integer zoomMax) {
         this.zoomMax = zoomMax;
     }
    
