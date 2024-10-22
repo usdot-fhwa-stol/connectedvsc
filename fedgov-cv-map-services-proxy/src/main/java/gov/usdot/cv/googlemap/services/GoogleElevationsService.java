@@ -24,7 +24,7 @@ public class GoogleElevationsService {
     private Logger logger = LogManager.getLogger(GoogleElevationsService.class);
 
     public String composeFullURL(String latitude, String longitude, String api_key){
-        String fullURL = URL_BASE+"/"+ TYPE +"?locations="+ latitude + ',' + longitude;
+        String fullURL = URL_BASE+"/"+ TYPE +"?locations="+ latitude + "," + longitude;
         fullURL += "&key=" + api_key;
         return fullURL;
     }
