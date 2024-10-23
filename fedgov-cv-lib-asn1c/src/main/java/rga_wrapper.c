@@ -138,72 +138,57 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 		// Get full RAID
 		jmethodID getFullRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getFullRdAuthID", "()[I");
 		jintArray fullRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getFullRdAuthID);
-		const int *fullRAID = (*env)->GetIntArrayElements(env, fullRdAuthID, NULL);
+		const uint32_t* fullRAID = (*env)->GetIntArrayElements(env, fullRdAuthID, NULL);
 
 		size_t fullRAIDLen = (*env)->GetArrayLength(env, fullRdAuthID);
 
-		OBJECT_IDENTIFIER_t fullRAIDObjID;
-		fullRAIDObjID.buf = (uint8_t *)calloc(1, (fullRAIDLen + 1));
+		OBJECT_IDENTIFIER_t *fullRAIDObjID = calloc(1, sizeof(OBJECT_IDENTIFIER_t));
+		
+		OBJECT_IDENTIFIER_set_arcs(fullRAIDObjID,
+                               fullRAID, fullRAIDLen);
 
-		for (size_t n = 0; n < fullRAIDLen; n++)
-		{
-			fullRAIDObjID.buf[n] = (uint8_t)fullRAID[n];
-		}
-		fullRAIDObjID.size = fullRAIDLen;
-
-		// Set RAID pointer's PRESENT and CHOICE
 		roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
-		roadAuthorityID->choice.fullRdAuthID = fullRAIDObjID;
+		roadAuthorityID->choice.fullRdAuthID = *fullRAIDObjID;
 		rdGeoRefID.rdAuthorityID = roadAuthorityID;
 	} else if (relRdAuthIDExists) {
 		// Get relative RAID
 		jmethodID getRelRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelRdAuthID", "()[I");
 		jintArray relRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelRdAuthID);
-
-		const int *relRAID = (*env)->GetIntArrayElements(env, relRdAuthID, NULL);
+		const uint32_t* relRAID = (*env)->GetIntArrayElements(env, relRdAuthID, NULL);
+		
 		size_t relRAIDLen  = (*env)->GetArrayLength(env, relRdAuthID);
 
-		OBJECT_IDENTIFIER_t relRAIDObjID;
-		relRAIDObjID.buf = (uint8_t *)calloc(1, (relRAIDLen + 1));
+		RELATIVE_OID_t *relRAIDObjID = calloc(1, sizeof(RELATIVE_OID_t));
 
-		for (size_t n = 0; n < relRAIDLen; n++)
-		{
-			relRAIDObjID.buf[n] = (uint8_t)relRAID[n];
-		}
-		relRAIDObjID.size = relRAIDLen;
+		RELATIVE_OID_set_arcs(relRAIDObjID,
+                               relRAID, relRAIDLen);
 
 		// Set RAID pointer's PRESENT and CHOICE
 		roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
-		roadAuthorityID->choice.relRdAuthID = relRAIDObjID;
+		roadAuthorityID->choice.relRdAuthID = *relRAIDObjID;
 		rdGeoRefID.rdAuthorityID = roadAuthorityID;
 	} else {
 		roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
 		rdGeoRefID.rdAuthorityID = NULL;
 	}
-
-	//TODO: SET RAID correctly once implemention is updated in the UI and backend for MAP & RGA.
+	
 	rdGeoRefID.rdAuthorityID = roadAuthorityID;
-	//rdGeoRefID.rdAuthorityID = NULL;
 
 	// ================== Road Geometry Ref ID Info (relativeToRdAuthID) ==================
 	jmethodID getRelToRdAuthID = (*env)->GetMethodID(env, baseLayerClass, "getRelativeToRdAuthID", "()[I"); 
 	jintArray relativeToRdAuthID = (*env)->CallObjectMethod(env, baseLayer, getRelToRdAuthID);
-	const int *relToRdAuthID = (*env)->GetIntArrayElements(env, relativeToRdAuthID, NULL);
+	const uint32_t *relToRdAuthID = (*env)->GetIntArrayElements(env, relativeToRdAuthID, NULL);
 
 	size_t relToAuthIDLen = (*env)->GetArrayLength(env, relativeToRdAuthID);
 
-	RELATIVE_OID_t relativeOID;
-	relativeOID.buf = (uint8_t *)calloc(1, (relToAuthIDLen + 1));
+	RELATIVE_OID_t *relativeOID = calloc(1, sizeof(RELATIVE_OID_t));
 
-	for (size_t l = 0; l < relToAuthIDLen; l++)
-	{
-		relativeOID.buf[l] = (uint8_t)relToRdAuthID[l];
-	}
-	relativeOID.size = relToAuthIDLen;
+	RELATIVE_OID_set_arcs(relativeOID,
+                               relToRdAuthID, relToAuthIDLen);
 
 	MappedGeometryID_t mappedGeomID;
 	mappedGeomID.present = MappedGeometryID_PR_relativeToRdAuthID;
-	mappedGeomID.choice.relativeToRdAuthID = relativeOID;
+	mappedGeomID.choice.relativeToRdAuthID = *relativeOID;
 	
 	rdGeoRefID.mappedGeomID = mappedGeomID;
 	rgaBaseLayer.rdGeomRefID = rdGeoRefID;
