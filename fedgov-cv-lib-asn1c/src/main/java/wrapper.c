@@ -171,43 +171,35 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				// Get full RAID
 				jmethodID getFullRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getFullRdAuthID", "()[I");
 				jintArray fullRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getFullRdAuthID);
-				const int *fullRAID = (*env)->GetIntArrayElements(env, fullRdAuthID, NULL);
+				const uint32_t* fullRAID = (*env)->GetIntArrayElements(env, fullRdAuthID, NULL);
 
 				size_t fullRAIDLen = (*env)->GetArrayLength(env, fullRdAuthID);
 
-				OBJECT_IDENTIFIER_t fullRAIDObjID;
-				fullRAIDObjID.buf = (uint8_t *)calloc(1, (fullRAIDLen + 1));
-
-				for (size_t n = 0; n < fullRAIDLen; n++)
-				{
-					fullRAIDObjID.buf[n] = (uint8_t)fullRAID[n];
-				}
-				fullRAIDObjID.size = fullRAIDLen;
+				OBJECT_IDENTIFIER_t *fullRAIDObjID = calloc(1, sizeof(OBJECT_IDENTIFIER_t));
+				
+				OBJECT_IDENTIFIER_set_arcs(fullRAIDObjID,
+                               fullRAID, fullRAIDLen);
 
 				// Set RAID pointer's PRESENT and CHOICE
 				roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
-				roadAuthorityID->choice.fullRdAuthID = fullRAIDObjID;
+				roadAuthorityID->choice.fullRdAuthID = *fullRAIDObjID;
 				intersection->roadAuthorityID = roadAuthorityID;
 			} else if (relRdAuthIDExists) {
 				// Get relative RAID
 				jmethodID getRelRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getRelRdAuthID", "()[I");
 				jintArray relRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getRelRdAuthID);
-
-				const int *relRAID = (*env)->GetIntArrayElements(env, relRdAuthID, NULL);
+				const uint32_t* relRAID = (*env)->GetIntArrayElements(env, relRdAuthID, NULL);
+				
 				size_t relRAIDLen  = (*env)->GetArrayLength(env, relRdAuthID);
 
-				OBJECT_IDENTIFIER_t relRAIDObjID;
-				relRAIDObjID.buf = (uint8_t *)calloc(1, (relRAIDLen + 1));
+				RELATIVE_OID_t *relRAIDObjID = calloc(1, sizeof(RELATIVE_OID_t));
 
-				for (size_t n = 0; n < relRAIDLen; n++)
-				{
-					relRAIDObjID.buf[n] = (uint8_t)relRAID[n];
-				}
-				relRAIDObjID.size = relRAIDLen;
+				RELATIVE_OID_set_arcs(relRAIDObjID,
+                               relRAID, relRAIDLen);
 
 				// Set RAID pointer's PRESENT and CHOICE
 				roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
-				roadAuthorityID->choice.relRdAuthID = relRAIDObjID;
+				roadAuthorityID->choice.relRdAuthID = *relRAIDObjID;
 				intersection->roadAuthorityID = roadAuthorityID;
 			} else {
 				roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
