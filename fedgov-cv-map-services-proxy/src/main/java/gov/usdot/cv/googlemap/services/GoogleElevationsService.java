@@ -22,6 +22,7 @@ public class GoogleElevationsService {
     private static final String URL_BASE ="https://maps.googleapis.com/maps/api/elevation";
     private static final String TYPE="json";
     private Logger logger = LogManager.getLogger(GoogleElevationsService.class);
+    private final OkHttpClient client = new OkHttpClient();
 
     public String composeFullURL(String latitude, String longitude, String api_key){
         String fullURL = URL_BASE+"/"+ TYPE +"?locations="+ latitude + "," + longitude;
@@ -31,7 +32,6 @@ public class GoogleElevationsService {
 
     public GoogleElevationResponse getElevation(String latitude, String longitude, String api_key){
         String fullURL = composeFullURL(latitude, longitude, api_key);
-        OkHttpClient client = new OkHttpClient();
         Request req = new Request.Builder()
         .url(fullURL)
         .build();

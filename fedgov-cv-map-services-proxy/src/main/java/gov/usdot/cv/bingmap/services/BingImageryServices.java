@@ -22,6 +22,7 @@ public class BingImageryServices {
     private static final String URL_BASE ="https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/";
     private static final String SCHEMA="https";
     private Logger logger = LogManager.getLogger(BingImageryServices.class);
+    private final OkHttpClient client = new OkHttpClient();
 
     public String composeFullURL(String latitude, String longitude, String zoomLevel, String session_key){
         String fullURL = URL_BASE + latitude + "," + longitude + "?uriScheme="+SCHEMA+"&zl=" + zoomLevel;
@@ -31,7 +32,6 @@ public class BingImageryServices {
 
     public BingImageryMetadata getImageryMetadata(String latitude, String longitude, String zoomLevel, String session_key){
         String fullURL = composeFullURL(latitude, longitude, zoomLevel, session_key);
-        OkHttpClient client = new OkHttpClient();
         Request req = new Request.Builder()
         .url(fullURL)
         .build();
