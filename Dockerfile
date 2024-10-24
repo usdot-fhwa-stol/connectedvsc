@@ -1,8 +1,8 @@
-FROM gradle:7.4.2-jdk11 AS gradle-build
+FROM gradle:7.4.2-jdk8 AS gradle-build
 ARG TOKEN
 RUN git clone https://$TOKEN@github.com/usdot-fhwa-stol/CARMASensitive.git 
 RUN ls -la && pwd
-FROM maven:3.8.5-jdk-11-slim AS mvn-build
+FROM maven:3.8.5-jdk-8-slim AS mvn-build
 ADD . /root
 
 # Run the Maven build
@@ -22,7 +22,7 @@ RUN cd /root/fedgov-cv-map-services-proxy \
     && mvn clean install -DskipTests
 RUN jar cvf /root/root.war -C /root/root .
 
-FROM jetty:9.4.46-jre11-slim
+FROM jetty:9.4.46-jre8-slim
 # Install the generated WAR files
 COPY --from=mvn-build /root/fedgov-cv-ISDcreator-webapp/target/isd.war /var/lib/jetty/webapps
 COPY --from=mvn-build /root/fedgov-cv-TIMcreator-webapp/target/tim.war /var/lib/jetty/webapps
