@@ -43,5 +43,5 @@ RUN cd /var/lib/jetty \
 RUN java -jar $JETTY_HOME/start.jar --create-files
 
 RUN java -jar $JETTY_HOME/start.jar --add-to-start=https
-COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/keystore* /var/lib/jetty/etc
+COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/keystore* /var/lib/jetty/etc/
 COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/ssl.ini /var/lib/jetty/start.d/
