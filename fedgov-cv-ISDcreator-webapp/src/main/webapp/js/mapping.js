@@ -11,7 +11,7 @@
     var fromProjection, toProjection;
     var temp_lat, temp_lon, selected_marker, selected_layer;
     var intersection_url = '//api.geonames.org/findNearestIntersectionJSON';
-    var elevation_url = 'https://dev.virtualearth.net/REST/v1/Elevation/List?hts=ellipsoid&points=';
+	var google_elevation_url='/msp/googlemap/api/elevation';
     var computingLane = false;
     var computedLaneSource;
     var sharedWith_object = '';
@@ -1917,36 +1917,33 @@ function populateRefWindow(feature, lat, lon)
             }
 		}
 	});
+	if(!feature.attributes.elevation)
+	{
+		var elev;
+		$.ajax({
+			url: google_elevation_url+"/"+lat+'/'+lon,
+			success: function(result){
+				console.log(result);
+				elev = result?.elevation;
+				// elev = result.resourceSets[0].resources[0].elevations[0];
+				if (elev == null|| elev==undefined){
+					elev = -9999; //any sea value is set to -9999 by default. This brings it back to sea level as we know it
+				}else{
+					elev = Math.round(elev);
+				}
+				if (! feature.attributes.elevation ) {
+					$('#elev').val(elev);
+				} else {
+					if (feature.attributes.number > -1) {
+						if (!feature.attributes.elevation.value) {
+							$('#elev').val(elev);
+						}
+					}
+				}
+			}
+		});
+	}
 
-	var elev;
-
-    $.ajax({
-        url: elevation_url + lat + ',' + lon + '&key=' + cachedSessionKey,
-        dataType: 'jsonp',
-        jsonp: 'jsonp',
-        cache: false,
-        success: function(result){
-            elev = result.resourceSets[0].resources[0].elevations[0];
-            if (elev == null){
-                elev = -9999; //any sea value is set to -9999 by default. This brings it back to sea level as we know it
-            }
-            if (! feature.attributes.elevation ) {
-                $('#elev').val(elev);
-            } else {
-                if (feature.attributes.number > -1) {
-                    if (!feature.attributes.elevation.value) {
-                        $('#elev').val(elev);
-                    }
-                }
-            }
-            if (feature.attributes.verifiedElev){
-                $('#verified_elev').val(feature.attributes.verifiedElev);
-            } else {
-                $('#verified_elev').val(elev);
-            }
-        }
-    });
-	
 	if (feature.attributes.verifiedLat){
 		$('#verified_lat').val(feature.attributes.verifiedLat);	
 	} else {
@@ -2238,15 +2235,14 @@ function getCookie(cname) {
 function getElevation(dot, latlon, i, j, callback){
 
     $.ajax({
-        url: elevation_url + latlon.lat + ',' + latlon.lon + '&key=' + cachedSessionKey,
-        dataType: 'jsonp',
-        jsonp: 'jsonp',
-        cache: false,
+		url: google_elevation_url+"/"+latlon.lat+'/'+latlon.lon,
         success: function(result){
-            elev = result.resourceSets[0].resources[0].elevations[0];
-            if (elev == null){
+			elev = result?.elevation;
+            if (elev == null || elev == undefined){
                 elev = -9999; //any sea value is set to -9999 by default. This brings it back to sea level as we know it
-            }
+            }else{
+				elev = Math.round(elev);
+			}
             callback(elev, i, j, latlon, dot);
         },
         error: function(error){
