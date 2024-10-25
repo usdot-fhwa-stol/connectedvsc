@@ -243,6 +243,8 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	rgaContentIdentification.contentDateTime = contentDateTime;
 	rgaBaseLayer.rgaContentIdentification = rgaContentIdentification;
 
+	rgaBaseLayer.partitionInfo = NULL;
+
 	// Set BaseLayer, RGADataSet, and MessageFrame
 	RGADataSet_t rgaDataSet;
 	rgaDataSet.baseLayer = rgaBaseLayer;
