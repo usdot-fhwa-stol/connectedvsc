@@ -190,7 +190,7 @@ function createMessageJSON()
 	                        "nodeNumber": m,
 	                        "nodeLat": latlon.lat,
 	                        "nodeLong": latlon.lon,
-	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
+	                        "nodeElev": lanes.features[j].attributes.elevation[m]?.value,
 	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m]
 	                    }
 	                }
@@ -243,7 +243,7 @@ function createMessageJSON()
 	                        "nodeNumber": m,
 	                        "nodeLat": latlon.lat,
 	                        "nodeLong": latlon.lon,
-	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
+	                        "nodeElev": lanes.features[j].attributes.elevation[m]?.value,
 	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m]
 	                    }
 	                }
