@@ -54,7 +54,7 @@ public class GoogleElevationsService {
         try {
             ObjectMapper objMapper = new ObjectMapper();
             JsonNode rootNode = objMapper.readTree(response);
-            if(rootNode.has("results") && rootNode.get("results").get(0) != null){
+            if(rootNode.has("results") && !rootNode.get("results").get(0).isNull()){
                 JsonNode resultsNode = rootNode.get("results").get(0);
                 GoogleElevationResponse elevationData =  objMapper.readValue(resultsNode.toString(), GoogleElevationResponse.class);
                 logger.info("Response: "+ elevationData.toString());
