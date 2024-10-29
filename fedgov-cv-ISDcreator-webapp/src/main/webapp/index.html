@@ -433,7 +433,7 @@
 							</div>
 							<div class="row mapped_geometry_id extra_rga_field">
 								<div class="col-sm-4"><label for="mapped_geometry_id">Mapped Geometry ID:</label></div>
-								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="mapped_geometry_id" placeholder="0" ></div>
+								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="mapped_geometry_id" placeholder="0" data-parsley-required="true" data-parsley-pattern="([0-9]+(\.[0-9]+)+)" data-parsley-pattern-message="This value must contain at least two integers separated by a period." ></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="mapped_geometry_id"></i></div>
 							</div>
 							<div class="row content_version extra_rga_field">
