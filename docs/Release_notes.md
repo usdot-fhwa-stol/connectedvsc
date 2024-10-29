@@ -1,6 +1,29 @@
 Map Tool Release Notes
 ----------------------------
 
+Version 2.0.1, released Nov Xth, 2024
+----------------------------------------
+
+### **Summary**
+This Hotfix 2.0.1 focuses on addressing security issues related to the Bing Map API usage and includes several improvements related to security of the Map tool websites. 
+
+**<ins>Connectedvcs Tools:</ins>** 
+
+We identified an issue where the map tiles were not loading due to suspended API keys, and this hotfix introduces proper map functionality while improving security and monitoring capabilities.
+
+**<ins> Epic 203: Implement Map tool Security Fixes </ins>**
+
+Investigation revealed that Map tool could no longer load map tiles from Bing due to Bing API kyes being suspended due to abnormal usage. The focus of this         Epic is to apply necessary security fixes to enable the re-deployment of the Map Tool websites and prevent such issues in the future.
+
+   - **<ins> Pull Requests:</ins>** (https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/39, https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/40, https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/43  )
+   - **<ins> Known Issues:</ins>** (N/A)
+
+In addition to the security fixes above, we have implemented AWS security features for all three map tool websites:
+webapp.connectedvcs.com
+webappopen.connectedvcs.com
+webapptest.connectedvcs.com
+
+
 Version 2.0.0, released April 25th, 2024
 ----------------------------------------
 
