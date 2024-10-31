@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gov.usdot.cv.bingmap.models.BingImageryMetadata;
+import gov.usdot.cv.bingmap.models.BingMapProperties;
 import gov.usdot.cv.bingmap.services.BingImageryServices;
 
 
@@ -21,9 +22,12 @@ public class BingMapServicesController {
     @Autowired
     private BingImageryServices imageryService;
 
-    @GetMapping("/imagery/metadata/{latitude}/{longitude}/{zoomLevel}/{session_key}")
-    ResponseEntity<BingImageryMetadata> getImageryMetadata( @PathVariable String latitude, @PathVariable String longitude, @PathVariable String zoomLevel , @PathVariable String session_key){
-        BingImageryMetadata mdata= imageryService.getImageryMetadata(latitude, longitude, zoomLevel,session_key);
+    @Autowired
+    private BingMapProperties property;
+
+    @GetMapping("/imagery/metadata/{latitude}/{longitude}/{zoomLevel}")
+    ResponseEntity<BingImageryMetadata> getImageryMetadata( @PathVariable String latitude, @PathVariable String longitude, @PathVariable String zoomLevel){
+        BingImageryMetadata mdata= imageryService.getImageryMetadata(latitude, longitude, zoomLevel,property.get_api_key());
         if(mdata==null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

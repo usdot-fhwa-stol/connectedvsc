@@ -66,7 +66,7 @@ function tileAge(cachedSessionKey) {
         current_zoom = 18;
     }
     $.ajax({
-        url: "/msp/bingmap/api/imagery/metadata/"+convertedLonLat.lat+"/"+convertedLonLat.lon+"/"+current_zoom+"/"+cachedSessionKey,
+        url: "/msp/bingmap/api/imagery/metadata/"+convertedLonLat.lat+"/"+convertedLonLat.lon+"/"+current_zoom,
         success: function (result) {
 
 			console.log(result);
