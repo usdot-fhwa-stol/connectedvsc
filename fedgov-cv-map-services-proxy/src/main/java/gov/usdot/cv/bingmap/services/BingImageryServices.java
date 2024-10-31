@@ -24,14 +24,14 @@ public class BingImageryServices {
     private Logger logger = LogManager.getLogger(BingImageryServices.class);
     private final OkHttpClient client = new OkHttpClient();
 
-    public String composeFullURL(String latitude, String longitude, String zoomLevel, String session_key){
+    public String composeFullURL(String latitude, String longitude, String zoomLevel, String api_key){
         String fullURL = URL_BASE + latitude + "," + longitude + "?uriScheme="+SCHEMA+"&zl=" + zoomLevel;
-        fullURL += "&key=" + session_key;
+        fullURL += "&key=" + api_key;
         return fullURL;
     }
 
-    public BingImageryMetadata getImageryMetadata(String latitude, String longitude, String zoomLevel, String session_key){
-        String fullURL = composeFullURL(latitude, longitude, zoomLevel, session_key);
+    public BingImageryMetadata getImageryMetadata(String latitude, String longitude, String zoomLevel, String api_key){
+        String fullURL = composeFullURL(latitude, longitude, zoomLevel, api_key);
         Request req = new Request.Builder()
         .url(fullURL)
         .build();
