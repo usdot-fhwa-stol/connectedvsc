@@ -200,15 +200,28 @@ function createMessageJSON()
                                 }
                             }
                         }
-                        
-                        nodeArray[m] = {
-	                        "nodeNumber": m,
-	                        "nodeLat": latlon.lat,
-	                        "nodeLong": latlon.lon,
-	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
-	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
-                            "speedLimitType": currentSpeedLimits
-	                    }
+
+                        try {
+                            nodeArray[m] = {
+                                "nodeNumber": m,
+                                "nodeLat": latlon.lat,
+                                "nodeLong": latlon.lon,
+                                "nodeElev": lanes.features[j].attributes.elevation[m].value,
+                                "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
+                                "speedLimitType": currentSpeedLimits
+                            }
+                          } catch (e) {
+                            nodeArray[m] = {
+                                "nodeNumber": m,
+                                "nodeLat": latlon.lat,
+                                "nodeLong": latlon.lon,
+                                "nodeElev": lanes.features[j].attributes.elevation[m]?.value,
+                                "laneWidthDelta": lanes.features[j].attributes?.laneWidth[m],
+                                "speedLimitType": currentSpeedLimits
+                            }
+                            $("#message_deposit").prop('disabled', true);
+                            $('#alert_placeholder').append('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Node elevation empty for node " + m + " in lane " + lanes.features[j].attributes.laneNumber + "." +'</span></div>');
+                          }                 
 	                }
                 } else {
                 	computedLane = {
