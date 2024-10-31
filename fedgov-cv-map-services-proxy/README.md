@@ -7,7 +7,7 @@ The fedgov-cv-map-services-proxy is a software application to forward map relate
 The Map Services Proxy is accessible at <https://webapp.connectedvcs.com/msp>
 
 ## Build image
-- Update Google API keys in  fedgov-cv-map-services-proxy folder `resources/application.properties` file.
+- Update Google API and Bing MAP keys in  fedgov-cv-map-services-proxy folder `resources/application.properties` file.
 - Navigate to connectedvcs-tools folder
 - Run `docker build -t usdotfhwastol/connectedvcs-tools:<tag> .` to build the docker image
 
