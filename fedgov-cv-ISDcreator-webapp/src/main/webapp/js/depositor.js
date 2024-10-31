@@ -403,7 +403,7 @@ function createMessageJSON()
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
                 "referenceElevation": feature.attributes.elevation,
-                "roadAuthorityId": feature.attributes.roadAuthorityId?.split("."),
+                "roadAuthorityId": feature.attributes.roadAuthorityId.split(".").map(num => parseInt(num, 10)),
                 "roadAuthorityIdType": feature.attributes.roadAuthorityIdType,
             };
 
@@ -418,7 +418,7 @@ function createMessageJSON()
                 data_frame_rga_base_layer_fields["contentDateTime"] = date_time.time;
 
                 //Add mapped geometry ID to intersection geometry reference point
-                reference["mappedGeomID"] = feature.attributes.mappedGeometryId;
+                reference["mappedGeomID"] = feature.attributes.mappedGeometryId.split(".").map(num => parseInt(num, 10));
 
                 //Validate RGA required fields
                 validate_required_rga_fields(feature);
