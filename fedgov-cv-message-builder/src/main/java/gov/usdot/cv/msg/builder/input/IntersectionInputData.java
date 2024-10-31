@@ -226,6 +226,7 @@ public class IntersectionInputData {
 		public int intersectionID;
 		public String roadAuthorityIdType;
 		public int[] roadAuthorityId;
+		public int[] mappedGeomID;
 		public int regionID;
 		public int layerID;
 		public int msgCount;
@@ -240,11 +241,12 @@ public class IntersectionInputData {
 
 		@Override
 		public String toString() {
-			return String.format("ReferencePoint [%s=%s,%s=%d,%s=%d,%s=%d,%s=%d,%s=%g,%s=%g,%s=%d,%s=%s,", 
+			return String.format("ReferencePoint [%s=%s,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%g,%s=%g,%s=%d,%s=%s,", 
 					"descriptiveIntersctionName", descriptiveIntersctionName,
 					"intersectionID", intersectionID,
 					"roadAuthorityIdType", roadAuthorityIdType, 
 					"roadAuthorityId", roadAuthorityId,
+					"relativeToRdAuthID" , mappedGeomID,
 					"regionID", regionID,					
 					"layerID", layerID,
 					"msgCount", msgCount,
@@ -443,9 +445,8 @@ public class IntersectionInputData {
 		public int minuteOfTheYear;
 		public TimeOfCalculation timeOfCalculation;
 		public ContentDateTime contentDateTime;
-		public int majorVer;
-		public int minorVer;
-		public int[] relativeToRdAuthID;
+		public int majorVersion;
+		public int minorVersion;
 		public int contentVer;
 		public String layerType;
 		public IntersectionGeometry intersectionGeometry;
@@ -456,9 +457,8 @@ public class IntersectionInputData {
 			return "MapData [minuteOfTheYear=" + minuteOfTheYear 
 					+ ", timeOfCalculation=" + timeOfCalculation
 					+ ", contentDateTime=" + contentDateTime
-					+ ", majorVer=" + majorVer
-					+ ", minorVer=" + minorVer
-					+ ", relativeToRdAuthID" + relativeToRdAuthID
+					+ ", majorVersion=" + majorVersion
+					+ ", minorVersion=" + minorVersion
 					+ ", contentVer=" + contentVer
 					+ ", layerType=" + layerType 
 					+ ",  intersectionGeometry=" + intersectionGeometry 
