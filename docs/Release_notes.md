@@ -7,22 +7,34 @@ Version 2.0.1, released Nov Xth, 2024
 ### **Summary**
 This Hotfix 2.0.1 focuses on addressing security issues related to the Bing Map API usage and includes several improvements related to security of the Map tool websites. 
 
-**<ins>Connectedvcs Tools:</ins>** 
+**<ins>Fixes:</ins>** 
+- Epic 203 Implement ConnectedVCS Tool Security Fixes:  Investigation revealed that ConnectedVCS ISD Tool could no longer load map tiles from Bing due to Bing API keys being suspended due to abnormal usage. The changes included below were applied to the webappopen.connectedvcs.com and webapptest.connectedvcs.com (test site). 
+   - Implementing backend monitoring of API calls 
 
-We identified an issue where the map tiles were not loading due to suspended API keys, and this hotfix introduces proper map functionality while improving security and monitoring capabilities.
+   - Switching to Google Maps API for elevation data 
 
-**<ins> Epic 203: Implement Map tool Security Fixes </ins>**
+   - Adding protection from bots and common DDOS attacks 
 
-Investigation revealed that Map tool could no longer load map tiles from Bing due to Bing API kyes being suspended due to abnormal usage. The focus of this         Epic is to apply necessary security fixes to enable the re-deployment of the Map Tool websites and prevent such issues in the future.
+- These security fixes apply to the open-source sites: 
+   - webappopen.connectedvcs.com 
+   - webapptest.connectedvcs.com (test site) 
 
-   - **<ins> Pull Requests:</ins>** (https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/39, https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/40, https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/43  )
-   - **<ins> Known Issues:</ins>** (N/A)
+**<ins>Pull Requests:</ins>**
 
-In addition to the security fixes above, we have implemented AWS security features for all three map tool websites:
-webapp.connectedvcs.com
-webappopen.connectedvcs.com
-webapptest.connectedvcs.com
+- https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/39, (use session keys) 
+- https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/40, (backend monitoring) 
+- https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/43  (error log fix) 
 
+ 
+
+**<ins>Known Issues:</ins>**  
+
+- (N/A) 
+ 
+In addition to the security fixes above, we have implemented AWS security features for all three map tool websites: 
+   - webapp.connectedvcs.com (legacy site) 
+   - webappopen.connectedvcs.com 
+   - webapptest.connectedvcs.com (test site) 
 
 Version 2.0.0, released April 25th, 2024
 ----------------------------------------
