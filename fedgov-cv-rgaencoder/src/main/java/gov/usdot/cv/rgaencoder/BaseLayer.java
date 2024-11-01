@@ -157,7 +157,8 @@ public class BaseLayer {
 
     @Override
     public String toString() {
-        return "RGAData [majorVer=" + majorVer + ", minorVer=" + minorVer + ", location="+ location + ", timeOfCalculation" + timeOfCalculation + ", contentVer=" + contentVer + ", contentDate Time" + contentDateTime + "]";
+        return "RGAData [majorVer=" + majorVer + ", minorVer=" + minorVer + ", location="+ location + ", timeOfCalculation" + timeOfCalculation 
+            + ", contentVer=" + contentVer + ", contentDate Time" + contentDateTime + ", fullRdAuthID " + fullRdAuthID + "]";
     }
 }
  

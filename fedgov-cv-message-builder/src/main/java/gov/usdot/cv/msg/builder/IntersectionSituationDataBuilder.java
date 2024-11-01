@@ -254,8 +254,8 @@ public class IntersectionSituationDataBuilder {
 		ContentDateTime contentDateTime = isdInputData.mapData.contentDateTime;
 
 		//DataSetFormatVersionInfo
-		baseLayer.setMajorVer(isdInputData.mapData.majorVer);
-		baseLayer.setMinorVer(isdInputData.mapData.minorVer);
+		baseLayer.setMajorVer(isdInputData.mapData.majorVersion);
+		baseLayer.setMinorVer(isdInputData.mapData.minorVersion);
 
 		//ReferencePointInfo
 		Position3D position3d = new Position3D();
@@ -276,7 +276,7 @@ public class IntersectionSituationDataBuilder {
 		baseLayer.setTimeOfCalculation(dDate);
 
 		//RoadGeometryRefIDInfo
-		baseLayer.setRelativeToRdAuthID(isdInputData.mapData.relativeToRdAuthID);
+		baseLayer.setRelativeToRdAuthID(referencePoint.mappedGeomID);
 
 		if(referencePoint.roadAuthorityIdType != null) {
 			if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("full")) {
@@ -294,7 +294,7 @@ public class IntersectionSituationDataBuilder {
 		}	
 
 		//DataSetContentIdentification
-		baseLayer.setContentVer(isdInputData.mapData.contentVer);
+		baseLayer.setContentVer(isdInputData.mapData.contentVersion);
 
 		DDateTime dDateTime = new DDateTime();
 		dDateTime.setHour(contentDateTime.hour);
