@@ -2555,8 +2555,16 @@ function onRegionIdChangeCallback(regionId){
 }
 
 function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType){
+	const roadAuthorityIdInput = $("#road_authority_id");
 	if(roadAuthorityIdType!==""){
 		$("#road_authority_id").attr('data-parsley-required', true);
+		if (roadAuthorityIdType === "full") {
+            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-2](\.[0-9]+)+)");
+            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer.");
+        } else if (roadAuthorityIdType === "relative") {
+            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-9]+(\.[0-9]+)+)");
+            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Relative RAID, enter at least two integers separated by a period.");
+        }
 	}else{
 		$("#road_authority_id").attr('data-parsley-required', false);
 	}

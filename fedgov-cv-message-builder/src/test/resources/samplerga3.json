@@ -26,9 +26,9 @@
           "referenceLat": 42.30151225703397,
           "referenceLon": -83.6979284591585,
           "referenceElevation": "241",
-          "roadAuthorityIdType": "Relative",
+          "roadAuthorityIdType": "Full",
           "roadAuthorityId": [
-            12, 
+            1, 
             2, 
             840, 
             113549, 
@@ -839,7 +839,7 @@
         }
       }
     },
-    "messageType": "RGA",
+    "messageType": "Frame+RGA",
     "nodeOffsets": "Explicit",
     "enableElevation": true
   }

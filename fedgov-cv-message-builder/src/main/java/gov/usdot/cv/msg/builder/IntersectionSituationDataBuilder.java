@@ -294,7 +294,7 @@ public class IntersectionSituationDataBuilder {
 		}	
 
 		//DataSetContentIdentification
-		baseLayer.setContentVer(isdInputData.mapData.contentVer);
+		baseLayer.setContentVer(isdInputData.mapData.contentVersion);
 
 		DDateTime dDateTime = new DDateTime();
 		dDateTime.setHour(contentDateTime.hour);

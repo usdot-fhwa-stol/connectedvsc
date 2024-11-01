@@ -447,7 +447,7 @@ public class IntersectionInputData {
 		public ContentDateTime contentDateTime;
 		public int majorVersion;
 		public int minorVersion;
-		public int contentVer;
+		public int contentVersion;
 		public String layerType;
 		public IntersectionGeometry intersectionGeometry;
 		public SpatData spatData;
@@ -459,7 +459,7 @@ public class IntersectionInputData {
 					+ ", contentDateTime=" + contentDateTime
 					+ ", majorVersion=" + majorVersion
 					+ ", minorVersion=" + minorVersion
-					+ ", contentVer=" + contentVer
+					+ ", contentVersion=" + contentVersion
 					+ ", layerType=" + layerType 
 					+ ",  intersectionGeometry=" + intersectionGeometry 
 					+ ", spatData=" + spatData 	
