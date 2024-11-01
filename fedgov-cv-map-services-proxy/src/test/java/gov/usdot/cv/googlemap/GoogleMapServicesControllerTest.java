@@ -17,11 +17,15 @@ import gov.usdot.cv.googlemap.models.GoogleElevationResponse;
 import gov.usdot.cv.googlemap.models.GoogleLocation;
 import gov.usdot.cv.googlemap.models.GoogleMapProperties;
 import gov.usdot.cv.googlemap.services.GoogleElevationsService;
+import gov.usdot.cv.googlemap.services.GooglePlacesService;
 
 @WebMvcTest(GoogleMapServicesController.class)
 public class GoogleMapServicesControllerTest {
     @MockBean
     private GoogleElevationsService elevationService;
+
+    @MockBean
+    private GooglePlacesService placeService;
 
     @MockBean
     private GoogleMapProperties googleMapProp;
