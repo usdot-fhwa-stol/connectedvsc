@@ -58,7 +58,7 @@
  * @event: sets tile age text on DOM
  */
 
-function tileAge(cachedSessionKey) {
+function tileAge() {
 
     var convertedLonLat = new OpenLayers.LonLat(map.getCenter().lon,map.getCenter().lat).transform(toProjection, fromProjection);
     var current_zoom =  map.getZoom();
@@ -68,7 +68,6 @@ function tileAge(cachedSessionKey) {
     $.ajax({
         url: "/msp/bingmap/api/imagery/metadata/"+convertedLonLat.lat+"/"+convertedLonLat.lon+"/"+current_zoom,
         success: function (result) {
-
 			console.log(result);
             try {
                 let start = result.vintageStart?.split(" ");

@@ -25,7 +25,6 @@
     var signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID;
     var nodeObject = [];
     var revisionNum = 0;
-	var cachedSessionKey = null;
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
         19567.87923828125, 9783.939619140625, 4891.9698095703125,
@@ -47,14 +46,6 @@
 /**
  * Define functions that must bind on load
  */
-async function GetHiddenMap() {
-	let hiddenMap = new Microsoft.Maps.Map('#myHiddenMap', {
-		credentials: apiKey
-	});
-	hiddenMap.getCredentials(function (c) {
-		cachedSessionKey = c;
-	});
-}
 
 function init() {
 	// cannot call http service from our https deployed application:
@@ -141,7 +132,7 @@ function init() {
 
     var road = new OpenLayers.Layer.Bing({
         name: "Road",
-        key: cachedSessionKey,
+        key: apiKey,
         type: "Road",
         numZoomLevels: 22,
         resolutions: bingResolutions,
@@ -150,7 +141,7 @@ function init() {
     });
     var hybrid = new OpenLayers.Layer.Bing({
         name: "Hybrid",
-        key: cachedSessionKey,
+        key: apiKey,
         type: "AerialWithLabels",
         numZoomLevels: 22,
         resolutions: bingResolutions,
@@ -159,7 +150,7 @@ function init() {
     });
     var aerial = new OpenLayers.Layer.Bing({
         name: "Aerial",
-        key: cachedSessionKey,
+        key: apiKey,
         type: "Aerial",
         numZoomLevels: 22,
         resolutions: bingResolutions,
@@ -833,6 +824,7 @@ function init() {
 		map.addControl(controls[key]);
 	}
 
+    map.events.register("moveend", map, tileAge);
     
     map.addLayers([aerial, road, hybrid, laneConnections, box, laneMarkers, lanes, vectors, errors, laneWidths]);
     try {
@@ -848,8 +840,7 @@ function init() {
     $('#OpenLayers_Control_MaximizeDiv_innerImage').attr('src', "img/layer-switcher-maximize.png");
 
     //Init toggle switches for the layers
-	//Update tile age
-	tileAge(cachedSessionKey);
+
 }
 
 
@@ -1943,7 +1934,6 @@ function populateRefWindow(feature, lat, lon)
 			}
 		});
 	}
-
 	if (feature.attributes.verifiedLat){
 		$('#verified_lat').val(feature.attributes.verifiedLat);	
 	} else {
