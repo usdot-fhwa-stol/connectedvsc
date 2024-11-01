@@ -66,13 +66,12 @@ function tileAge() {
         current_zoom = 18;
     }
     $.ajax({
-        url: "https://dev.virtualearth.net/REST/v1/Imagery/Metadata/Aerial/" + convertedLonLat.lat + "," + convertedLonLat.lon + "?uriScheme=https&zl=" + current_zoom + "&key=" + apiKey,
-        dataType: "jsonp",
-        jsonp: "jsonp",
+        url: "/msp/bingmap/api/imagery/metadata/"+convertedLonLat.lat+"/"+convertedLonLat.lon+"/"+current_zoom,
         success: function (result) {
+			console.log(result);
             try {
-                var start = (result.resourceSets[0].resources[0].vintageStart).split(" ");
-                var end = (result.resourceSets[0].resources[0].vintageEnd).split(" ");
+                let start = result.vintageStart?.split(" ");
+                let end = result.vintageEnd?.split(" ");
                 $('#tileAge .start').text(start[1] + "/" + start[2]);
                 $('#tileAge .end').text(end[1] + "/" + end[2]);
             }
