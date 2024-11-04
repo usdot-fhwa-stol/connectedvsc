@@ -1,7 +1,15 @@
 package gov.usdot.cv.googlemap.models;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class GoogleLocation {
+    @JsonProperty("lat")
+    @JsonAlias("latitude")
     private double lat;
+    
+    @JsonProperty("lng")
+    @JsonAlias("longitude")
     private double lng;
 
     public GoogleLocation() {
