@@ -156,10 +156,60 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				intersection->id.region = roadRegulatorId;
 			}
 
+			RoadAuthorityID_t *roadAuthorityID = calloc(1, sizeof(RoadAuthorityID_t));
+
+			// Check if full RAID exists
+			jmethodID isFullRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isFullRdAuthIDExists", "()Z");
+			jboolean fullRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isFullRdAuthIDExists);
+
+			// Check if relative RAID exists
+			jmethodID isRelRdAuthIDExists = (*env)->GetMethodID(env, intersectionClass, "isRelRdAuthIDExists", "()Z");
+			jboolean relRdAuthIDExists = (*env)->CallBooleanMethod(env, intersectionObj, isRelRdAuthIDExists);
+			
+			if (fullRdAuthIDExists)
+			{
+				// Get full RAID
+				jmethodID getFullRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getFullRdAuthID", "()[I");
+				jintArray fullRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getFullRdAuthID);
+				const uint32_t* fullRAID = (*env)->GetIntArrayElements(env, fullRdAuthID, NULL);
+
+				size_t fullRAIDLen = (*env)->GetArrayLength(env, fullRdAuthID);
+
+				OBJECT_IDENTIFIER_t *fullRAIDObjID = calloc(1, sizeof(OBJECT_IDENTIFIER_t));
+				
+				OBJECT_IDENTIFIER_set_arcs(fullRAIDObjID,
+                               fullRAID, fullRAIDLen);
+
+				// Set RAID pointer's PRESENT and CHOICE
+				roadAuthorityID->present = RoadAuthorityID_PR_fullRdAuthID;
+				roadAuthorityID->choice.fullRdAuthID = *fullRAIDObjID;
+				intersection->roadAuthorityID = roadAuthorityID;
+			} else if (relRdAuthIDExists) {
+				// Get relative RAID
+				jmethodID getRelRdAuthID = (*env)->GetMethodID(env, intersectionClass, "getRelRdAuthID", "()[I");
+				jintArray relRdAuthID = (*env)->CallObjectMethod(env, intersectionObj, getRelRdAuthID);
+				const uint32_t* relRAID = (*env)->GetIntArrayElements(env, relRdAuthID, NULL);
+				
+				size_t relRAIDLen  = (*env)->GetArrayLength(env, relRdAuthID);
+
+				RELATIVE_OID_t *relRAIDObjID = calloc(1, sizeof(RELATIVE_OID_t));
+
+				RELATIVE_OID_set_arcs(relRAIDObjID,
+                               relRAID, relRAIDLen);
+
+				// Set RAID pointer's PRESENT and CHOICE
+				roadAuthorityID->present = RoadAuthorityID_PR_relRdAuthID;
+				roadAuthorityID->choice.relRdAuthID = *relRAIDObjID;
+				intersection->roadAuthorityID = roadAuthorityID;
+			} else {
+				roadAuthorityID->present = RoadAuthorityID_PR_NOTHING;
+				intersection->roadAuthorityID = NULL;
+			}
+
 			// Get Intersection Revision
 			jmethodID getRevision = (*env)->GetMethodID(env, intersectionClass, "getRevision", "()I");
 			jint revision = (*env)->CallIntMethod(env, intersectionObj, getRevision);
-			intersection->revision = (DSRC_MsgCount_t)((long)revision);
+			intersection->revision = (Common_MsgCount_t)((long)revision);
 
 			// Get Intersection Ref Point
 			jmethodID getRefPoint = (*env)->GetMethodID(env, intersectionClass, "getRefPoint", "()Lgov/usdot/cv/mapencoder/Position3D;");
@@ -174,8 +224,8 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 			jdouble latitude = (*env)->CallDoubleMethod(env, position3DObj, getLatitude);
 			jdouble longitude = (*env)->CallDoubleMethod(env, position3DObj, getLongitude);
 
-			refPoint.lat = (Latitude_t)((long)latitude);
-			refPoint.Long = (Longitude_t)((long)longitude);
+			refPoint.lat = (Common_Latitude_t)((long)latitude);
+			refPoint.Long = (Common_Longitude_t)((long)longitude);
 
 			// Check if elevation exists
 			jmethodID isElevationExists = (*env)->GetMethodID(env, position3DClass, "isElevationExists", "()Z");
@@ -186,7 +236,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 				jmethodID getElevation = (*env)->GetMethodID(env, position3DClass, "getElevation", "()F");
 				jfloat elevation = (*env)->CallFloatMethod(env, position3DObj, getElevation);
 
-				DSRC_Elevation_t *dsrcElevation = calloc(1, sizeof(DSRC_Elevation_t));
+				Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
 				*dsrcElevation = (long)elevation;
 				refPoint.elevation = dsrcElevation;
 			}
@@ -768,8 +818,8 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_mapencoder_Encoder_encodeMap(JNIE
 							jint nodeLLMd64bLon = (*env)->CallIntMethod(env, nodeLatLonObj, getNodeLLMd64bLon);
 
 							nodeXy->delta.present = NodeOffsetPointXY_PR_node_LatLon;
-							nodeXy->delta.choice.node_LatLon.lon = (Longitude_t)((long)nodeLLMd64bLon);
-							nodeXy->delta.choice.node_LatLon.lat = (Latitude_t)((long)nodeLLMd64bLat);
+							nodeXy->delta.choice.node_LatLon.lon = (Common_Longitude_t)((long)nodeLLMd64bLon);
+							nodeXy->delta.choice.node_LatLon.lat = (Common_Latitude_t)((long)nodeLLMd64bLat);
 						}
 						else if (nodeOffsetPointXYChoice == NODE_REGIONAL)
 						{

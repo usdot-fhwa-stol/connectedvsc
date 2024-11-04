@@ -169,6 +169,8 @@ function createMessageJSON()
     var computedLane = "";
     var spatArray = spatsArray["spatNodes"];
 
+    let incompleteApproaches = []
+
     for(var b=0; b< laneFeat.length; b++){
         lanes.features[b].attributes.inBox = false;
     }
@@ -186,13 +188,40 @@ function createMessageJSON()
                 if(!lanes.features[j].attributes.computed) {
 	                for(var m=0; m< lanes.features[j].geometry.components.length; m++){
 	                    var latlon = new OpenLayers.LonLat(lanes.features[j].geometry.components[m].x,lanes.features[j].geometry.components[m].y).transform(toProjection, fromProjection);
-	                    nodeArray[m] = {
-	                        "nodeNumber": m,
-	                        "nodeLat": latlon.lat,
-	                        "nodeLong": latlon.lon,
-	                        "nodeElev": lanes.features[j].attributes.elevation[m].value,
-	                        "laneWidthDelta": lanes.features[j].attributes.laneWidth[m]
-	                    }
+	                    
+
+                        let currentSpeedLimits = [];
+                        if(lanes.features[j].attributes.speedLimitType) {
+                            let mapSpeedLimits = lanes.features[j].attributes.speedLimitType;
+
+                            for (let mapSpeedLimit of mapSpeedLimits) {
+                                if (mapSpeedLimit.speedLimitType != "Speed Limit Type") {
+                                    currentSpeedLimits.push(mapSpeedLimit)
+                                }
+                            }
+                        }
+
+                        try {
+                            nodeArray[m] = {
+                                "nodeNumber": m,
+                                "nodeLat": latlon.lat,
+                                "nodeLong": latlon.lon,
+                                "nodeElev": lanes.features[j].attributes.elevation[m].value,
+                                "laneWidthDelta": lanes.features[j].attributes.laneWidth[m],
+                                "speedLimitType": currentSpeedLimits
+                            }
+                          } catch (e) {
+                            nodeArray[m] = {
+                                "nodeNumber": m,
+                                "nodeLat": latlon.lat,
+                                "nodeLong": latlon.lon,
+                                "nodeElev": lanes.features[j].attributes.elevation[m]?.value,
+                                "laneWidthDelta": lanes.features[j].attributes?.laneWidth[m],
+                                "speedLimitType": currentSpeedLimits
+                            }
+                            $("#message_deposit").prop('disabled', true);
+                            $('#alert_placeholder').append('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Node elevation empty for node " + m + " in lane " + lanes.features[j].attributes.laneNumber + "." +'</span></div>');
+                          }                 
 	                }
                 } else {
                 	computedLane = {
@@ -297,6 +326,12 @@ function createMessageJSON()
             "drivingLanes": drivingLaneArray
         };
 
+        if (approachArray[i].approachType === undefined) {
+            incompleteApproaches.push(drivingLaneArray[0].laneID);
+            $("#message_deposit").prop('disabled', true);
+            $('#alert_placeholder').html('<div id="approach-alert" class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "Approach Type empty for approach associated with lane(s) " + incompleteApproaches.toString() + "." +'</span></div>');
+        }
+
         drivingLaneArray = [];
     }
 
@@ -343,7 +378,7 @@ function createMessageJSON()
             }
 
         } else {
-            $('#alert_placeholder').html('<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "SPaT message empty for lane " + lanes.features[a].attributes.laneNumber + "." +'</span></div>');
+            $('#alert_placeholder').append('<div id="spat-alert" class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ "SPaT message empty for lane " + lanes.features[a].attributes.laneNumber + "." +'</span></div>');
         }
     }
     errors.clearMarkers();
@@ -367,7 +402,6 @@ function createMessageJSON()
             errors.addMarker(new OpenLayers.Marker(latlon.transform(fromProjection, toProjection),icon));
         }
     }
-
     for ( var f = 0; f < vectors.features.length; f++) {
         var feature = vectors.features[f];
         if (vectors.features[f].attributes.marker.name == "Reference Point Marker") {
@@ -376,12 +410,33 @@ function createMessageJSON()
                 "descriptiveIntersctionName": feature.attributes.intersectionName,
                 "layerID": feature.attributes.layerID,
                 "intersectionID": feature.attributes.intersectionID,
+                "regionID": feature.attributes.regionID,
                 "msgCount": feature.attributes.revisionNum,
                 "masterLaneWidth": feature.attributes.masterLaneWidth,
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
-                "referenceElevation": feature.attributes.elevation
+                "referenceElevation": feature.attributes.elevation,
+                "roadAuthorityId": feature.attributes.roadAuthorityId.split(".").map(num => parseInt(num, 10)),
+                "roadAuthorityIdType": feature.attributes.roadAuthorityIdType,
+            };
+
+            var data_frame_rga_base_layer_fields = {} //Ensure to clear the data for each call
+            //Only populate JSON with RGA fields when the RGA toggle is enabled
+            if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js
+                data_frame_rga_base_layer_fields["majorVersion"]=parseInt(feature.attributes.majorVersion);
+                data_frame_rga_base_layer_fields["minorVersion"]= parseInt(feature.attributes.minorVersion);
+                data_frame_rga_base_layer_fields["contentVersion"]= parseInt(feature.attributes.contentVersion);
+                let date_time = parse_datetime_str(feature.attributes.contentDateTime);
+                data_frame_rga_base_layer_fields["timeOfCalculation"] = date_time.date;
+                data_frame_rga_base_layer_fields["contentDateTime"] = date_time.time;
+
+                //Add mapped geometry ID to intersection geometry reference point
+                reference["mappedGeomID"] = feature.attributes.mappedGeometryId.split(".").map(num => parseInt(num, 10));
+
+                //Validate RGA required fields
+                validate_required_rga_fields(feature);
             }
+
 
             var referenceChild = {
                 "speedLimitType": feature.attributes.speedLimitType
@@ -428,6 +483,7 @@ function createMessageJSON()
     var mapData = {
         "minuteOfTheYear": minuteOfTheYear,
         "layerType": "intersectionData",
+        ...data_frame_rga_base_layer_fields,
         "intersectionGeometry": intersectionGeometry,
         "spatData": spat
     }
@@ -440,6 +496,50 @@ function createMessageJSON()
     return isdMessage;
 }
 
+function parse_datetime_str(datetimestring){
+    let temp_datetime = datetimestring.split(/\s/);
+    try{
+        let temp_date = temp_datetime[0]
+        let temp_time = temp_datetime[1]
+        temp_date = temp_date.split(/\//)
+        temp_time = temp_time.split(/\:/)
+        let date_time = {
+            date: {
+                "day": parseInt(temp_date[0]),
+                "month": parseInt(temp_date[1]),
+                "year": parseInt(temp_date[2]),
+            },
+            time:{
+                "hour": parseInt(temp_time[0]),
+                "minute": parseInt(temp_time[1]),
+                "second": parseInt(temp_time[2]??0),
+            }
+        }
+        return date_time;
+    }catch(e){
+        console.error("Incorrect datetime format! Expected datetime format is: d/m/Y H:m:s");
+        console.error(e);
+    }    
+}
+
+/***
+ * @brief According to J2945_A RGA definition,  majorVersion, minorVersion, mappedGeometryId, contentVersion, contentDateTime are required
+ */
+function validate_required_rga_fields(feature){    
+    let map_fields_descriptions= {
+        "majorVersion": "RGA message no major version defined",
+        "minorVersion": "RGA message no minor version defined",
+        "mappedGeometryId": "RGA message no mapped geometry ID defined",
+        "contentVersion": "RGA message no content version defined",
+        "contentDateTime": "RGA message no content datetime defined",
+    }
+    for (const [key, value] of Object.entries(map_fields_descriptions)){
+        if (feature.attributes[key]== undefined || feature.attributes[key] == ""){
+            $("#message_deposit").prop('disabled', true);
+            $('#alert_placeholder').append('<div class="alert alert-warning alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><span>'+ value +'</span></div>');
+        }
+    }
+}
 
 /**
  * Purpose: pretty terrible error check

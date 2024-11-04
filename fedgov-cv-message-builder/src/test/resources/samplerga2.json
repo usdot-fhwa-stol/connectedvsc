@@ -1,0 +1,43 @@
+{
+  "mapData": {
+    "minuteOfTheYear": 385179,
+    "layerType": "intersectionData",
+    "timeOfCalculation": {
+      "day": 21,
+      "month": 6,
+      "year" : 2023
+    },
+    "contentDateTime": {
+      "hour": 9,
+      "minute": 24,
+      "second" : 25
+    },
+    "intersectionGeometry": {
+      "referencePoint": {
+        "descriptiveIntersctionName": "Nebel St",
+        "roadAuthorityIdType": "Relative",
+        "roadAuthorityId": [1, 2, 840, 113549, 1, 1, 5],
+        "mappedGeomID": [1, 3, 6, 1, 5, 5, 7, 3, 1],
+        "layerID": "1",
+        "intersectionID": "45571",
+        "msgCount": "105",
+        "masterLaneWidth": "366",
+        "referenceLat": 38.94346938863933,
+        "referenceLon": -77.15159208520186,
+        "referenceElevation": "45"
+      },
+      "referencePointChild": {},
+      "verifiedPoint": {
+        "verifiedMapLat": 38.94355700614207,
+        "verifiedMapLon": -77.15138823731643,
+        "verifiedMapElevation": "45",
+        "verifiedSurveyedLat": "38.94355700614207",
+        "verifiedSurveyedLon": "-77.15138823731643",
+        "verifiedSurveyedElevation": "45"
+      }
+    }
+  },
+  "messageType": "Frame+RGA",
+  "nodeOffsets": "Tight",
+  "enableElevation": true
+}
