@@ -26,3 +26,4 @@ target/
 .classpath
 .vscode/
 root.war
+private-resources.war

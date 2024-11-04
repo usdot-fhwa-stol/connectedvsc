@@ -26,6 +26,7 @@ jobs:
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-parent && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-lib-asn1c && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-mapencoder && mvn -e -X clean install -Dmaven.test.failure.ignore=true
+            cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-rgaencoder && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-message-builder && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-ISDcreator-webapp && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp && mvn -e -X clean install -Dmaven.test.failure.ignore=true
@@ -94,18 +95,23 @@ jobs:
             sonar.projectBaseDir=$GITHUB_WORKSPACE
             sonar.projectKey=usdot-fhwa-stol_connectedvcs-tools
             sonar.projectName=connectedvcs-tools
+            sonar.exclusions=**/target/**
             sonar.coverage.jacoco.xmlReportPaths=$GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-ISDcreator-webapp/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-lib-asn1c/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-mapencoder/target/site/jacoco/jacoco.xml,\
+
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-message-builder/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-map-services-proxy/target/site/jacoco/jacoco.xml
+
             sonar.java.binaries=/__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp/target,\
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-ISDcreator-webapp/target,\
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-lib-asn1c/target,\
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-mapencoder/target,\
+
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-message-builder/target,\
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-map-services-proxy/target
+
             sonar.c.file.suffixes=-
             sonar.cpp.file.suffixes=-
             sonar.objc.file.suffixes=-

@@ -28,7 +28,9 @@
 	<!-- OTHER -->
 	<link rel="stylesheet" href="css/navbar.css" type="text/css">
 	<link rel="stylesheet" href="css/sidebar.css" type="text/css">
+        <link rel="stylesheet" href="css/switch.css" type="text/css">
 	<link rel="stylesheet" href="css/jquery-ui.css" type="text/css">
+	<link rel="stylesheet" href="css/jquery.datetimepicker.min.css" type="text/css">
 	<link href="external/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" rel="stylesheet">
 
 </head>
@@ -61,6 +63,16 @@
 					</form>
 				</div>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><div class="rga_label">RGA Enabled</div></li>
+                    <li style="padding: 10px 5px">                     
+                        <div class="onoffswitch">
+                            <input class="onoffswitch-checkbox" type="checkbox" role="switch" onclick="set_rga_status()" id="rga_switch"><!-- Switch to enable or disable RGA -->
+                            <label class="onoffswitch-label" for="rga_switch">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </li>
 					<li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">File <span class="caret"></span></a>
 			          <ul class="dropdown-menu" role="menu">
@@ -105,7 +117,7 @@
 							<li><a href="#instructions_modal" data-toggle="modal" data-target="#instructions_modal">Instructions</a></li>
 							<li class="divider"></li>
 							<li><a href="#" onclick="alert('To request support or report problems please email\nthe CAV Support Services at: CAVSupportServices@dot.gov.');">Support</a></li>
-							<li><a href="#" data-toggle="modal" data-target="#" onclick="alert('ISD Builder Tool for J2735 3/2016 (UPER encoding)\n\n\t  Version 2.2.8, Released on 5/2/2019');">About</a></li>
+							<li><a href="#" data-toggle="modal" data-target="#" onclick="alert('ISD Builder Tool for J2735 9/2024 (UPER encoding)\n\n\t  Version 4.0.0, Released on 4/25/2024');">About</a></li>
 						</ul>
 					</li>
                 </ul>
@@ -167,7 +179,7 @@
             <li class="spat-info-tab"><a href="#spat-info-tab" onclick="$('#attribute-tabs a[href=\'#spat-info-tab\']').tab('show'); return false;">SPaT</a></li>
             <li class="intersection-info-tab"><a href="#intersection-info-tab" onclick="$('#attribute-tabs a[href=\'#intersection-info-tab\']').tab('show'); return false;">Intersection Info</a></li>
             <li class="connection-tab"><a href="#connection-tab" onclick="$('#attribute-tabs a[href=\'#connection-tab\']').tab('show'); return false;">Connections</a></li>
-            <li class="computed-tab"><a href="#computed-tab" onclick="$('#attribute-tabs a[href=\'#computed-tab\']').tab('show'); return false;">Computed</a></li>
+			<li class="computed-tab"><a href="#computed-tab" onclick="$('#attribute-tabs a[href=\'#computed-tab\']').tab('show'); return false;">Computed</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="lane-info-tab">
@@ -383,10 +395,56 @@
 							  <div class="col-sm-7"><input class="form-control" id="long" placeholder="-180 to 180"  data-parsley-pattern="^-?[0-9]*(\.)?[0-9]+$" data-parsley-required="true" data-parsley-range="[-180, 180]" data-parsley-pattern-message="This value must include numbers only."></div>
 							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="longitude"></i></div>
 							</div>
+							<div class="row region">
+								<div class="col-sm-4"><label for="region">Region ID:</label></div>
+                                                                <div class="col-sm-7"><input class="form-control" id="region" placeholder="0 to 65535" onchange="onRegionIdChangeCallback(this.value);" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="region_id"></i></div>
+							</div>
 							<div class="row intersection">
 							  <div class="col-sm-4"><label for="intersection">Intersection ID:</label></div>
 							  <div class="col-sm-7"><input class="form-control" id="intersection" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
 							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="intersection_id"></i></div>
+							</div>
+							<div class="row major_version extra_rga_field">
+								<div class="col-sm-4"><label for="major_version">Major Version:</label></div>
+								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="major_version" placeholder="0 to 15" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 15]" data-parsley-pattern-message="This value must be an integer."></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="major_version"></i></div>
+							</div>
+							<div class="row minor_version extra_rga_field">
+								<div class="col-sm-4"><label for="major_version">Minor Version:</label></div>
+								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="minor_version" placeholder="0 to 64" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 64]" data-parsley-pattern-message="This value must be an integer."></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="minor_version"></i></div>
+							</div>
+							<div class="row road_authority_id_type">
+								<div class="col-sm-4"><label for="road_authority_id_type">Road Authority ID Type:</label></div>
+								<div class="col-sm-7">
+									<select name="road_authority_id_type" class="form-control" onchange="onRoadAuthorityIdTypeChangeCallback(this.value)" id = "road_authority_id_type">
+										<option value="full">Full</option>
+										<option value="relative">Relative</option>
+										<option value="">NA</option>
+									</select>
+								</div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="road_authority_id_type"></i></div>
+							</div>
+							<div class="row road_authority_id">
+								<div class="col-sm-4"><label for="road_authority_id">Road Authority ID:</label></div>
+								<div class="col-sm-7"><input class="form-control" id="road_authority_id" placeholder="xx.xx.xx"></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="road_authority_id"></i></div>
+							</div>
+							<div class="row mapped_geometry_id extra_rga_field">
+								<div class="col-sm-4"><label for="mapped_geometry_id">Mapped Geometry ID:</label></div>
+								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="mapped_geometry_id" placeholder="xx.xx.xx" data-parsley-required="true" data-parsley-pattern="([0-9]+(\.[0-9]+)+)" data-parsley-pattern-message="This value must contain at least two integers separated by a period." ></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="mapped_geometry_id"></i></div>
+							</div>
+							<div class="row content_version extra_rga_field">
+								<div class="col-sm-4"><label for="content_version">Content Version:</label></div>
+								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="content_version" placeholder="0" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 32]" data-parsley-pattern-message="This value must be an integer."></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="content_version"></i></div>
+							</div>
+							<div class="row content_date_time extra_rga_field">
+								<div class="col-sm-4"><label for="content_date_time">Content Date Time:</label></div>
+								<div class="col-sm-7"><input class="form-control datetimepicker extra_rga_field_input required" id="content_date_time" placeholder="yyyy/mm/dd hh:mm:ss"></div>
+								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="content_date_time"></i></div>
 							</div>
 							<div class="row elev" data-toggle="tooltip" title="in meters">
 							  <div class="col-sm-4"><label for="elev">Elevation:</label></div>
@@ -605,6 +663,10 @@
 						<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="layer_id"></i></div>
 					</div>
 
+					<div class="row lane-speed-text"> 
+						<div class="col-sm-12">Enter speed limits for all nodes in this lane</div>
+					</div>
+
 					<!-- sheepIt Form -->
 					<div id="speedForm">
 						<div id="speedForm_template">
@@ -790,6 +852,8 @@
                        <option value="ISD">ISD</option>
                        <option value="Map">Map</option>
 					   <option value="Frame+Map">Frame+Map</option>
+                       <option value="RGA">RGA</option>
+					   <option value="Frame+RGA">Frame+RGA</option>
                        <option value="SPaT">SPaT</option>
 					   <option value="Frame+SPaT">Frame+SPaT</option>
 					   <option value="SpatRecord">SpatRecord</option>
@@ -1205,11 +1269,10 @@
 	</div>
 
 	<!--******************************************* SCRIPTS *******************************************-->
-
-	<script src="/private-resources/js/ISDcreator-webapp-keys.js"></script>
 	
 	<script src="external/jquery.min.js"></script>
 	<script src="external/jquery-ui.min.js"></script>
+	<script src="external/jquery.datetimepicker.full.min.js"></script>
 	<script src="external/touchpunch.js"></script>
 	<script src="external/modernizr-2.6.2.min.js"></script>
 	<script src="external/moment.js"></script>
