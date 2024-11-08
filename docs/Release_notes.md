@@ -1,14 +1,15 @@
 Map Tool Release Notes
 ----------------------------
 
-Version 2.0.2, released Nov 7th, 2024
+Version 2.0.2, released Nov 8th, 2024
 ----------------------------------------
 
 ### **Summary**
-This Hotfix 2.0.2 focuses on addressing tileAge displayed on the MAPTool ISD map which was updated every time when user zoom in/out, move around a map in Map tool websites. 
+This Hotfix 2.0.2 focuses on addressing tileAge data displayed on the MAPTool ISD map which was updated every time when user zoom in/out, move around a map in Map tool websites. Allowing these calls at the current rate is expected to prematurely exhaust the current Bing API key.
+
 
 **<ins>Fixes:</ins>** 
-- Removed tileAge API calls to bing maps.
+- Removed tileAge API calls to bing maps. NOTE: tile age will no longer be available to users of the current MAP Tool.
 
 Version 2.0.1, released Nov 1st, 2024
 ----------------------------------------
