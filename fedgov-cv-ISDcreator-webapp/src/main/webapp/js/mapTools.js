@@ -166,6 +166,7 @@ function loadMap( data )
 			feat[a].style = {externalGraphic: iconAddress, graphicHeight: 50, graphicWidth: 50, graphicYOffset: -50};
 			if (vectors.features[a].attributes.marker.name == "Reference Point Marker") {
 				intersectionID = vectors.features[a].attributes.intersectionID;
+				regionID = vectors.features[a].attributes.regionID ? vectors.features[a].attributes.regionID : '';
 			}
 		}
 		;
@@ -216,6 +217,7 @@ function loadMap( data )
 				intersectionID = vectors.features[a].attributes.intersectionID;
 				vectors.features[a].attributes.speedLimitType = tempSpeedLimits;
 				vectors.features[a].attributes.layerID = tempLayerID;
+				regionID = vectors.features[a].attributes.regionID ? vectors.features[a].attributes.regionID : '';
 			}
 		}
 

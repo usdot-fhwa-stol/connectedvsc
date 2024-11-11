@@ -55,7 +55,7 @@ async function GetHiddenMap() {
  * Define functions that must bind on load
  */
 
-function init() {
+async function init() {
 	// cannot call http service from our https deployed application:
 	// making call to backend to do GET for us if not deployed on localhost
 	if( host.indexOf("localhost") == -1 ) {
@@ -80,6 +80,8 @@ function init() {
      * Note: each layer is defined in this section, and layers interact with the sidebar
      * by showing/hiding DOM elements. Also, all data is loaded into the forms via these feature objects
      */
+
+	const apiKey = await getApiKey();
 
 	map = new OpenLayers.Map('map', {
         allOverlays: false,
@@ -392,6 +394,10 @@ function init() {
 		        	$(".verified_lat").hide();
 		        	$(".verified_long").hide();
 		        	$(".intersection").hide();
+					$(".region").hide();
+					show_rga_fields(hide=true);
+					$('.road_authority_id').hide();
+					$('.road_authority_id_type').hide();
 		        	$(".elev").hide();
 		        	$(".verified_elev").hide();
 		        	$(".lane_width").hide();
@@ -495,10 +501,14 @@ function init() {
 	        	$(".verified_elev").hide();
 	        	$(".approach_type").hide();
 	        	$(".intersection").hide();
+				$(".region").hide();
                 $(".revision").hide();
                 $('.phases').hide();
                 $(".master_lane_width").hide();
                 $(".intersection_name").hide();
+                show_rga_fields(hide=true);
+				$('.road_authority_id').hide();
+				$('.road_authority_id_type').hide();
                 $(".approach_name").hide();
                 $(".shared_with").hide();
                 $(".btnClone").hide();
@@ -522,6 +532,10 @@ function init() {
 		        	$(".lane_number").show();
                     $('.spat-info-tab').show();
                     $('.connection-tab').show();
+					$(".intersection-info-tab").find('a:contains("Intersection Info")').text('Speed Limits');
+					$('.intersection-info-tab').show();
+					$('.layer').hide();
+					$('.lane-speed-text').show();
                     $(".shared_with").show();
                     if(!selected_marker.attributes.computed) {
                 		// Only show the button if this lane is already defined with a lane number
@@ -591,6 +605,12 @@ function init() {
                     toggleLaneTypeAttributes(selected_marker.attributes.laneType);
                 }
 
+				if (!lanes.features[selected_marker.attributes.lane].attributes.speedLimitType) {
+					removeSpeedForm();
+					addSpeedForm();
+				} else {
+					rebuildSpeedForm(lanes.features[selected_marker.attributes.lane].attributes.speedLimitType);
+				}
                 
             	$('#shared_with').multiselect('deselectAll', false);
             	$("#shared_with").multiselect("refresh");
@@ -1282,6 +1302,10 @@ function placeComputedLane(newDotFeature) {
 			$(".verified_elev").hide();
 			$(".approach_type").hide();
 			$(".intersection").hide();
+			$(".region").hide();
+			show_rga_fields(hide=true);
+			$('.road_authority_id').hide();
+			$('.road_authority_id_type').hide();
 			$(".revision").hide();
 			$('.phases').hide();
 			$(".master_lane_width").hide();
@@ -1663,11 +1687,21 @@ function referencePointWindow(feature){
 	$(".lat").show();
 	$(".long").show();
 	$(".intersection").show();
+	$(".region").show();
 	$(".elev").show();
     $(".revision").show();
+    
+    //Show additional RGA related fields
+    show_rga_fields(hide=false);
+	$('.road_authority_id').show();
+	$('.road_authority_id_type').show();
+    
     $(".master_lane_width").show();
     $(".intersection_name").show();
     if (selected == "child"){
+		$(".intersection-info-tab").find('a:contains("Speed Limits")').text('Intersection Info');
+		$('.layer').show();
+		$('.lane-speed-text').hide();		
     	$('.intersection-info-tab').show();
         $(".velocity").show();
     }
@@ -1678,6 +1712,7 @@ function referencePointWindow(feature){
 		$("#long").prop('readonly', true);
 		$("#elev").prop('readonly', true);
 		$(".intersection").hide();
+		$(".region").hide();
     	$(".verified_lat").show();
     	$(".verified_long").show();
     	$(".verified_elev").show();
@@ -1685,8 +1720,17 @@ function referencePointWindow(feature){
         $(".master_lane_width").hide();
         $(".intersection_name").hide();
         $(".approach_name").hide();
-        $('.intersection-info-tab').hide();
+        $('.intersection-info-tab').hide();        
+        
+        show_rga_fields(hide=true);
+		$('.road_authority_id').hide();
+		$('.road_authority_id_type').hide();
 	}
+        
+        if(feature.attributes.marker.name == "Reference Point Marker"){    
+            //Enable or disable rga fields on reference point marker depend on whether current RGA toggle is enabled/disabled.
+            enable_rga_fields(enable=rga_enabled);
+        }
 	
 	$('#revision').val(revisionNum);
 	if (! selected_marker.attributes.elevation){
@@ -1718,8 +1762,60 @@ function referencePointWindow(feature){
 		$("#intersection_name").val(selected_marker.attributes.intersectionName);
 	}
 
+	if (! selected_marker.attributes.regionID){
+        $("#region").val("");
+    } else {
+        $("#region").val(selected_marker.attributes.regionID);
+    }
+    
+    if (! selected_marker.attributes.majorVersion){
+        $("#major_version").val("");
+    } else {
+        $("#major_version").val(selected_marker.attributes.majorVersion);
+    }
+    
+    if (! selected_marker.attributes.minorVersion){
+        $("#minor_version").val("");
+    } else {
+        $("#minor_version").val(selected_marker.attributes.minorVersion);
+    }
+    
+    if (! selected_marker.attributes.roadAuthorityId){
+        $("#road_authority_id").val("");
+    } else {
+        $("#road_authority_id").val(selected_marker.attributes.roadAuthorityId);
+    }
+
+	if (! selected_marker.attributes.roadAuthorityIdType){
+        $("#road_authority_id_type").val("");
+    } else {
+        $("#road_authority_id_type").val(selected_marker.attributes.roadAuthorityIdType);
+    }
+    
+    if (! selected_marker.attributes.mappedGeometryId){
+        $("#mapped_geometry_id").val("");
+    } else {
+        $("#mapped_geometry_id").val(selected_marker.attributes.mappedGeometryId);
+    }
+    
+    if (! selected_marker.attributes.contentVersion){
+        $("#content_version").val("");
+    } else {
+        $("#content_version").val(selected_marker.attributes.contentVersion);
+    }
+    
+    if (! selected_marker.attributes.contentDateTime){
+        $("#content_date_time").val("");
+    } else {
+        $("#content_date_time").val(selected_marker.attributes.contentDateTime);
+    }
+
     if (selected == "child"){
-        $('.btnDone').prop('disabled', true);
+		if(feature.attributes.marker.name != "Reference Point Marker") {
+			$('.btnDone').prop('disabled', true);
+		} else {
+			$('.btnDone').prop('disabled', false);
+		}
         $('.intersection-btn').prop('disabled', false);
         $('.btnClose').prop('readonly', false);
     } else {
@@ -1737,6 +1833,36 @@ function referencePointWindow(feature){
 	$("#attributes").show();
 }
 
+ /***
+  * @brief Show and hide RGA related fields. 
+  * Note: extra RGA fields in addition to MAP message should only appear at the "Reference Point" dialog.
+  * @param {type} Boolean show or hide RGA fields
+  */
+function show_rga_fields(hide=true){
+    if(hide){        
+       $(".extra_rga_field").hide();
+    }else{        
+       $(".extra_rga_field").show();
+    }
+}
+
+function enable_rga_fields(enable=true){    
+    if(enable){        
+         $(".extra_rga_field_input").prop('disabled', false);
+    }else{     
+         $(".extra_rga_field_input").prop('disabled', true);
+    }
+	add_rga_fields_validation(enable);
+}
+
+function add_rga_fields_validation(enable=true){
+	if(enable){
+		$("input:text.required").attr('data-parsley-required', true);
+	}else{
+		$("input:text.required").attr('data-parsley-required', false);
+	}
+	
+}
 
 /**
  * Purpose: if lat/long is modified, it changes the location
@@ -1892,9 +2018,11 @@ function populateAttributeWindow(temp_lat, temp_lon){
 	$('#long').val(temp_lon);
 }
 
-function populateRefWindow(feature, lat, lon)
+async function populateRefWindow(feature, lat, lon)
 {
-	
+	const apiKey = await getApiKey();
+	const geoNamesUserName = await getUsername();
+
 	$.ajax({
 		type: 'GET',
 		url: intersection_url,
@@ -2035,7 +2163,11 @@ $(".btnDone").click(function(){
 		
 			var move = new OpenLayers.LonLat($('#long').val(), $('#lat').val()).transform(fromProjection, toProjection)
 		
-			if (selected_layer.name == "Lane Marker Layer"){                
+			if (selected_layer.name == "Lane Marker Layer"){   
+				var currentLaneSpeedLimits = saveSpeedForm();
+				(lanes.features[selected_marker.attributes.lane]).attributes.speedLimitType = currentLaneSpeedLimits;
+				speedLimits = [];
+
 				var vert = lanes.features[selected_marker.attributes.lane].geometry.components[selected_marker.attributes.number];
 				vert.move(move.lon - vert.x, move.lat - vert.y);
 				selected_marker.move(move);
@@ -2122,11 +2254,9 @@ $(".btnDone").click(function(){
 			
 			if (selected_layer.name == "Vector Layer"){
 				if (selected == "child"){
-
                     selected_marker.attributes.speedLimitType = saveSpeedForm();
                     selected_marker.attributes.layerID = $("#layer").val();
                     speedLimits = [];
-
 				} else {
 					selected_marker.move(move);
 					if (selected_marker.attributes.marker.name == "Verified Point Marker"){
@@ -2135,14 +2265,22 @@ $(".btnDone").click(function(){
 						selected_marker.attributes.verifiedElev = $("#verified_elev").val();
 						selected_marker.attributes.elevation = $("#elev").val();
 					}
-					if (selected_marker.attributes.marker.name == "Reference Point Marker"){
-						selected_marker.attributes.intersectionName = $("#intersection_name").val();
-						selected_marker.attributes.elevation = $("#elev").val();
-		                selected_marker.attributes.intersectionID = $("#intersection").val();
-		                intersectionID = $("#intersection").val();
-		                selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
-		                selected_marker.attributes.revisionNum = revisionNum;
-					}
+				}
+				if (selected_marker.attributes.marker.name == "Reference Point Marker") {
+					selected_marker.attributes.intersectionName = $("#intersection_name").val();
+					selected_marker.attributes.elevation = $("#elev").val();
+					selected_marker.attributes.intersectionID = $("#intersection").val();
+					intersectionID = $("#intersection").val();
+					selected_marker.attributes.regionID = $("#region").val();
+					selected_marker.attributes.roadAuthorityIdType = $("#road_authority_id_type").val();
+					selected_marker.attributes.roadAuthorityId = $("#road_authority_id").val();
+					selected_marker.attributes.majorVersion = $("#major_version").val();
+					selected_marker.attributes.minorVersion = $("#minor_version").val();
+					selected_marker.attributes.mappedGeometryId = $("#mapped_geometry_id").val();
+					selected_marker.attributes.contentVersion = $("#content_version").val();
+					selected_marker.attributes.contentDateTime = $("#content_date_time").val();
+					selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
+					selected_marker.attributes.revisionNum = revisionNum;
 				}
 			}
 			$('#attributes').parsley().reset();
@@ -2230,7 +2368,8 @@ function getCookie(cname) {
     return "";
 }
 
-function getElevation(dot, latlon, i, j, callback){
+async function getElevation(dot, latlon, i, j, callback){
+	const apiKey = await getApiKey();
 
     $.ajax({
 		url: google_elevation_url+"/"+latlon.lat+'/'+latlon.lon,
@@ -2340,7 +2479,32 @@ function toggleWidthArray() {
     if (isNegative.value){
         alert("Width deltas sum to less than zero on lane " + lanes.features[isNegative.lane].attributes.laneNumber + " at node " + isNegative.node + "!");
     }
+}
 
+function onRegionIdChangeCallback(regionId){
+    if(!isNaN(regionId) && parseFloat(regionId)===0){
+        $("#road_authority_id").attr('data-parsley-required', true);
+        $("#road_authority_id_type").attr('data-parsley-required', true);
+    }else{
+        $("#road_authority_id").attr('data-parsley-required', false);
+        $("#road_authority_id_type").attr('data-parsley-required', false);
+    }
+}
+
+function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType){
+	const roadAuthorityIdInput = $("#road_authority_id");
+	if(roadAuthorityIdType!==""){
+		$("#road_authority_id").attr('data-parsley-required', true);
+		if (roadAuthorityIdType === "full") {
+            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-2](\.[0-9]+)+)");
+            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer.");
+        } else if (roadAuthorityIdType === "relative") {
+            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-9]+(\.[0-9]+)+)");
+            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Relative RAID, enter at least two integers separated by a period.");
+        }
+	}else{
+		$("#road_authority_id").attr('data-parsley-required', false);
+	}
 }
 
 function isOdd(num) { return (num % 2) == 1;}
