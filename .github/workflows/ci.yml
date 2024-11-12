@@ -18,7 +18,7 @@ jobs:
         options: --user root
       steps:
         - name: Checkout ${{ github.event.repository.name }}
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
         - name: Install # This action is to install and build subfolders in project
           run: |
             cd $GITHUB_WORKSPACE
@@ -32,7 +32,7 @@ jobs:
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             jar cvf /__w/connectedvcs-tools/connectedvcs-tools/root.war -C /__w/connectedvcs-tools/connectedvcs-tools/root .
         - name: Archive generated Class files
-          uses: actions/upload-artifact@v3 # Archive the generated class files after the build action used for deployment
+          uses: actions/upload-artifact@v4 # Archive the generated class files after the build action used for deployment
           with:
             name: Class files
             path: |
