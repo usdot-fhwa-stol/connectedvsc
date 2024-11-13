@@ -35,7 +35,6 @@ COPY --from=mvn-build /root/private-resources.war /var/lib/jetty/webapps
 COPY --from=mvn-build /root/root.war /var/lib/jetty/webapps
 COPY --from=mvn-build /root/fedgov-cv-map-services-proxy/target/*.war /var/lib/jetty/webapps/msp.war
 
-
 # Create third_party_lib directory and copy the shared libraries to it
 RUN mkdir -p /var/lib/jetty/webapps/third_party_lib
 COPY --from=mvn-build /root/fedgov-cv-lib-asn1c/third_party_lib/libasn1c.so /var/lib/jetty/webapps/third_party_lib
