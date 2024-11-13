@@ -1,6 +1,51 @@
 Map Tool Release Notes
 ----------------------------
 
+Version 2.0.2, released Nov 8th, 2024
+----------------------------------------
+
+### **Summary**
+This Hotfix 2.0.2 focuses on addressing tileAge data displayed on the MAPTool ISD map which was updated every time when user zoom in/out, move around a map in Map tool websites. Allowing these calls at the current rate is expected to prematurely exhaust the current Bing API key.
+
+
+**<ins>Fixes:</ins>** 
+- Removed tileAge API calls to bing maps. NOTE: tile age will no longer be available to users of the current MAP Tool.
+
+Version 2.0.1, released Nov 1st, 2024
+----------------------------------------
+
+### **Summary**
+This Hotfix 2.0.1 focuses on addressing security issues related to the Bing Map API usage and includes several improvements related to security of the Map tool websites. 
+
+**<ins>Fixes:</ins>** 
+- Epic 203 Implement ConnectedVCS Tool Security Fixes:  Investigation revealed that ConnectedVCS ISD Tool could no longer load map tiles from Bing due to Bing API keys being suspended due to abnormal usage. The changes included below were applied to the webappopen.connectedvcs.com and webapptest.connectedvcs.com (test site). 
+   - Implementing backend monitoring of API calls 
+
+   - Switching to Google Maps API for elevation data 
+
+   - Adding protection from bots and common DDOS attacks 
+
+- These security fixes apply to the open-source sites: 
+   - webappopen.connectedvcs.com 
+   - webapptest.connectedvcs.com (test site) 
+
+**<ins>Pull Requests:</ins>**
+
+- https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/39, (use session keys) 
+- https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/40, (backend monitoring) 
+- https://github.com/usdot-fhwa-stol/connectedvcs-tools/pull/43  (error log fix) 
+
+ 
+
+**<ins>Known Issues:</ins>**  
+
+- (N/A) 
+ 
+In addition to the security fixes above, we have implemented AWS security features for all three map tool websites: 
+   - webapp.connectedvcs.com (legacy site) 
+   - webappopen.connectedvcs.com 
+   - webapptest.connectedvcs.com (test site) 
+
 Version 2.0.0, released April 25th, 2024
 ----------------------------------------
 
