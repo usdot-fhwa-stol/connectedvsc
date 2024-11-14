@@ -18,26 +18,24 @@ package gov.usdot.cv.googlemap.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GoogleElevationResponse {
-    private double elevation;
+public class GoogleSearchTextResponse {
+    private String formattedAddress;
     private GoogleLocation location;
-    private double resolution;
 
-    public GoogleElevationResponse() {
+    public GoogleSearchTextResponse() {
     }
 
-
-    public GoogleElevationResponse(double elevation, GoogleLocation location, double resolution) {
-        this.elevation = elevation;
+    public GoogleSearchTextResponse(String formattedAddress, GoogleLocation location) {
+        this.formattedAddress = formattedAddress;
         this.location = location;
-        this.resolution = resolution;
-    }
-    public double getElevation() {
-        return this.elevation;
     }
 
-    public void setElevation(double elevation) {
-        this.elevation = elevation;
+    public String getFormattedAddress() {
+        return this.formattedAddress;
+    }
+
+    public void setFormattedAddress(String formattedAddress) {
+        this.formattedAddress = formattedAddress;
     }
 
     public GoogleLocation getLocation() {
@@ -48,21 +46,22 @@ public class GoogleElevationResponse {
         this.location = location;
     }
 
-    public double getResolution() {
-        return this.resolution;
+    public GoogleSearchTextResponse formattedAddress(String formattedAddress) {
+        setFormattedAddress(formattedAddress);
+        return this;
     }
 
-    public void setResolution(double resolution) {
-        this.resolution = resolution;
+    public GoogleSearchTextResponse location(GoogleLocation location) {
+        setLocation(location);
+        return this;
     }
 
     @Override
     public String toString() {
         return "{" +
-            " elevation='" + getElevation() + "'" +
+            " formattedAddress='" + getFormattedAddress() + "'" +
             ", location='" + getLocation() + "'" +
-            ", resolution='" + getResolution() + "'" +
             "}";
     }
-
+    
 }

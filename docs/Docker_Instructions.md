@@ -20,11 +20,12 @@ git clone https://github.com/usdot-fhwa-stol/connectedvcs-tools.git
 ```
 2. Note: Placeholder for map API key generation.
 
-3. Enter a map API key and username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js).
+3. Enter a map API key and username in [ISDcreator-webapp-keys](/private-resources/js/ISDcreator-webapp-keys.js)
+and API key in [application.properties](/fedgov-cv-map-services-proxy/src/main/resources/application.properties#L2).
 
 4. Create a new Google Maps API Key using the [Google Maps Platform](https://developers.google.com/maps/documentation/javascript/get-api-key#create-api-keys).
     - Please read the [Google Maps API Key Guidance](/docs/GoogleMaps_API_Key_Guidance.md).
-5. Enter your key to the end of the Geocomplete src link (indicated by "YOUR_API_KEY") at the [index.html](/fedgov-cv-ISDcreator-webapp/src/main/webapp/index.html#L1295C76-L1295C88)
+5. Enter your key to the end of the Geocomplete src link (indicated by "google.map.api.key") at the [application.properties](/fedgov-cv-map-services-proxy/src/main/resources/application.properties#L1)
 
 6. Using SSL vs not using SSL:
 

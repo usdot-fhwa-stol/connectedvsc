@@ -15,47 +15,36 @@
  */
 package gov.usdot.cv.googlemap.models;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class GooglePlaceSuggestionItem {
+    private GooglePlacePrediction placePrediction;
 
-public class GoogleLocation {
-    @JsonProperty("lat")
-    @JsonAlias("latitude")
-    private double lat;
-    
-    @JsonProperty("lng")
-    @JsonAlias("longitude")
-    private double lng;
 
-    public GoogleLocation() {
+    public GooglePlaceSuggestionItem() {
     }
 
-    public GoogleLocation(double lat, double lng) {
-        this.lat = lat;
-        this.lng = lng;
+    public GooglePlaceSuggestionItem(GooglePlacePrediction suggestions) {
+        this.placePrediction = suggestions;
     }
 
-    public double getLat() {
-        return this.lat;
+    public GooglePlacePrediction getPlacePrediction() {
+        return this.placePrediction;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setPlacePrediction(GooglePlacePrediction suggestions) {
+        this.placePrediction = suggestions;
     }
 
-    public double getLng() {
-        return this.lng;
+    public GooglePlaceSuggestionItem suggestions(GooglePlacePrediction suggestions) {
+        setPlacePrediction(suggestions);
+        return this;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
 
     @Override
     public String toString() {
         return "{" +
-            " lat='" + getLat() + "'" +
-            ", lng='" + getLng() + "'" +
+            " suggestions='" + getPlacePrediction() + "'" +
             "}";
     }
+
 }

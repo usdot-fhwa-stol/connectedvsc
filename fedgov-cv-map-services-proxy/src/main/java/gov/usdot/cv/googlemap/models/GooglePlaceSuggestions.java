@@ -15,47 +15,36 @@
  */
 package gov.usdot.cv.googlemap.models;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 
-public class GoogleLocation {
-    @JsonProperty("lat")
-    @JsonAlias("latitude")
-    private double lat;
-    
-    @JsonProperty("lng")
-    @JsonAlias("longitude")
-    private double lng;
+public class GooglePlaceSuggestions {
+    private ArrayList<GooglePlaceSuggestionItem> suggestions;
 
-    public GoogleLocation() {
+    public GooglePlaceSuggestions() {
     }
 
-    public GoogleLocation(double lat, double lng) {
-        this.lat = lat;
-        this.lng = lng;
+    public GooglePlaceSuggestions(ArrayList<GooglePlaceSuggestionItem> suggestions) {
+        this.suggestions = suggestions;
     }
 
-    public double getLat() {
-        return this.lat;
+    public ArrayList<GooglePlaceSuggestionItem> getSuggestions() {
+        return this.suggestions;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setSuggestions(ArrayList<GooglePlaceSuggestionItem> suggestions) {
+        this.suggestions = suggestions;
     }
 
-    public double getLng() {
-        return this.lng;
-    }
-
-    public void setLng(double lng) {
-        this.lng = lng;
+    public GooglePlaceSuggestions suggestions(ArrayList<GooglePlaceSuggestionItem> suggestions) {
+        setSuggestions(suggestions);
+        return this;
     }
 
     @Override
     public String toString() {
         return "{" +
-            " lat='" + getLat() + "'" +
-            ", lng='" + getLng() + "'" +
+            " suggestions='" + getSuggestions() + "'" +
             "}";
     }
+    
 }

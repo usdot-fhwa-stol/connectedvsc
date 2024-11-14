@@ -26,6 +26,7 @@
     var nodeObject = [];
     var revisionNum = 0;
 	var cachedSessionKey = null;
+	let cachedApiKey='';
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
         19567.87923828125, 9783.939619140625, 4891.9698095703125,
@@ -43,12 +44,58 @@
         4.777314267158508, 2.388657133579254, 1.194328566789627,
         0.5971642833948135, 0.29858214169740677];
 
+/***
+ * A global variable to store current RGA toggle status. 
+ * Some UI fields are disabled or enabled depends on the current RGA status.
+ * @type Boolean Indicator whether RGA fields are enabled.
+ */
+let rga_enabled=false;
+
+
+function set_rga_status() {
+    if($('#rga_switch').is(":checked")){
+        rga_enabled = true;
+    }else{
+        rga_enabled = false;
+    }
+    enable_rga_fields(enable=rga_enabled);
+}
+
+async function getApiKey() {
+    if (cachedApiKey) {
+        return cachedApiKey;
+    }
+
+    try {
+        const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+        const text = await res.text();
+
+        // Extract the API key from the file content
+        const regex = /const\s+apiKey\s*=\s*"([^"]+)"/;
+        const match = regex.exec(text);
+        cachedApiKey = match?.[1];
+
+        if (!cachedApiKey) {
+            throw new Error('API key not found in the file');
+        }
+
+        return cachedApiKey;
+    } catch (error) {
+        console.error('Failed to fetch API key:', error);
+        throw new Error('Failed to fetch API key');
+    }
+}
+
 async function GetHiddenMap() {
+	let apiKey = await getApiKey();
 	let hiddenMap = new Microsoft.Maps.Map('#myHiddenMap', {
 		credentials: apiKey
 	});
-	hiddenMap.getCredentials(function (c) {
+	await hiddenMap.getCredentials(async function (c) {
 		cachedSessionKey = c;
+		if(cachedSessionKey!==null){
+			await init();
+		}
 	});
 }
 /**

@@ -22,22 +22,9 @@ RUN if [ "$USE_SSL" = "true" ]; then \
     mv /tmp/web.xml.tmp /root/fedgov-cv-ISDcreator-webapp/src/main/webapp/WEB-INF/web.xml
 
 # Run the Maven build
-RUN cd /root/fedgov-cv-parent \
-    && mvn install -DskipTests
-RUN cd /root/fedgov-cv-lib-asn1c \
-    && mvn install -DskipTests
-RUN cd /root/fedgov-cv-mapencoder \
-    && mvn install -DskipTests
-RUN cd /root/fedgov-cv-message-builder \
-    && mvn install -DskipTests
-RUN cd /root/fedgov-cv-ISDcreator-webapp \
-    && mvn install -DskipTests
-RUN cd /root/fedgov-cv-TIMcreator-webapp \
-    && mvn install -DskipTests
-RUN cd /root/fedgov-cv-map-services-proxy \
-    && mvn clean install -DskipTests
-RUN jar cvf /root/private-resources.war -C /root/private-resources .
-RUN jar cvf /root/root.war -C /root/root .
+COPY ./build.sh /root
+WORKDIR /root
+RUN ./build.sh
 
 
 FROM jetty:9.4.46-jre8-slim
@@ -70,7 +57,3 @@ RUN if [ "$USE_SSL" = "true" ]; then \
     else \
         java -jar "$JETTY_HOME"/start.jar --add-to-start=http; \
     fi
-
-RUN java -jar $JETTY_HOME/start.jar --add-to-start=https
-COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/keystore* /var/lib/jetty/etc/
-COPY --from=gradle-build /home/gradle/CARMASensitive/maptool/ssl.ini /var/lib/jetty/start.d/

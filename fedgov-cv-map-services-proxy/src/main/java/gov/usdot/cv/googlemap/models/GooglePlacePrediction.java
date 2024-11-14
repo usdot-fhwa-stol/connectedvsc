@@ -13,17 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package gov.usdot.cv.bingmap.models;
+package gov.usdot.cv.googlemap.models;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Component
-public class BingMapProperties {
-    @Value("${bing.map.api.key}")
-    private String BING_MAP_API_KEY;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GooglePlacePrediction {
+    private GoogleText text;
 
-    public String get_api_key(){
-        return this.BING_MAP_API_KEY;
+    public GooglePlacePrediction(GoogleText text) {
+        this.text = text;
     }
+
+    public GooglePlacePrediction() {
+    }
+
+    public GoogleText getText() {
+        return this.text;
+    }
+
+    public void setText(GoogleText text) {
+        this.text = text;
+    }
+    
 }
