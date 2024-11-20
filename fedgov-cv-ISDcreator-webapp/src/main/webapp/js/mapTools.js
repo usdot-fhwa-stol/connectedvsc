@@ -129,8 +129,10 @@ function saveFile( data )
 	catch(e) {
 		console.log("Unable to click the download link.  Are you using IE?")
 	}
-
-	document.body.removeChild(downloadLink);
+        
+        if(document.body.contains(downloadLink)){
+           document.body.removeChild(downloadLink);
+        }	
 }
 
 

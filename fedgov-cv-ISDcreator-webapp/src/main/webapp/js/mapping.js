@@ -11,7 +11,7 @@
     var fromProjection, toProjection;
     var temp_lat, temp_lon, selected_marker, selected_layer;
     var intersection_url = '//api.geonames.org/findNearestIntersectionJSON';
-	var google_elevation_url='/msp/googlemap/api/elevation';
+    var google_elevation_url='/msp/googlemap/api/elevation';
     var computingLane = false;
     var computedLaneSource;
     var sharedWith_object = '';
@@ -25,8 +25,9 @@
     var signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID;
     var nodeObject = [];
     var revisionNum = 0;
-	var cachedSessionKey = null;
-	let cachedApiKey='';
+    var cachedSessionKey = null;
+    let cachedApiKey='';
+    let cachedUsername = null;
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
         19567.87923828125, 9783.939619140625, 4891.9698095703125,
@@ -83,6 +84,27 @@ async function getApiKey() {
     } catch (error) {
         console.error('Failed to fetch API key:', error);
         throw new Error('Failed to fetch API key');
+    }
+}
+
+async function getUsername() {
+    if (cachedUsername) {
+            return cachedUsername;
+    }
+    try {
+            const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+            const text = await res.text();
+            // Extract the API key from the file content
+            const regex = /const\s+geoNamesUserName\s*=\s*"([^"]+)"/;
+            const match = regex.exec(text);
+            cachedUsername = match?.[1];
+            if (!cachedUsername) {
+                    throw new Error('API key not found in the file');
+            }
+            return cachedUsername;
+    } catch (error) {
+            console.error('Failed to fetch API key:', error);
+            throw new Error('Failed to fetch API key');
     }
 }
 
