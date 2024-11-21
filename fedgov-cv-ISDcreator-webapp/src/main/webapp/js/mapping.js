@@ -2565,8 +2565,8 @@ function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType){
 	if(roadAuthorityIdType!==""){
 		$("#road_authority_id").attr('data-parsley-required', true);
 		if (roadAuthorityIdType === "full") {
-            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-2](\.[0-9]+)+)");
-            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer.");
+            roadAuthorityIdInput.attr("data-parsley-pattern", "^(([01]\.(0|[1-9]|[1-2][0-9]|3[0-9]))|(2\.[0-9]+))(\.[0-9]+)*$");
+            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer. If the first integer is either 0 or 1, the second integer cannot be greater than 39.");
         } else if (roadAuthorityIdType === "relative") {
             roadAuthorityIdInput.attr("data-parsley-pattern", "([0-9]+(\.[0-9]+)+)");
             roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Relative RAID, enter at least two integers separated by a period.");

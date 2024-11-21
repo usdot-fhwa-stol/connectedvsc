@@ -429,7 +429,7 @@
 							</div>
 							<div class="row road_authority_id">
 								<div class="col-sm-4"><label for="road_authority_id">Road Authority ID:</label></div>
-								<div class="col-sm-7"><input class="form-control" id="road_authority_id" placeholder="xx.xx.xx"></div>
+								<div class="col-sm-7"><input class="form-control" id="road_authority_id" placeholder="xx.xx.xx" data-parsley-required="true" data-parsley-pattern='([0-9]+(\.[0-9]+)+)' data-parsley-pattern-message="RAID must be integers separated by a period. The first integer should be either 0, 1, or 2."></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="road_authority_id"></i></div>
 							</div>
 							<div class="row mapped_geometry_id extra_rga_field">
