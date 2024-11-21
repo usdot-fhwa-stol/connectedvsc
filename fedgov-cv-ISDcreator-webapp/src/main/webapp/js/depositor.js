@@ -416,7 +416,7 @@ function createMessageJSON()
                 "referenceLat": feature.attributes.LonLat.lat,
                 "referenceLon": feature.attributes.LonLat.lon,
                 "referenceElevation": feature.attributes.elevation,
-                "roadAuthorityId": feature.attributes.roadAuthorityId.split(".").map(num => parseInt(num, 10)),
+                "roadAuthorityId": feature.attributes.roadAuthorityId?.split(".").map(num => parseInt(num, 10)),
                 "roadAuthorityIdType": feature.attributes.roadAuthorityIdType,
             };
 

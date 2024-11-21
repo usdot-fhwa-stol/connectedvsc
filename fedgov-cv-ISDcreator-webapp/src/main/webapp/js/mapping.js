@@ -2136,6 +2136,13 @@ async function populateRefWindow(feature, lat, lon)
 						}
 					}
 				}
+				
+				if (feature.attributes.verifiedElev){
+					$('#verified_elev').val(feature.attributes.verifiedElev);
+				} else {
+					//If verified elevation does not exist in feature, update it with new elevation value
+					$('#verified_elev').val(elev);
+				}
 			}
 		});
 	}
@@ -2162,6 +2169,21 @@ async function populateRefWindow(feature, lat, lon)
  */
 
 $(".btnDone").click(function(){
+	//Update Reference Point Configuration fields with parsley attributes
+	let road_authority_id = $('#road_authority_id');
+	let road_authority_id_type = $('#road_authority_id_type');
+	road_authority_id_type.attr('data-parsley-required','false');
+	road_authority_id.attr('data-parsley-required','false');
+	if($('#region').val()?.trim() === "0"){
+		road_authority_id.attr('data-parsley-required','true');
+		road_authority_id_type.attr('data-parsley-required','true');
+	}else if(road_authority_id.val()?.length){
+		road_authority_id_type.attr('data-parsley-required','true');
+	}
+
+	if(road_authority_id_type.val()?.trim()?.toLowerCase()){
+		road_authority_id.attr('data-parsley-required','true');
+	}
 
 	$('#attributes').parsley().validate();
 
