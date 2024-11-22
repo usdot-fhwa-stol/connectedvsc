@@ -32,8 +32,11 @@
 function saveMap()
 {
 	$('#revision_modal').modal('show')
-
+        let clickCounter = 0;
 	$('#revision_modal .btn').click(function(event){
+                if(clickCounter++ > 0){
+                    return;
+                }
 		if(($('#revision_num').val()).match(/^\d+$/)){
 
 		    for ( var f = 0; f < vectors.features.length; f++) {
@@ -50,7 +53,7 @@ function saveMap()
 					"laneMarkers" : GEOJSON_PARSER.write(laneMarkers.features, true)
 				};
 
-				saveFile( layers )
+				saveFile( layers );
 		} else {
 			alert("Must enter a number value.");
 			return false;
