@@ -2586,7 +2586,12 @@ function onRegionIdChangeCallback(regionId){
 function onRoadAuthorityIdChangeCallback() {
 	let roadAuthorityIdType = $("#road_authority_id_type").val();
 	const roadAuthorityIdInput = $("#road_authority_id");
-	roadAuthorityIdInput.removeAttr("data-parsley-error-message");
+	// Get the Parsley instance of the input field
+    const parsleyInstance = roadAuthorityIdInput.parsley();
+
+    // Reset previous errors
+    parsleyInstance.removeError('raid'); // Ensure no lingering custom errors
+
 	if (roadAuthorityIdType !== "") {
 		$("#road_authority_id").attr('data-parsley-required', true);
 		let roadAuthorityIdInputVal = $("#road_authority_id").val();
@@ -2594,30 +2599,45 @@ function onRoadAuthorityIdChangeCallback() {
 			let roadAuthorityIdInputValArr = roadAuthorityIdInputVal.split(".").map(Number);
 			// Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
 			if(roadAuthorityIdInputValArr.length < 2) {
-				roadAuthorityIdInput.attr("data-parsley-error-message", "For RAID, enter at least two integers separated by a period.");
-				return;
+				parsleyInstance.addError('raid', {
+                    message: "For RAID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
 			}
 			if (roadAuthorityIdType === "full") {
 				if (roadAuthorityIdInputValArr[0] != 0 && roadAuthorityIdInputValArr[0] != 1 && roadAuthorityIdInputValArr[0] != 2) {
-					roadAuthorityIdInput.attr("data-parsley-error-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer.");
+					parsleyInstance.addError('raid', {
+                        message: "For Full RAID, the first integer must be 0-2.",
+                        updateClass: true
+                    });
 					return;
 				}
 
 				if ((roadAuthorityIdInputValArr[1] < 0 || roadAuthorityIdInputValArr[1] > 39) && (roadAuthorityIdInputValArr[0] == 0 || roadAuthorityIdInputValArr[0] == 1)) {
-					roadAuthorityIdInput.attr("data-parsley-error-message", "For Full RAID, if the first integer is either 0 or 1, the second integer cannot be greater than 39.");
+					parsleyInstance.addError('raid', {
+                        message: "For Full RAID, if the first integer is either 0 or 1, the second integer cannot be greater than 39.",
+                        updateClass: true
+                    });
 					return;
 				}
 
 				for (let r = 2; r < roadAuthorityIdInputValArr.length; r++) {
 					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
-						roadAuthorityIdInput.attr("data-parsley-error-message", `For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`);
+						parsleyInstance.addError('raid', {
+                            message: `For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
 						return;
 					}
 				}
 			} else if (roadAuthorityIdType === "relative") {
 				for (let r = 0; r < roadAuthorityIdInputValArr.length; r++) {
 					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
-						roadAuthorityIdInput.attr("data-parsley-error-message", `For Relative RAID, integer at position ${r + 1} cannot be greater than 2147483647.`);
+						parsleyInstance.addError('raid', {
+                            message: `For Relative RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
 						return;
 					}
 				}
@@ -2626,6 +2646,41 @@ function onRoadAuthorityIdChangeCallback() {
 	} else {
 		$("#road_authority_id").attr('data-parsley-required', false);
 	}
+}
+
+function onMappedGeomIdChangeCallback(){
+	const mappedGeomIdInput = $("#mapped_geometry_id");
+	// Get the Parsley instance of the input field
+    const parsleyInstance = mappedGeomIdInput.parsley();
+
+	$("#mapped_geometry_id").attr('data-parsley-required', true);
+	let mappedGeomIdInputVal = $("#mapped_geometry_id").val();
+
+    // Reset previous errors
+    parsleyInstance.removeError('mapped'); // Ensure no lingering custom errors
+
+	if (mappedGeomIdInputVal != "") {
+		let mappedGeomIdInputValArr = mappedGeomIdInputVal.split(".").map(Number);
+			// Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+			if(mappedGeomIdInputValArr.length < 2) {
+				parsleyInstance.addError('mapped', {
+                    message: "For Mapped Geometry ID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+			}
+
+			for (let r = 0; r < mappedGeomIdInputValArr.length; r++) {
+				if (mappedGeomIdInputValArr[r] < 0 || mappedGeomIdInputValArr[r] > 2147483647) {
+					parsleyInstance.addError('mapped', {
+						message: `For Mapped Geometry ID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+						updateClass: true
+					});
+					return;
+				}
+			}
+	}
+
 }
 
 function isOdd(num) { return (num % 2) == 1;}
