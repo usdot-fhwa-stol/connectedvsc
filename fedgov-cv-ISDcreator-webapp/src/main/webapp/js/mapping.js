@@ -2582,20 +2582,74 @@ function onRegionIdChangeCallback(regionId){
     }
 }
 
-function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType){
+function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType) {
 	const roadAuthorityIdInput = $("#road_authority_id");
-	if(roadAuthorityIdType!==""){
-		$("#road_authority_id").attr('data-parsley-required', true);
-		if (roadAuthorityIdType === "full") {
-            roadAuthorityIdInput.attr("data-parsley-pattern", "^(([01]\.(0|[1-9]|[1-2][0-9]|3[0-9]))|(2\.[0-9]+))(\.[0-9]+)*$");
-            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer. If the first integer is either 0 or 1, the second integer cannot be greater than 39.");
-        } else if (roadAuthorityIdType === "relative") {
-            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-9]+(\.[0-9]+)+)");
-            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Relative RAID, enter at least two integers separated by a period.");
-        }
-	}else{
-		$("#road_authority_id").attr('data-parsley-required', false);
+
+	// Set required attribute based on roadAuthorityIdType
+	if (roadAuthorityIdType !== "") {
+		roadAuthorityIdInput.attr("data-parsley-required", true);
+
+		const roadAuthorityIdInputVal = roadAuthorityIdInput.val();
+
+		if (roadAuthorityIdInputVal !== "") {
+			const roadAuthorityIdInputValArr = roadAuthorityIdInputVal.split(".").map(Number);
+
+			if (roadAuthorityIdType === "full") {
+				// Validate first integer
+				if (roadAuthorityIdInputValArr[0] != 0 && roadAuthorityIdInputValArr[0] != 1 && roadAuthorityIdInputValArr[0] != 2) {
+					roadAuthorityIdInput.attr(
+						"data-parsley-pattern-message",
+						"For Full RAID, the first integer must be 0-2, with at least one period-separated integer."
+					);
+					return; // Stop further validation if this fails
+				}
+
+				// Validate second integer based on the first
+				if ((roadAuthorityIdInputValArr[1] < 0 || roadAuthorityIdInputValArr[1] > 39) &&
+					(roadAuthorityIdInputValArr[0] == 0 || roadAuthorityIdInputValArr[0] == 1)) {
+					roadAuthorityIdInput.attr(
+						"data-parsley-pattern-message",
+						"For Full RAID, if the first integer is either 0 or 1, the second integer cannot be greater than 39."
+					);
+					return; // Stop further validation if this fails
+				}
+
+				// Validate remaining integers
+				for (let r = 2; r < roadAuthorityIdInputValArr.length; r++) {
+					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+						roadAuthorityIdInput.attr(
+							"data-parsley-pattern-message",
+							`For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`
+						);
+						return; // Stop further validation if this fails
+					}
+				}
+			} else if (roadAuthorityIdType === "relative") {
+				// Validate minimum length for relative RAID
+				if (roadAuthorityIdInputValArr.length < 2) {
+					roadAuthorityIdInput.attr(
+						"data-parsley-pattern-message",
+						"For Relative RAID, enter at least two integers separated by a period."
+					);
+					return; // Stop further validation if this fails
+				}
+
+				// Validate all integers for relative RAID
+				for (let r = 0; r < roadAuthorityIdInputValArr.length; r++) {
+					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+						roadAuthorityIdInput.attr(
+							"data-parsley-pattern-message",
+							`For Relative RAID, integer at position ${r + 1} cannot be greater than 2147483647.`
+						);
+						return; // Stop further validation if this fails
+					}
+				}
+			}
+		}
+	} else {
+		roadAuthorityIdInput.attr("data-parsley-required", false);
 	}
 }
+
 
 function isOdd(num) { return (num % 2) == 1;}
