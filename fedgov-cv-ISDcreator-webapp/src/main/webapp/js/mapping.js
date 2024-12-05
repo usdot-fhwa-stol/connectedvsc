@@ -2285,6 +2285,7 @@ $(".btnDone").click(function(){
 	                    }
 	                    if (laneType != null){
 	                        selected_marker.attributes.laneType = laneType;
+							
 	                        (lanes.features[selected_marker.attributes.lane]).attributes.laneType = laneType;
 	                    }
 	                    if (stateConfidence != null){
@@ -2582,20 +2583,104 @@ function onRegionIdChangeCallback(regionId){
     }
 }
 
-function onRoadAuthorityIdTypeChangeCallback(roadAuthorityIdType){
+function onRoadAuthorityIdChangeCallback() {
+	let roadAuthorityIdType = $("#road_authority_id_type").val();
 	const roadAuthorityIdInput = $("#road_authority_id");
-	if(roadAuthorityIdType!==""){
+	// Get the Parsley instance of the input field
+    const parsleyInstance = roadAuthorityIdInput.parsley();
+
+    // Reset previous errors
+    parsleyInstance.removeError('raid'); // Ensure no lingering custom errors
+
+	if (roadAuthorityIdType !== "") {
 		$("#road_authority_id").attr('data-parsley-required', true);
-		if (roadAuthorityIdType === "full") {
-            roadAuthorityIdInput.attr("data-parsley-pattern", "^(([01]\.(0|[1-9]|[1-2][0-9]|3[0-9]))|(2\.[0-9]+))(\.[0-9]+)*$");
-            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Full RAID, the first integer must be 0-2, with at least one period-separated integer. If the first integer is either 0 or 1, the second integer cannot be greater than 39.");
-        } else if (roadAuthorityIdType === "relative") {
-            roadAuthorityIdInput.attr("data-parsley-pattern", "([0-9]+(\.[0-9]+)+)");
-            roadAuthorityIdInput.attr("data-parsley-pattern-message", "For Relative RAID, enter at least two integers separated by a period.");
-        }
-	}else{
+		let roadAuthorityIdInputVal = $("#road_authority_id").val();
+		if (roadAuthorityIdInputVal != "") {
+			let roadAuthorityIdInputValArr = roadAuthorityIdInputVal.split(".").map(Number);
+			// Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+			if(roadAuthorityIdInputValArr.length < 2) {
+				parsleyInstance.addError('raid', {
+                    message: "For RAID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+			}
+			if (roadAuthorityIdType === "full") {
+				if (roadAuthorityIdInputValArr[0] != 0 && roadAuthorityIdInputValArr[0] != 1 && roadAuthorityIdInputValArr[0] != 2) {
+					parsleyInstance.addError('raid', {
+                        message: "For Full RAID, the first integer must be 0-2.",
+                        updateClass: true
+                    });
+					return;
+				}
+
+				if ((roadAuthorityIdInputValArr[1] < 0 || roadAuthorityIdInputValArr[1] > 39) && (roadAuthorityIdInputValArr[0] == 0 || roadAuthorityIdInputValArr[0] == 1)) {
+					parsleyInstance.addError('raid', {
+                        message: "For Full RAID, if the first integer is either 0 or 1, the second integer cannot be greater than 39.",
+                        updateClass: true
+                    });
+					return;
+				}
+
+				for (let r = 2; r < roadAuthorityIdInputValArr.length; r++) {
+					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+						parsleyInstance.addError('raid', {
+                            message: `For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
+						return;
+					}
+				}
+			} else if (roadAuthorityIdType === "relative") {
+				for (let r = 0; r < roadAuthorityIdInputValArr.length; r++) {
+					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+						parsleyInstance.addError('raid', {
+                            message: `For Relative RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
+						return;
+					}
+				}
+			}
+		}
+	} else {
 		$("#road_authority_id").attr('data-parsley-required', false);
 	}
+}
+
+function onMappedGeomIdChangeCallback(){
+	const mappedGeomIdInput = $("#mapped_geometry_id");
+	// Get the Parsley instance of the input field
+    const parsleyInstance = mappedGeomIdInput.parsley();
+
+	$("#mapped_geometry_id").attr('data-parsley-required', true);
+	let mappedGeomIdInputVal = $("#mapped_geometry_id").val();
+
+    // Reset previous errors
+    parsleyInstance.removeError('mapped'); // Ensure no lingering custom errors
+
+	if (mappedGeomIdInputVal != "") {
+		let mappedGeomIdInputValArr = mappedGeomIdInputVal.split(".").map(Number);
+			// Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+			if(mappedGeomIdInputValArr.length < 2) {
+				parsleyInstance.addError('mapped', {
+                    message: "For Mapped Geometry ID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+			}
+
+			for (let r = 0; r < mappedGeomIdInputValArr.length; r++) {
+				if (mappedGeomIdInputValArr[r] < 0 || mappedGeomIdInputValArr[r] > 2147483647) {
+					parsleyInstance.addError('mapped', {
+						message: `For Mapped Geometry ID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+						updateClass: true
+					});
+					return;
+				}
+			}
+	}
+
 }
 
 function isOdd(num) { return (num % 2) == 1;}
