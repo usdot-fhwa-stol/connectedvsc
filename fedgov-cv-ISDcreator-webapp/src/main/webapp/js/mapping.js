@@ -2622,7 +2622,7 @@ function onRoadAuthorityIdChangeCallback() {
 					return;
 				}
 
-				for (let r = 2; r < roadAuthorityIdInputValArr.length; r++) {
+				for (let r = 1; r < roadAuthorityIdInputValArr.length; r++) {
 					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
 						parsleyInstance.addError('raid', {
                             message: `For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
