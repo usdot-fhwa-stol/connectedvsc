@@ -179,6 +179,9 @@ $(document).ready(function() {
         let config={
             enableTime: true,
             enableSeconds: true,
+            allowInput: true,
+            minuteIncrement: 1,
+            secondIncrement: 1,
             dateFormat: "d/m/Y H:i:s"
         }
         $(this).flatpickr(config);
