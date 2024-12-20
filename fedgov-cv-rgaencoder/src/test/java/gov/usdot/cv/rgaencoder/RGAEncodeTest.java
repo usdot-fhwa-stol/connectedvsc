@@ -46,8 +46,8 @@ public class RGAEncodeTest {
 
         encoder = new Encoder();
 
-        when(mockBaseLayer.getMajorVer()).thenReturn(22);
-        when(mockBaseLayer.getMinorVer()).thenReturn(11);
+        when(mockBaseLayer.getMajorVer()).thenReturn(1);
+        when(mockBaseLayer.getMinorVer()).thenReturn(1);
 
         // RAID
         when(mockBaseLayer.isFullRdAuthIDExists()).thenReturn(false);
@@ -86,7 +86,8 @@ public class RGAEncodeTest {
     @Test
     public void rgaEncodeTester() {
         ByteArrayObject res = encoder.encode(mockRGA);
-        byte[] expected = { 0, 43, 44, 0, 4, 4, 88, 44, -102, -46, 116, -125, -75, -92, -23, 5, 8, 6, -65, 68, 85, 65, 2, 1, 48, -98, -63, 64, 32, 96, -64, 32, -128, 48, 70, -30, -94, -127, -65, -33, -94, 42, -36, -64, 5, 26, 64 };
+        System.out.println(res.getMessage());
+        byte[] expected = { 0, 43, 43, 0, 0, 64, 73, -83, 39, 72, 59, 90, 78, -112, 80, -128, 107, -12, 69, 84, 16, 32, 19, 9, -20, 20, 2, 6, 12, 2, 8, 3, 4, 110, 42, 40, 27, -3, -6, 34, -83, -52, 0, 81, -92, 0};
         Assert.assertArrayEquals(expected, res.getMessage());
     }
 }

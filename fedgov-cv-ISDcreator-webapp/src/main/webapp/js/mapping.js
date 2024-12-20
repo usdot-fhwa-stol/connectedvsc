@@ -1837,17 +1837,17 @@ function referencePointWindow(feature){
         $("#region").val(selected_marker.attributes.regionID);
     }
     
-    if (! selected_marker.attributes.majorVersion){
-        $("#major_version").val("");
-    } else {
-        $("#major_version").val(selected_marker.attributes.majorVersion);
-    }
+    // if (! selected_marker.attributes.majorVersion){
+    //     $("#major_version").val("");
+    // } else {
+    //     $("#major_version").val(selected_marker.attributes.majorVersion);
+    // }
     
-    if (! selected_marker.attributes.minorVersion){
-        $("#minor_version").val("");
-    } else {
-        $("#minor_version").val(selected_marker.attributes.minorVersion);
-    }
+    // if (! selected_marker.attributes.minorVersion){
+    //     $("#minor_version").val("");
+    // } else {
+    //     $("#minor_version").val(selected_marker.attributes.minorVersion);
+    // }
     
     if (! selected_marker.attributes.roadAuthorityId){
         $("#road_authority_id").val("");
@@ -2366,8 +2366,8 @@ $(".btnDone").click(function(){
 					selected_marker.attributes.regionID = $("#region").val();
 					selected_marker.attributes.roadAuthorityIdType = $("#road_authority_id_type").val();
 					selected_marker.attributes.roadAuthorityId = $("#road_authority_id").val();
-					selected_marker.attributes.majorVersion = $("#major_version").val();
-					selected_marker.attributes.minorVersion = $("#minor_version").val();
+					// selected_marker.attributes.majorVersion = $("#major_version").val();
+					// selected_marker.attributes.minorVersion = $("#minor_version").val();
 					selected_marker.attributes.mappedGeometryId = $("#mapped_geometry_id").val();
 					selected_marker.attributes.contentVersion = $("#content_version").val();
 					selected_marker.attributes.contentDateTime = $("#content_date_time").val();
