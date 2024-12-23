@@ -135,14 +135,14 @@ public class IntersectionSituationDataBuilderTest {
     @Test
     public void rgaBaseLayerMessageWithFramePlusRGATypeTest() {
         String filePath = "src/test/resources/samplerga.json";
-        String expectedHexString = "00000a66d9b231ea6b5f708e13f4105024aa19221bdc340404141202060c020a0a0e060201fdfa082d080081a400";
+        String expectedHexString = "00404a66d9b231ea6b5f708e13f4105024aa19221bdc340404141202060c020a0a0e060201fdfa082d080081a400";
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 
     @Test
     public void rgaBaseLayerMessageWithFramePlusRGATypeTestRelativeRAID() {
         String filePath = "src/test/resources/samplerga2.json";
-        String expectedHexString = "002b300000000a66d9b231ea6b5f708e13f3b55428040a19221bdc340404141202060c020a0a0e060201fdf9daa9600065a400";
+        String expectedHexString = "002b300000404a66d9b231ea6b5f708e13f3b55428040a19221bdc340404141202060c020a0a0e060201fdf9daa9600065a400";
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 
@@ -170,7 +170,7 @@ public class IntersectionSituationDataBuilderTest {
     @Test
     public void rgaMessageFromUI() {
         String filePath = "src/test/resources/samplerga3.json"; 
-        String expectedHexString = "002b290000408a76dcde99cb343d50cb53f4571024aa19221bdc3404041406182c4203fdfa2b88280011a400";
+        String expectedHexString = "002b290000404a76dcde99cb343d50cb53f4571024aa19221bdc3404041406182c4203fdfa2b88280011a400";
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 
