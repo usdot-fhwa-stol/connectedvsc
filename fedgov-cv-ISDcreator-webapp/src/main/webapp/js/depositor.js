@@ -423,8 +423,6 @@ function createMessageJSON()
             var data_frame_rga_base_layer_fields = {} //Ensure to clear the data for each call
             //Only populate JSON with RGA fields when the RGA toggle is enabled
             if(rga_enabled){ // Global variable rga_enabled is defined in mapping.js
-                // data_frame_rga_base_layer_fields["majorVersion"]=parseInt(feature.attributes.majorVersion);
-                // data_frame_rga_base_layer_fields["minorVersion"]= parseInt(feature.attributes.minorVersion);
                 data_frame_rga_base_layer_fields["contentVersion"]= parseInt(feature.attributes.contentVersion);
                 let date_time = parse_datetime_str(feature.attributes.contentDateTime);
                 data_frame_rga_base_layer_fields["timeOfCalculation"] = date_time.date;
@@ -523,12 +521,10 @@ function parse_datetime_str(datetimestring){
 }
 
 /***
- * @brief According to J2945_A RGA definition,  majorVersion, minorVersion, mappedGeometryId, contentVersion, contentDateTime are required
+ * @brief According to J2945_A RGA definition, mappedGeometryId, contentVersion, contentDateTime are required
  */
 function validate_required_rga_fields(feature){    
     let map_fields_descriptions= {
-        // "majorVersion": "RGA message no major version defined",
-        // "minorVersion": "RGA message no minor version defined",
         "mappedGeometryId": "RGA message no mapped geometry ID defined",
         "contentVersion": "RGA message no content version defined",
         "contentDateTime": "RGA message no content datetime defined",
