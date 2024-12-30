@@ -59,9 +59,14 @@ COPY ssl.ini /tmp/
 
 # Conditionally add SSL or non-SSL based on the USE_SSL environment variable
 RUN if [ "$USE_SSL" = "true" ]; then \
-        java -jar "$JETTY_HOME"/start.jar --add-to-start=https; \
-	cp /tmp/keystore* /var/lib/jetty/etc/; \
-	cp /tmp/ssl.ini /var/lib/jetty/start.d/; \
+        if [ -f /tmp/ssl.ini ]; then \
+            java -jar "$JETTY_HOME"/start.jar --add-to-start=https; \
+            cp /tmp/keystore* /var/lib/jetty/etc/; \
+            cp /tmp/ssl.ini /var/lib/jetty/start.d/; \
+        else \
+            echo "SSL is enabled, but keystore or ssl.ini files are missing."; \
+            exit 1; \
+        fi; \
     else \
         java -jar "$JETTY_HOME"/start.jar --add-to-start=http; \
     fi
