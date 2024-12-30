@@ -1,7 +1,7 @@
 Map Tool Release Notes
 ----------------------------
 
-Version 2.1.0, released 27th, 2024
+Version 2.1.0, released 31st, 2024
 ----------------------------------------
 
 ### **Summary**  
@@ -23,9 +23,6 @@ This release focuses on compliance with the 2024 J2735 standard and initial inte
 
 **<ins>Fixed Issues:</ins>**  
 - Fixed occasionally saving child map dialog box popup multiple times after clicking on save.  
-
-**<ins>Known Issues:</ins>**  
-- Currently, only values up to **2,147,483,647** are permitted for nodes in **RoadAuthorityID** and **MappedGeometryID**.  
 
 **Epic MAP-148: Implement J2945/A RGA Base Layer Message with the ISD Tool**  
 
