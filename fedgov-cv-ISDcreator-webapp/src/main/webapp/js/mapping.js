@@ -11,7 +11,7 @@
     var fromProjection, toProjection;
     var temp_lat, temp_lon, selected_marker, selected_layer;
     var intersection_url = '//api.geonames.org/findNearestIntersectionJSON';
-	var google_elevation_url='/msp/googlemap/api/elevation';
+    var google_elevation_url='/msp/googlemap/api/elevation';
     var computingLane = false;
     var computedLaneSource;
     var sharedWith_object = '';
@@ -25,7 +25,9 @@
     var signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID;
     var nodeObject = [];
     var revisionNum = 0;
-	var cachedSessionKey = null;
+    var cachedSessionKey = null;
+    let cachedApiKey='';
+    let cachedUsername = null;
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
         19567.87923828125, 9783.939619140625, 4891.9698095703125,
@@ -43,19 +45,86 @@
         4.777314267158508, 2.388657133579254, 1.194328566789627,
         0.5971642833948135, 0.29858214169740677];
 
+/***
+ * A global variable to store current RGA toggle status. 
+ * Some UI fields are disabled or enabled depends on the current RGA status.
+ * @type Boolean Indicator whether RGA fields are enabled.
+ */
+let rga_enabled=false;
+
+
+function set_rga_status() {
+    if($('#rga_switch').is(":checked")){
+        rga_enabled = true;
+    }else{
+        rga_enabled = false;
+    }
+    enable_rga_fields(enable=rga_enabled);
+}
+
+async function getApiKey() {
+    if (cachedApiKey) {
+        return cachedApiKey;
+    }
+
+    try {
+        const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+        const text = await res.text();
+
+        // Extract the API key from the file content
+        const regex = /const\s+apiKey\s*=\s*"([^"]+)"/;
+        const match = regex.exec(text);
+        cachedApiKey = match?.[1];
+
+        if (!cachedApiKey) {
+            throw new Error('API key not found in the file');
+        }
+
+        return cachedApiKey;
+    } catch (error) {
+        console.error('Failed to fetch API key:', error);
+        throw new Error('Failed to fetch API key');
+    }
+}
+
+async function getUsername() {
+    if (cachedUsername) {
+            return cachedUsername;
+    }
+    try {
+            const res = await fetch('/private-resources/js/ISDcreator-webapp-keys.js');
+            const text = await res.text();
+            // Extract the API key from the file content
+            const regex = /const\s+geoNamesUserName\s*=\s*"([^"]+)"/;
+            const match = regex.exec(text);
+            cachedUsername = match?.[1];
+            if (!cachedUsername) {
+                    throw new Error('API key not found in the file');
+            }
+            return cachedUsername;
+    } catch (error) {
+            console.error('Failed to fetch API key:', error);
+            throw new Error('Failed to fetch API key');
+    }
+}
+
 async function GetHiddenMap() {
+	let apiKey = await getApiKey();
 	let hiddenMap = new Microsoft.Maps.Map('#myHiddenMap', {
 		credentials: apiKey
 	});
-	hiddenMap.getCredentials(function (c) {
+	await hiddenMap.getCredentials(async function (c) {
 		cachedSessionKey = c;
+		if(cachedSessionKey!==null){
+			await init();
+		}
 	});
 }
 /**
  * Define functions that must bind on load
  */
 
-function init() {
+async function init() {
 	// cannot call http service from our https deployed application:
 	// making call to backend to do GET for us if not deployed on localhost
 	if( host.indexOf("localhost") == -1 ) {
@@ -80,6 +149,8 @@ function init() {
      * Note: each layer is defined in this section, and layers interact with the sidebar
      * by showing/hiding DOM elements. Also, all data is loaded into the forms via these feature objects
      */
+
+	const apiKey = await getApiKey();
 
 	map = new OpenLayers.Map('map', {
         allOverlays: false,
@@ -392,6 +463,10 @@ function init() {
 		        	$(".verified_lat").hide();
 		        	$(".verified_long").hide();
 		        	$(".intersection").hide();
+					$(".region").hide();
+					show_rga_fields(hide=true);
+					$('.road_authority_id').hide();
+					$('.road_authority_id_type').hide();
 		        	$(".elev").hide();
 		        	$(".verified_elev").hide();
 		        	$(".lane_width").hide();
@@ -495,10 +570,14 @@ function init() {
 	        	$(".verified_elev").hide();
 	        	$(".approach_type").hide();
 	        	$(".intersection").hide();
+				$(".region").hide();
                 $(".revision").hide();
                 $('.phases').hide();
                 $(".master_lane_width").hide();
                 $(".intersection_name").hide();
+                show_rga_fields(hide=true);
+				$('.road_authority_id').hide();
+				$('.road_authority_id_type').hide();
                 $(".approach_name").hide();
                 $(".shared_with").hide();
                 $(".btnClone").hide();
@@ -522,6 +601,10 @@ function init() {
 		        	$(".lane_number").show();
                     $('.spat-info-tab').show();
                     $('.connection-tab').show();
+					$(".intersection-info-tab").find('a:contains("Intersection Info")').text('Speed Limits');
+					$('.intersection-info-tab').show();
+					$('.layer').hide();
+					$('.lane-speed-text').show();
                     $(".shared_with").show();
                     if(!selected_marker.attributes.computed) {
                 		// Only show the button if this lane is already defined with a lane number
@@ -591,6 +674,12 @@ function init() {
                     toggleLaneTypeAttributes(selected_marker.attributes.laneType);
                 }
 
+				if (!lanes.features[selected_marker.attributes.lane].attributes.speedLimitType) {
+					removeSpeedForm();
+					addSpeedForm();
+				} else {
+					rebuildSpeedForm(lanes.features[selected_marker.attributes.lane].attributes.speedLimitType);
+				}
                 
             	$('#shared_with').multiselect('deselectAll', false);
             	$("#shared_with").multiselect("refresh");
@@ -1282,6 +1371,10 @@ function placeComputedLane(newDotFeature) {
 			$(".verified_elev").hide();
 			$(".approach_type").hide();
 			$(".intersection").hide();
+			$(".region").hide();
+			show_rga_fields(hide=true);
+			$('.road_authority_id').hide();
+			$('.road_authority_id_type').hide();
 			$(".revision").hide();
 			$('.phases').hide();
 			$(".master_lane_width").hide();
@@ -1663,11 +1756,21 @@ function referencePointWindow(feature){
 	$(".lat").show();
 	$(".long").show();
 	$(".intersection").show();
+	$(".region").show();
 	$(".elev").show();
     $(".revision").show();
+    
+    //Show additional RGA related fields
+    show_rga_fields(hide=false);
+	$('.road_authority_id').show();
+	$('.road_authority_id_type').show();
+    
     $(".master_lane_width").show();
     $(".intersection_name").show();
     if (selected == "child"){
+		$(".intersection-info-tab").find('a:contains("Speed Limits")').text('Intersection Info');
+		$('.layer').show();
+		$('.lane-speed-text').hide();		
     	$('.intersection-info-tab').show();
         $(".velocity").show();
     }
@@ -1678,6 +1781,7 @@ function referencePointWindow(feature){
 		$("#long").prop('readonly', true);
 		$("#elev").prop('readonly', true);
 		$(".intersection").hide();
+		$(".region").hide();
     	$(".verified_lat").show();
     	$(".verified_long").show();
     	$(".verified_elev").show();
@@ -1685,8 +1789,17 @@ function referencePointWindow(feature){
         $(".master_lane_width").hide();
         $(".intersection_name").hide();
         $(".approach_name").hide();
-        $('.intersection-info-tab').hide();
+        $('.intersection-info-tab').hide();        
+        
+        show_rga_fields(hide=true);
+		$('.road_authority_id').hide();
+		$('.road_authority_id_type').hide();
 	}
+        
+        if(feature.attributes.marker.name == "Reference Point Marker"){    
+            //Enable or disable rga fields on reference point marker depend on whether current RGA toggle is enabled/disabled.
+            enable_rga_fields(enable=rga_enabled);
+        }
 	
 	$('#revision').val(revisionNum);
 	if (! selected_marker.attributes.elevation){
@@ -1718,8 +1831,48 @@ function referencePointWindow(feature){
 		$("#intersection_name").val(selected_marker.attributes.intersectionName);
 	}
 
+	if (! selected_marker.attributes.regionID){
+        $("#region").val("");
+    } else {
+        $("#region").val(selected_marker.attributes.regionID);
+    }
+    
+    if (! selected_marker.attributes.roadAuthorityId){
+        $("#road_authority_id").val("");
+    } else {
+        $("#road_authority_id").val(selected_marker.attributes.roadAuthorityId);
+    }
+
+	if (! selected_marker.attributes.roadAuthorityIdType){
+        $("#road_authority_id_type").val("");
+    } else {
+        $("#road_authority_id_type").val(selected_marker.attributes.roadAuthorityIdType);
+    }
+    
+    if (! selected_marker.attributes.mappedGeometryId){
+        $("#mapped_geometry_id").val("");
+    } else {
+        $("#mapped_geometry_id").val(selected_marker.attributes.mappedGeometryId);
+    }
+    
+    if (! selected_marker.attributes.contentVersion){
+        $("#content_version").val("");
+    } else {
+        $("#content_version").val(selected_marker.attributes.contentVersion);
+    }
+    
+    if (! selected_marker.attributes.contentDateTime){
+        $("#content_date_time").val("");
+    } else {
+        $("#content_date_time").val(selected_marker.attributes.contentDateTime);
+    }
+
     if (selected == "child"){
-        $('.btnDone').prop('disabled', true);
+		if(feature.attributes.marker.name != "Reference Point Marker") {
+			$('.btnDone').prop('disabled', true);
+		} else {
+			$('.btnDone').prop('disabled', false);
+		}
         $('.intersection-btn').prop('disabled', false);
         $('.btnClose').prop('readonly', false);
     } else {
@@ -1737,6 +1890,38 @@ function referencePointWindow(feature){
 	$("#attributes").show();
 }
 
+ /***
+  * @brief Show and hide RGA related fields. 
+  * Note: extra RGA fields in addition to MAP message should only appear at the "Reference Point" dialog.
+  * @param {type} Boolean show or hide RGA fields
+  */
+function show_rga_fields(hide=true){
+    if(hide){        
+       $(".extra_rga_field").hide();
+    }else{        
+       $(".extra_rga_field").show();
+    }
+}
+
+function enable_rga_fields(enable=true){    
+    if(enable){        
+         $(".extra_rga_field_input").prop('disabled', false);
+		 $(".extra_rga_field_input").css('backgroundColor', "#fff");
+    }else{     
+         $(".extra_rga_field_input").prop('disabled', true);
+		 $(".extra_rga_field_input").css('backgroundColor', "#eee");
+    }
+	add_rga_fields_validation(enable);
+}
+
+function add_rga_fields_validation(enable=true){
+	if(enable){
+		$("input:text.required").attr('data-parsley-required', true);
+	}else{
+		$("input:text.required").attr('data-parsley-required', false);
+	}
+	
+}
 
 /**
  * Purpose: if lat/long is modified, it changes the location
@@ -1892,9 +2077,11 @@ function populateAttributeWindow(temp_lat, temp_lon){
 	$('#long').val(temp_lon);
 }
 
-function populateRefWindow(feature, lat, lon)
+async function populateRefWindow(feature, lat, lon)
 {
-	
+	const apiKey = await getApiKey();
+	const geoNamesUserName = await getUsername();
+
 	$.ajax({
 		type: 'GET',
 		url: intersection_url,
@@ -1939,6 +2126,13 @@ function populateRefWindow(feature, lat, lon)
 						}
 					}
 				}
+				
+				if (feature.attributes.verifiedElev){
+					$('#verified_elev').val(feature.attributes.verifiedElev);
+				} else {
+					//If verified elevation does not exist in feature, update it with new elevation value
+					$('#verified_elev').val(elev);
+				}
 			}
 		});
 	}
@@ -1965,6 +2159,21 @@ function populateRefWindow(feature, lat, lon)
  */
 
 $(".btnDone").click(function(){
+	//Update Reference Point Configuration fields with parsley attributes
+	let road_authority_id = $('#road_authority_id');
+	let road_authority_id_type = $('#road_authority_id_type');
+	road_authority_id_type.attr('data-parsley-required','false');
+	road_authority_id.attr('data-parsley-required','false');
+	if($('#region').val()?.trim() === "0"){
+		road_authority_id.attr('data-parsley-required','true');
+		road_authority_id_type.attr('data-parsley-required','true');
+	}else if(road_authority_id.val()?.length){
+		road_authority_id_type.attr('data-parsley-required','true');
+	}
+
+	if(road_authority_id_type.val()?.trim()?.toLowerCase()){
+		road_authority_id.attr('data-parsley-required','true');
+	}
 
 	$('#attributes').parsley().validate();
 
@@ -2035,7 +2244,11 @@ $(".btnDone").click(function(){
 		
 			var move = new OpenLayers.LonLat($('#long').val(), $('#lat').val()).transform(fromProjection, toProjection)
 		
-			if (selected_layer.name == "Lane Marker Layer"){                
+			if (selected_layer.name == "Lane Marker Layer"){   
+				var currentLaneSpeedLimits = saveSpeedForm();
+				(lanes.features[selected_marker.attributes.lane]).attributes.speedLimitType = currentLaneSpeedLimits;
+				speedLimits = [];
+
 				var vert = lanes.features[selected_marker.attributes.lane].geometry.components[selected_marker.attributes.number];
 				vert.move(move.lon - vert.x, move.lat - vert.y);
 				selected_marker.move(move);
@@ -2062,6 +2275,7 @@ $(".btnDone").click(function(){
 	                    }
 	                    if (laneType != null){
 	                        selected_marker.attributes.laneType = laneType;
+							
 	                        (lanes.features[selected_marker.attributes.lane]).attributes.laneType = laneType;
 	                    }
 	                    if (stateConfidence != null){
@@ -2122,11 +2336,9 @@ $(".btnDone").click(function(){
 			
 			if (selected_layer.name == "Vector Layer"){
 				if (selected == "child"){
-
                     selected_marker.attributes.speedLimitType = saveSpeedForm();
                     selected_marker.attributes.layerID = $("#layer").val();
                     speedLimits = [];
-
 				} else {
 					selected_marker.move(move);
 					if (selected_marker.attributes.marker.name == "Verified Point Marker"){
@@ -2135,14 +2347,20 @@ $(".btnDone").click(function(){
 						selected_marker.attributes.verifiedElev = $("#verified_elev").val();
 						selected_marker.attributes.elevation = $("#elev").val();
 					}
-					if (selected_marker.attributes.marker.name == "Reference Point Marker"){
-						selected_marker.attributes.intersectionName = $("#intersection_name").val();
-						selected_marker.attributes.elevation = $("#elev").val();
-		                selected_marker.attributes.intersectionID = $("#intersection").val();
-		                intersectionID = $("#intersection").val();
-		                selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
-		                selected_marker.attributes.revisionNum = revisionNum;
-					}
+				}
+				if (selected_marker.attributes.marker.name == "Reference Point Marker") {
+					selected_marker.attributes.intersectionName = $("#intersection_name").val();
+					selected_marker.attributes.elevation = $("#elev").val();
+					selected_marker.attributes.intersectionID = $("#intersection").val();
+					intersectionID = $("#intersection").val();
+					selected_marker.attributes.regionID = $("#region").val();
+					selected_marker.attributes.roadAuthorityIdType = $("#road_authority_id_type").val();
+					selected_marker.attributes.roadAuthorityId = $("#road_authority_id").val();
+					selected_marker.attributes.mappedGeometryId = $("#mapped_geometry_id").val();
+					selected_marker.attributes.contentVersion = $("#content_version").val();
+					selected_marker.attributes.contentDateTime = $("#content_date_time").val();
+					selected_marker.attributes.masterLaneWidth = $("#master_lane_width").val();
+					selected_marker.attributes.revisionNum = revisionNum;
 				}
 			}
 			$('#attributes').parsley().reset();
@@ -2230,7 +2448,8 @@ function getCookie(cname) {
     return "";
 }
 
-function getElevation(dot, latlon, i, j, callback){
+async function getElevation(dot, latlon, i, j, callback){
+	const apiKey = await getApiKey();
 
     $.ajax({
 		url: google_elevation_url+"/"+latlon.lat+'/'+latlon.lon,
@@ -2340,6 +2559,115 @@ function toggleWidthArray() {
     if (isNegative.value){
         alert("Width deltas sum to less than zero on lane " + lanes.features[isNegative.lane].attributes.laneNumber + " at node " + isNegative.node + "!");
     }
+}
+
+function onRegionIdChangeCallback(regionId){
+    if(!isNaN(regionId) && parseFloat(regionId)===0){
+        $("#road_authority_id").attr('data-parsley-required', true);
+        $("#road_authority_id_type").attr('data-parsley-required', true);
+    }else{
+        $("#road_authority_id").attr('data-parsley-required', false);
+        $("#road_authority_id_type").attr('data-parsley-required', false);
+    }
+}
+
+function onRoadAuthorityIdChangeCallback() {
+	let roadAuthorityIdType = $("#road_authority_id_type").val();
+	const roadAuthorityIdInput = $("#road_authority_id");
+	// Get the Parsley instance of the input field
+    const parsleyInstance = roadAuthorityIdInput.parsley();
+
+    // Reset previous errors
+    parsleyInstance.removeError('raid'); // Ensure no lingering custom errors
+
+	if (roadAuthorityIdType !== "") {
+		$("#road_authority_id").attr('data-parsley-required', true);
+		let roadAuthorityIdInputVal = $("#road_authority_id").val();
+		if (roadAuthorityIdInputVal != "") {
+			let roadAuthorityIdInputValArr = roadAuthorityIdInputVal.split(".").map(Number);
+			// Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+			if(roadAuthorityIdInputValArr.length < 2) {
+				parsleyInstance.addError('raid', {
+                    message: "For RAID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+			}
+			if (roadAuthorityIdType === "full") {
+				if (roadAuthorityIdInputValArr[0] != 0 && roadAuthorityIdInputValArr[0] != 1 && roadAuthorityIdInputValArr[0] != 2) {
+					parsleyInstance.addError('raid', {
+                        message: "For Full RAID, the first integer must be 0-2.",
+                        updateClass: true
+                    });
+					return;
+				}
+
+				if ((roadAuthorityIdInputValArr[1] < 0 || roadAuthorityIdInputValArr[1] > 39) && (roadAuthorityIdInputValArr[0] == 0 || roadAuthorityIdInputValArr[0] == 1)) {
+					parsleyInstance.addError('raid', {
+                        message: "For Full RAID, if the first integer is either 0 or 1, the second integer cannot be greater than 39.",
+                        updateClass: true
+                    });
+					return;
+				}
+
+				for (let r = 1; r < roadAuthorityIdInputValArr.length; r++) {
+					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+						parsleyInstance.addError('raid', {
+                            message: `For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
+						return;
+					}
+				}
+			} else if (roadAuthorityIdType === "relative") {
+				for (let r = 0; r < roadAuthorityIdInputValArr.length; r++) {
+					if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+						parsleyInstance.addError('raid', {
+                            message: `For Relative RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
+						return;
+					}
+				}
+			}
+		}
+	} else {
+		$("#road_authority_id").attr('data-parsley-required', false);
+	}
+}
+
+function onMappedGeomIdChangeCallback(){
+	const mappedGeomIdInput = $("#mapped_geometry_id");
+	// Get the Parsley instance of the input field
+    const parsleyInstance = mappedGeomIdInput.parsley();
+
+	$("#mapped_geometry_id").attr('data-parsley-required', true);
+	let mappedGeomIdInputVal = $("#mapped_geometry_id").val();
+
+    // Reset previous errors
+    parsleyInstance.removeError('mapped'); // Ensure no lingering custom errors
+
+	if (mappedGeomIdInputVal != "") {
+		let mappedGeomIdInputValArr = mappedGeomIdInputVal.split(".").map(Number);
+			// Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+			if(mappedGeomIdInputValArr.length < 2) {
+				parsleyInstance.addError('mapped', {
+                    message: "For Mapped Geometry ID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+			}
+
+			for (let r = 0; r < mappedGeomIdInputValArr.length; r++) {
+				if (mappedGeomIdInputValArr[r] < 0 || mappedGeomIdInputValArr[r] > 2147483647) {
+					parsleyInstance.addError('mapped', {
+						message: `For Mapped Geometry ID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+						updateClass: true
+					});
+					return;
+				}
+			}
+	}
 
 }
 

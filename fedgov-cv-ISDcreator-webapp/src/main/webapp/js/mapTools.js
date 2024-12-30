@@ -32,8 +32,11 @@
 function saveMap()
 {
 	$('#revision_modal').modal('show')
-
+        let clickCounter = 0;
 	$('#revision_modal .btn').click(function(event){
+                if(clickCounter++ > 0){
+                    return;
+                }
 		if(($('#revision_num').val()).match(/^\d+$/)){
 
 		    for ( var f = 0; f < vectors.features.length; f++) {
@@ -50,7 +53,7 @@ function saveMap()
 					"laneMarkers" : GEOJSON_PARSER.write(laneMarkers.features, true)
 				};
 
-				saveFile( layers )
+				saveFile( layers );
 		} else {
 			alert("Must enter a number value.");
 			return false;
@@ -129,8 +132,10 @@ function saveFile( data )
 	catch(e) {
 		console.log("Unable to click the download link.  Are you using IE?")
 	}
-
-	document.body.removeChild(downloadLink);
+        
+        if(document.body.contains(downloadLink)){
+           document.body.removeChild(downloadLink);
+        }	
 }
 
 
@@ -166,6 +171,7 @@ function loadMap( data )
 			feat[a].style = {externalGraphic: iconAddress, graphicHeight: 50, graphicWidth: 50, graphicYOffset: -50};
 			if (vectors.features[a].attributes.marker.name == "Reference Point Marker") {
 				intersectionID = vectors.features[a].attributes.intersectionID;
+				regionID = vectors.features[a].attributes.regionID ? vectors.features[a].attributes.regionID : '';
 			}
 		}
 		;
@@ -216,6 +222,7 @@ function loadMap( data )
 				intersectionID = vectors.features[a].attributes.intersectionID;
 				vectors.features[a].attributes.speedLimitType = tempSpeedLimits;
 				vectors.features[a].attributes.layerID = tempLayerID;
+				regionID = vectors.features[a].attributes.regionID ? vectors.features[a].attributes.regionID : '';
 			}
 		}
 

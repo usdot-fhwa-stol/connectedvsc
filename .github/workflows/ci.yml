@@ -18,7 +18,7 @@ jobs:
         options: --user root
       steps:
         - name: Checkout ${{ github.event.repository.name }}
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
         - name: Install # This action is to install and build subfolders in project
           run: |
             cd $GITHUB_WORKSPACE
@@ -26,13 +26,14 @@ jobs:
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-parent && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-lib-asn1c && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-mapencoder && mvn -e -X clean install -Dmaven.test.failure.ignore=true
+            cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-rgaencoder && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-message-builder && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-ISDcreator-webapp && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             cd /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-map-services-proxy && mvn -e -X clean install -Dmaven.test.failure.ignore=true
             jar cvf /__w/connectedvcs-tools/connectedvcs-tools/root.war -C /__w/connectedvcs-tools/connectedvcs-tools/root .
         - name: Archive generated Class files
-          uses: actions/upload-artifact@v3 # Archive the generated class files after the build action used for deployment
+          uses: actions/upload-artifact@v4 # Archive the generated class files after the build action used for deployment
           with:
             name: Class files
             path: |
@@ -94,12 +95,14 @@ jobs:
             sonar.projectBaseDir=$GITHUB_WORKSPACE
             sonar.projectKey=usdot-fhwa-stol_connectedvcs-tools
             sonar.projectName=connectedvcs-tools
+            sonar.exclusions=**/target/**
             sonar.coverage.jacoco.xmlReportPaths=$GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-ISDcreator-webapp/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-lib-asn1c/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-mapencoder/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-message-builder/target/site/jacoco/jacoco.xml,\
               $GITHUB_WORKSPACE/connectedvcs-tools/connectedvcs-tools/fedgov-cv-map-services-proxy/target/site/jacoco/jacoco.xml
+
             sonar.java.binaries=/__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-TIMcreator-webapp/target,\
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-ISDcreator-webapp/target,\
               /__w/connectedvcs-tools/connectedvcs-tools/fedgov-cv-lib-asn1c/target,\

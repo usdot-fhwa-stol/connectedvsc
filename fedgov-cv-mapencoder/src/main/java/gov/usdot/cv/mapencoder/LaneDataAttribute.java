@@ -25,6 +25,14 @@ public class LaneDataAttribute {
     private int laneAngle;
     private SpeedLimitList speedLimits;
 
+    //enum choices
+    public static final int PATH_END_POINT_ANGLE = 1;
+    public static final int LANE_CROWN_POINT_CENTER = 2;
+    public static final int LANE_CROWN_POINT_RIGHT = 3;
+    public static final int LANE_CROWN_POINT_LEFT = 4;
+    public static final int LANE_ANGLE = 5;
+    public static final int SPEED_LIMITS = 6;
+
     public LaneDataAttribute() {
     }
 

@@ -5,10 +5,11 @@ import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonTypeName;
 
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.DDate;
+import gov.usdot.cv.rgaencoder.DDateTime;
+import gov.usdot.cv.rgaencoder.RGAData;
 
 // import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
 
@@ -18,7 +19,9 @@ public class IntersectionInputData {
 	public enum GenerateType {
 		ISD("ISD"),
 		Map("Map"),
+		RGA("RGA"), //NEW
 		FramePlusMap("Frame+Map"),
+		FramePlusRGA("Frame+RGA"), //NEW
 		SPaT("SPaT"),
 		FramePlusSPaT("Frame+SPaT"),
 		SpatRecord("SpatRecord");
@@ -61,8 +64,8 @@ public class IntersectionInputData {
 	public GenerateType getGenerateType() {
 		return GenerateType.fromType(messageType);
 	}
-	
-	public void validate() {
+
+	public void validatePoints() {
 		ReferencePoint referencePoint = mapData.intersectionGeometry.referencePoint;
 		VerifiedPoint verifiedPoint = mapData.intersectionGeometry.verifiedPoint;
 		if (referencePoint == null) {
@@ -79,6 +82,11 @@ public class IntersectionInputData {
 			validateLat("verifiedPoint.verifiedSurveyedLat", verifiedPoint.verifiedSurveyedLat);
 			validateLon("verifiedPoint.verifiedSurveyedLon", verifiedPoint.verifiedSurveyedLon);
 		}
+	}
+	
+	public void validate() {
+		validatePoints(); 
+		
 		Approach[] approaches = mapData.intersectionGeometry.laneList.approach;
 		if (approaches == null) {
 			throw new IllegalArgumentException("approaches cannot be null");
@@ -172,38 +180,38 @@ public class IntersectionInputData {
 		referencePoint.referenceLon += lonOffset;
 		referencePoint.referenceElevation += elvOffset;
 		
-
-		Approach[] intersectionApproaches = mapData.intersectionGeometry.laneList.approach; 
-		for(int i = 0; i < intersectionApproaches.length; i++) {
-			if(intersectionApproaches[i].approachID != CrosswalkLane.CROSSWALK_APPROACH_ID) {
-				DrivingLane[] drivingLanes = intersectionApproaches[i].drivingLanes;
-				for(int j = 0; j < drivingLanes.length; j++) {
-					if(!drivingLanes[j].isComputed) {
-						LaneNode[] laneNodes = drivingLanes[j].laneNodes;
-						for(int k = 0; k < laneNodes.length; k++) {
-							laneNodes[k].nodeLat += latOffset;
-							laneNodes[k].nodeLong += lonOffset;
-							laneNodes[k].nodeElev += elvOffset;				
+		if(mapData.intersectionGeometry.laneList != null) {
+			Approach[] intersectionApproaches = mapData.intersectionGeometry.laneList.approach; 
+			for(int i = 0; i < intersectionApproaches.length; i++) {
+				if(intersectionApproaches[i].approachID != CrosswalkLane.CROSSWALK_APPROACH_ID) {
+					DrivingLane[] drivingLanes = intersectionApproaches[i].drivingLanes;
+					for(int j = 0; j < drivingLanes.length; j++) {
+						if(!drivingLanes[j].isComputed) {
+							LaneNode[] laneNodes = drivingLanes[j].laneNodes;
+							for(int k = 0; k < laneNodes.length; k++) {
+								laneNodes[k].nodeLat += latOffset;
+								laneNodes[k].nodeLong += lonOffset;
+								laneNodes[k].nodeElev += elvOffset;				
+							}
 						}
 					}
 				}
-			}
-			else {
-				// Pedestrian Crosswalk approach
-				CrosswalkLane[] crosswalkLanes = intersectionApproaches[i].crosswalkLanes;
-				for(int j = 0; j < crosswalkLanes.length; j++) {
-					if(!crosswalkLanes[j].isComputed) {
-						LaneNode[] laneNodes = crosswalkLanes[j].laneNodes;
-						for(int k = 0; k < laneNodes.length; k++) {
-							laneNodes[k].nodeLat += latOffset;
-							laneNodes[k].nodeLong += lonOffset;
-							laneNodes[k].nodeElev += elvOffset;				
+				else {
+					// Pedestrian Crosswalk approach
+					CrosswalkLane[] crosswalkLanes = intersectionApproaches[i].crosswalkLanes;
+					for(int j = 0; j < crosswalkLanes.length; j++) {
+						if(!crosswalkLanes[j].isComputed) {
+							LaneNode[] laneNodes = crosswalkLanes[j].laneNodes;
+							for(int k = 0; k < laneNodes.length; k++) {
+								laneNodes[k].nodeLat += latOffset;
+								laneNodes[k].nodeLong += lonOffset;
+								laneNodes[k].nodeElev += elvOffset;				
+							}
 						}
 					}
 				}
 			}
 		}
-		
 	}
 	
 	public static short convertElevation(double elevation) {
@@ -216,6 +224,10 @@ public class IntersectionInputData {
 	public static class ReferencePoint {
 		public String descriptiveIntersctionName;
 		public int intersectionID;
+		public String roadAuthorityIdType;
+		public int[] roadAuthorityId;
+		public int[] mappedGeomID;
+		public int regionID;
 		public int layerID;
 		public int msgCount;
 		public short masterLaneWidth;
@@ -229,9 +241,13 @@ public class IntersectionInputData {
 
 		@Override
 		public String toString() {
-			return String.format("ReferencePoint [%s=%s,%s=%d,%s=%d,%s=%d,%s=%d,%s=%g,%s=%g,%s=%d,%s=%s,", 
+			return String.format("ReferencePoint [%s=%s,%s=%d,%s=%d,%s=%d,%s=%d,%s=%d,%s=%g,%s=%g,%s=%d,%s=%s,", 
 					"descriptiveIntersctionName", descriptiveIntersctionName,
-					"intersectionID", intersectionID,					
+					"intersectionID", intersectionID,
+					"roadAuthorityIdType", roadAuthorityIdType, 
+					"roadAuthorityId", roadAuthorityId,
+					"relativeToRdAuthID" , mappedGeomID,
+					"regionID", regionID,					
 					"layerID", layerID,
 					"msgCount", msgCount,
 					"masterLaneWidth", masterLaneWidth,
@@ -275,7 +291,7 @@ public class IntersectionInputData {
 		public RegulatorySpeedLimit[] speedLimitType;	
 	}
 	
-	// @JsonTypeName("speedLimitType")
+	// @JsonTypeName("speedLimitType") 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class RegulatorySpeedLimit {
 		public String speedLimitType;
@@ -392,6 +408,7 @@ public class IntersectionInputData {
 		public double nodeLong;
 		public double nodeElev;
 		public short laneWidthDelta;
+		public RegulatorySpeedLimit[] speedLimitType;
 		
 		@Override
 		public String toString() {
@@ -426,6 +443,9 @@ public class IntersectionInputData {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class MapData {
 		public int minuteOfTheYear;
+		public TimeOfCalculation timeOfCalculation;
+		public ContentDateTime contentDateTime;
+		public int contentVersion;
 		public String layerType;
 		public IntersectionGeometry intersectionGeometry;
 		public SpatData spatData;
@@ -433,9 +453,45 @@ public class IntersectionInputData {
 		@Override
 		public String toString() {
 			return "MapData [minuteOfTheYear=" + minuteOfTheYear 
+					+ ", timeOfCalculation=" + timeOfCalculation
+					+ ", contentDateTime=" + contentDateTime
+					+ ", contentVersion=" + contentVersion
 					+ ", layerType=" + layerType 
 					+ ",  intersectionGeometry=" + intersectionGeometry 
 					+ ", spatData=" + spatData 	
+					+ "]";
+		}
+	}
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class TimeOfCalculation {
+		public int day;
+		public int month;
+		public int year; 
+
+		@Override
+		public String toString() {
+			return "TimeOfCalculation [day=" + day
+					+ ", month=" + month
+					+ ", year=" + year
+					+ "]";
+		}
+	}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	public static class ContentDateTime extends TimeOfCalculation {
+		public int hour;
+		public int minute;
+		public int second; 
+
+		@Override
+		public String toString() {
+			return "TimeOfCalculation [day=" + day
+					+ ", month=" + month
+					+ ", year=" + year
+					+ ", hour=" + hour
+					+ ", minute=" + minute
+					+ ", second=" + second
 					+ "]";
 		}
 	}
@@ -456,8 +512,6 @@ public class IntersectionInputData {
 					+ "]";
 		}		
 	}
-	
-	
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class LaneList {
 		public Approach[] approach;

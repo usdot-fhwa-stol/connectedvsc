@@ -198,6 +198,14 @@ var help_notes = [
     	units: "Decimal Degrees",
     	description: "The geographic longitude of an object."
     },
+	{
+    	value: "region_id",
+    	title: "Region ID",
+    	max: "65535",
+    	min: "0",
+    	units: "N/A",
+    	description: 'A globally unique regional assignment value that is typically assigned to a regional DOT authority. Also known as "Road Regulator ID" and is a portion of the "Intersection Reference ID".'
+    },
     {
     	value: "intersection_id",
     	title: "Intersection ID",
@@ -389,6 +397,45 @@ var help_notes = [
 		min: "-99.95",
 		units: "Steps of 0.05 percent",
 		description: "Expand or contract lane along the Y axis."
+	},
+    {
+		value: "road_authority_id_type",
+		title: "Road Authority Identifier Type",
+		max: "NA",
+		min: "NA",
+		units: "N/A",
+		description: "This Road Authority Identifier Type indicates whether the Road Authority ID is full or relative. If no type specified and region id is not zero, Road Authority ID is optional."
+	},
+	{
+		value: "road_authority_id",
+		title: "Road Authority Identifier",
+		max: "NA",
+		min: "NA",
+		units: "N/A",
+		description: "Road Authority ID, contained in the Base Layer of the RGA has the same value as that of the organization responsible for providing the DS content. If IEEE 1609.2 security is used (see 6.8), this will be contained in the ‘Operating Organization ID’ field of the security certificate used to sign the RGA. How this is obtained if other security mechanisms are used is outside the scope of this report."
+	},
+	{
+		value: "mapped_geometry_id",
+		title: "Mapped Geometry Identifier (RGA Only)",
+		max: "NA",
+		min: "NA",
+		units: "N/A",
+		description: "Uniquely identify a mapped location managed by an authority."
+	},
+	{
+		value: "content_version",
+		title: "Content Version (RGA Only)",
+		max: "32",
+		min: "0",
+		units: "N/A",
+		description: "Provides a version number which pertains to a combination of the dataset contents and the content values. INTEGER (0..32)"
+	},
+	{
+		value: "content_date_time",
+		title: "Content Date Time (RGA Only)",
+		max: "NA",
+		min: "NA",
+		units: "Datetime",
+		description: "Timestamp corresponding to the contents in format yyyy, mm, dd, hh, mm, ss (sss+)"
 	}
-    
 ];

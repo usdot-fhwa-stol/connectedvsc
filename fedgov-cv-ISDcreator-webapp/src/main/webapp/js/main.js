@@ -24,28 +24,23 @@ $(document).ready(function() {
     hidden_drag = $('#hidden-drag');
     intersection_sidebar = $('#sidebar');
 
-    /**
-     * Purpose: geocomplete for allowing place search
-     * @params  address input box
-     * @event uses geocomplete from google -> set cookie and move map to location
+    /***
+     * Purpose: Autocomplete for allowing place search
+     * @params Address input box
+     * @event places API from google -> set cookie and move map to location
      */
-
-    $('#address-search').geocomplete().bind("geocode:result", function(event, result){
-
-        var search_lat = result.geometry.location.lat();
-        var search_lon = result.geometry.location.lng();
-
-        setCookie("isd_latitude", search_lat, 365);
-        setCookie("isd_longitude", search_lon, 365);
-        setCookie("isd_zoom", map.getZoom(), 365);
-
-        try {
-            var location = new OpenLayers.LonLat(search_lon, search_lat);
-            location.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-            map.setCenter(location, 18);
+    let search_input = $("#address-search");
+    search_input.keyup((event)=>{
+        if(event.key==="ArrowDown" || event.key==="ArrowLeft" || event.key==="ArrowRight" || event.key==="ArrowUp"){
+            return;
         }
-        catch (err) {
-            console.log("No vectors to reset view");
+        let search_result_dropdown=$("#dropdown-menu-search");
+        search_result_dropdown.empty();
+        let inputText = event.target.value;
+        if(inputText?.length>0){
+            populateAutocompleteSearchPlacesDropdown(inputText);
+        }else{
+            search_result_dropdown.hide();
         }
     });
 
@@ -179,9 +174,103 @@ $(document).ready(function() {
     $("#speedForm_add").click(function(){
         resetSpeedDropdowns();
     });
+    
+    $(".datetimepicker").each(function(){
+        let config={
+            enableTime: true,
+            enableSeconds: true,
+            allowInput: true,
+            minuteIncrement: 1,
+            secondIncrement: 1,
+            dateFormat: "d/m/Y H:i:s"
+        }
+        $(this).flatpickr(config);
+    });
 
 });
 
+/***
+ * Purpose: Display list of autocomplete places suggested by predictionPlaces returned by google places API.
+ * @params input search place text
+ * @event update dropdown with a list of suggested places and allow to click on a place to move the map center location.
+ */
+function populateAutocompleteSearchPlacesDropdown(inputText){
+    let search_place_dropdown = $("#dropdown-menu-search");
+    $.ajax({
+                type: 'POST',
+                url: "/msp/googlemap/api/places/autocomplete",
+                data: JSON.stringify({inputText: inputText}),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                success: function(response){
+                    if(!response){
+                        console.error("Failed to retrieve places suggestions from server!");
+                        return;
+                    }
+                    let suggestions = response["suggestions"];
+                    suggestions = Object.values(suggestions);
+                    for(let key in suggestions){
+                        let suggestedResult = suggestions[key]["placePrediction"]["text"]["text"];
+                        let place_item = $("<li><a><i class=\"fa fa-map-marker\" style=\"cursor: not-allowed\"></i> <span style=\"margin-left: 5px; cursor: pointer; width: 200px; display: inline-flex; overflow: hidden; text-overflow: ellipsis;\">"+suggestedResult+"</span></a></li> ");
+                        place_item.click(clickPlaceHandler);
+                        search_place_dropdown.append(place_item);
+                    }
+                    search_place_dropdown.show();
+                },
+                error: function(error){
+                    search_place_dropdown.hide();
+                    console.error(error);
+                }
+            });
+}
+
+/***
+ * Purpose: Handler for a click event to navigate to a place
+ */
+function clickPlaceHandler(event){
+    let place = event.target.innerText;
+    if(place.length>0){
+        $("#address-search").val(place);
+        $("#dropdown-menu-search").hide();
+        updatePlaceLocationView(place);
+    }
+}
+
+/***
+ * Purpose: Move map view to a location returned by google places API for a given input place.
+ * @params input place full text
+ * @event Update map center view with new place location.
+ */
+function updatePlaceLocationView(inputPlaceText){
+    $.ajax({
+        url: "/msp/googlemap/api/places/searchText",
+        data: JSON.stringify({inputText: inputPlaceText}),
+        type: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        success: function(response){
+            try {
+                let location = response["location"];
+                let search_lat = location.lat;
+                let search_lon = location.lng;
+                setCookie("isd_latitude", search_lat, 365);
+                setCookie("isd_longitude", search_lon, 365);
+                setCookie("isd_zoom", map.getZoom(), 365);
+                location = new OpenLayers.LonLat(search_lon, search_lat);
+                location.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+                map.setCenter(location, 18);
+            }
+            catch (err) {
+                console.log("No vectors to reset view");
+            }
+        },
+        error: function(error){
+            console.error(error);
+        }
+    });
+}
 
 /**
  * Purpose: makes the attributes droppable

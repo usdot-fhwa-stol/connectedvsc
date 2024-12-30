@@ -58,10 +58,11 @@
  * @event: sets tile age text on DOM
  */
 
-function tileAge() {
+async function tileAge() {
+    const apiKey = await getApiKey();
 
-    var convertedLonLat = new OpenLayers.LonLat(map.getCenter().lon,map.getCenter().lat).transform(toProjection, fromProjection);
-    var current_zoom =  map.getZoom();
+    var convertedLonLat = new OpenLayers.LonLat(map.getCenter().lon, map.getCenter().lat).transform(toProjection, fromProjection);
+    var current_zoom = map.getZoom();
     if (current_zoom > 18) {
         current_zoom = 18;
     }
@@ -97,9 +98,6 @@ function tileAge() {
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
+    var expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-
-
-
