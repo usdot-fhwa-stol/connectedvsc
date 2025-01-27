@@ -16,7 +16,7 @@
 
 package gov.usdot.cv.mapencoder;
 
-public class NodeXY20b {
+public class  NodeXY20b {
     private float x;
     private float y;
 

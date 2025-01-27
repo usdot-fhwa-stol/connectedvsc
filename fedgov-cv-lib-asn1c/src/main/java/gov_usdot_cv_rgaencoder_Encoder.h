@@ -23,12 +23,31 @@
 extern "C" {
 #endif
 
+// Constants for Geometry Layer IDs
+#define APPROACH_GEOMETRY_LAYER_ID 1
+#define MOTOR_VEHICLE_LANE_GEOMETRY_LAYER_ID 2
+#define BICYCLE_LANE_GEOMETRY_LAYER_ID 3
+#define CROSSWALK_LANE_GEOMETRY_LAYER_ID 4
+
+// Constants for LaneConstructorType Choice
+#define PHYSICAL_NODE 1
+#define COMPUTED_NODE 2
+#define DUPLICATE_NODE 3
+
+// Constants for NodeXYZOffsetValue Choice
+#define OFFSET_B10 1
+#define OFFSET_B11 2
+#define OFFSET_B12 3
+#define OFFSET_B13 4
+#define OFFSET_B14 5
+#define OFFSET_B16 6
+
 /*
  * Class:     gov_usdot_cv_lib_asn1c_RGAMessage
  * Method:    encodeRGA
  */
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA
-  (JNIEnv *, jobject, jobject);
+  (JNIEnv *, jobject, jobject, jobject);
 #ifdef __cplusplus
 }
 #endif
