@@ -24,7 +24,6 @@ public class NodeXYZOffsetValue {
     private long offsetB13;
     private long offsetB14;
     private long offsetB16;
-    // TODO: Add a choice for nodeLatLon in MAP
 
     // Constants for choice field
     public static final int OFFSET_B10 = 1;
@@ -33,7 +32,6 @@ public class NodeXYZOffsetValue {
     public static final int OFFSET_B13 = 4;
     public static final int OFFSET_B14 = 5;
     public static final int OFFSET_B16 = 6;
-    // TODO: Add a constant for nodeLatLon in MAP;
 
     public NodeXYZOffsetValue() {
         this.choice = -1;

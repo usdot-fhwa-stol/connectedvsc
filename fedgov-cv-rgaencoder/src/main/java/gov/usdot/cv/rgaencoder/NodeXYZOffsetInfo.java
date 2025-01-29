@@ -17,8 +17,6 @@
 package gov.usdot.cv.rgaencoder;
 
 public class NodeXYZOffsetInfo {
-    // TODO: Create NodeXYZOffsetValue in such a way that it matched with MAP
-    // implementation
     private NodeXYZOffsetValue nodeXOffsetValue;
     private NodeXYZOffsetValue nodeYOffsetValue;
     private NodeXYZOffsetValue nodeZOffsetValue;

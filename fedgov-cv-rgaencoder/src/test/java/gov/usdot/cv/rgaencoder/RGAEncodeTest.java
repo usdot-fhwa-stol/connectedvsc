@@ -182,7 +182,6 @@ public class RGAEncodeTest {
         mockNodeXYZOffsetValue2 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue3 = mock(NodeXYZOffsetValue.class);
         mockWayPlanarGeometryInfo1 = mock(WayPlanarGeometryInfo.class);
-        // mockWayWidth1 = mock(WayWidth.class);
 
         mockGeometryContainer5 = mock(GeometryContainer.class);
         mockMotorVehicleLaneGeometryLayer3 = mock(MotorVehicleLaneGeometryLayer.class);
