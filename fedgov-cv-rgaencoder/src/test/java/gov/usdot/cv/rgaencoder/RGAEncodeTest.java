@@ -70,7 +70,6 @@ public class RGAEncodeTest {
     NodeXYZOffsetValue mockNodeXYZOffsetValue1;
     NodeXYZOffsetValue mockNodeXYZOffsetValue2;
     NodeXYZOffsetValue mockNodeXYZOffsetValue3;
-    // WayWidth mockWayWidth1;
     WayPlanarGeometryInfo mockWayPlanarGeometryInfo1;
 
     GeometryContainer mockGeometryContainer5;
@@ -86,7 +85,70 @@ public class RGAEncodeTest {
     NodeXYZOffsetValue mockNodeXYZOffsetValue5;
     NodeXYZOffsetValue mockNodeXYZOffsetValue6;
 
+    GeometryContainer mockGeometryContainer6;
+    BicycleLaneGeometryLayer mockBicycleLaneGeometryLayer1;
+    IndvBikeLaneGeometryInfo mockIndvBikeLaneGeometryInfo1;
+    List<IndvBikeLaneGeometryInfo> mockIndvBikeLaneGeometryInfoList1;
+    LaneConstructorType mockLaneConstructorType4;
+    DuplicateXYZNodeInfo mockDuplicateXYZNodeInfo2;
     
+    GeometryContainer mockGeometryContainer7;
+    BicycleLaneGeometryLayer mockBicycleLaneGeometryLayer2;
+    IndvBikeLaneGeometryInfo mockIndvBikeLaneGeometryInfo2;
+    List<IndvBikeLaneGeometryInfo> mockIndvBikeLaneGeometryInfoList2;
+    LaneConstructorType mockLaneConstructorType5;
+    ComputedXYZNodeInfo mockComputedXYZNodeInfo2;
+    NodeXYZOffsetInfo mockNodeXYZOffsetInfo3;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue7;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue8;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue9;
+    WayPlanarGeometryInfo mockWayPlanarGeometryInfo2;
+
+    GeometryContainer mockGeometryContainer8;
+    BicycleLaneGeometryLayer mockBicycleLaneGeometryLayer3;
+    IndvBikeLaneGeometryInfo mockIndvBikeLaneGeometryInfo3;
+    List<IndvBikeLaneGeometryInfo> mockIndvBikeLaneGeometryInfoList3;
+    LaneConstructorType mockLaneConstructorType6;
+    PhysicalXYZNodeInfo mockPhysicalXYZNodeInfo2;
+    IndividualXYZNodeGeometryInfo mockIndividualXYZNodeGeometryInfo2;
+    List<IndividualXYZNodeGeometryInfo> mockIndividualXYZNodeGeometryInfoList2;
+    NodeXYZOffsetInfo mockNodeXYZOffsetInfo4;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue10;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue11;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue12;
+
+    GeometryContainer mockGeometryContainer9;
+    CrosswalkLaneGeometryLayer mockCrosswalkLaneGeometryLayer1;
+    IndvCrosswalkLaneGeometryInfo mockIndvCrosswalkLaneGeometryInfo1;
+    List<IndvCrosswalkLaneGeometryInfo> mockIndvCrosswalkLaneGeometryInfoList1;
+    LaneConstructorType mockLaneConstructorType7;
+    DuplicateXYZNodeInfo mockDuplicateXYZNodeInfo3;
+
+    GeometryContainer mockGeometryContainer10;
+    CrosswalkLaneGeometryLayer mockCrosswalkLaneGeometryLayer2;
+    IndvCrosswalkLaneGeometryInfo mockIndvCrosswalkLaneGeometryInfo2;
+    List<IndvCrosswalkLaneGeometryInfo> mockIndvCrosswalkLaneGeometryInfoList2;
+    LaneConstructorType mockLaneConstructorType8;
+    ComputedXYZNodeInfo mockComputedXYZNodeInfo3;
+    NodeXYZOffsetInfo mockNodeXYZOffsetInfo5;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue13;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue14;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue15;
+    WayPlanarGeometryInfo mockWayPlanarGeometryInfo3;
+
+    GeometryContainer mockGeometryContainer11;
+    CrosswalkLaneGeometryLayer mockCrosswalkLaneGeometryLayer3;
+    IndvCrosswalkLaneGeometryInfo mockIndvCrosswalkLaneGeometryInfo3;
+    List<IndvCrosswalkLaneGeometryInfo> mockIndvCrosswalkLaneGeometryInfoList3;
+    LaneConstructorType mockLaneConstructorType9;
+    PhysicalXYZNodeInfo mockPhysicalXYZNodeInfo3;
+    IndividualXYZNodeGeometryInfo mockIndividualXYZNodeGeometryInfo3;
+    List<IndividualXYZNodeGeometryInfo> mockIndividualXYZNodeGeometryInfoList3;
+    NodeXYZOffsetInfo mockNodeXYZOffsetInfo6;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue16;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue17;
+    NodeXYZOffsetValue mockNodeXYZOffsetValue18;
+
     @Before
     public void setup() {
         mockRGA = mock(RGAData.class); 
@@ -132,6 +194,62 @@ public class RGAEncodeTest {
         mockNodeXYZOffsetValue4 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue5 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue6 = mock(NodeXYZOffsetValue.class);
+
+        mockGeometryContainer6 = mock(GeometryContainer.class);
+        mockBicycleLaneGeometryLayer1= mock(BicycleLaneGeometryLayer.class);
+        mockIndvBikeLaneGeometryInfo1 = mock(IndvBikeLaneGeometryInfo.class);
+        mockLaneConstructorType4 = mock(LaneConstructorType.class);
+        mockDuplicateXYZNodeInfo2 = mock(DuplicateXYZNodeInfo.class);
+
+        mockGeometryContainer7 = mock(GeometryContainer.class);
+        mockBicycleLaneGeometryLayer2 = mock(BicycleLaneGeometryLayer.class);
+        mockIndvBikeLaneGeometryInfo2 = mock(IndvBikeLaneGeometryInfo.class);
+        mockLaneConstructorType5 = mock(LaneConstructorType.class);
+        mockComputedXYZNodeInfo2 = mock(ComputedXYZNodeInfo.class);
+        mockNodeXYZOffsetInfo3 = mock(NodeXYZOffsetInfo.class);
+        mockNodeXYZOffsetValue7 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue8 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue9 = mock(NodeXYZOffsetValue.class);
+        mockWayPlanarGeometryInfo2 = mock(WayPlanarGeometryInfo.class);
+
+        mockGeometryContainer8 = mock(GeometryContainer.class);
+        mockBicycleLaneGeometryLayer3 = mock(BicycleLaneGeometryLayer.class);
+        mockIndvBikeLaneGeometryInfo3 = mock(IndvBikeLaneGeometryInfo.class);
+        mockLaneConstructorType6 = mock(LaneConstructorType.class);
+        mockPhysicalXYZNodeInfo2 = mock(PhysicalXYZNodeInfo.class);
+        mockIndividualXYZNodeGeometryInfo2 = mock(IndividualXYZNodeGeometryInfo.class);
+        mockNodeXYZOffsetInfo4 = mock(NodeXYZOffsetInfo.class);
+        mockNodeXYZOffsetValue10 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue11 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue12 = mock(NodeXYZOffsetValue.class);
+
+        mockGeometryContainer9 = mock(GeometryContainer.class);
+        mockCrosswalkLaneGeometryLayer1= mock(CrosswalkLaneGeometryLayer.class);
+        mockIndvCrosswalkLaneGeometryInfo1 = mock(IndvCrosswalkLaneGeometryInfo.class);
+        mockLaneConstructorType7 = mock(LaneConstructorType.class);
+        mockDuplicateXYZNodeInfo3 = mock(DuplicateXYZNodeInfo.class);
+
+        mockGeometryContainer10 = mock(GeometryContainer.class);
+        mockCrosswalkLaneGeometryLayer2 = mock(CrosswalkLaneGeometryLayer.class);
+        mockIndvCrosswalkLaneGeometryInfo2 = mock(IndvCrosswalkLaneGeometryInfo.class);
+        mockLaneConstructorType8 = mock(LaneConstructorType.class);
+        mockComputedXYZNodeInfo3 = mock(ComputedXYZNodeInfo.class);
+        mockNodeXYZOffsetInfo5 = mock(NodeXYZOffsetInfo.class);
+        mockNodeXYZOffsetValue13 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue14 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue15 = mock(NodeXYZOffsetValue.class);
+        mockWayPlanarGeometryInfo3 = mock(WayPlanarGeometryInfo.class);
+
+        mockGeometryContainer11 = mock(GeometryContainer.class);
+        mockCrosswalkLaneGeometryLayer3 = mock(CrosswalkLaneGeometryLayer.class);
+        mockIndvCrosswalkLaneGeometryInfo3 = mock(IndvCrosswalkLaneGeometryInfo.class);
+        mockLaneConstructorType9 = mock(LaneConstructorType.class);
+        mockPhysicalXYZNodeInfo3 = mock(PhysicalXYZNodeInfo.class);
+        mockIndividualXYZNodeGeometryInfo3 = mock(IndividualXYZNodeGeometryInfo.class);
+        mockNodeXYZOffsetInfo6 = mock(NodeXYZOffsetInfo.class);
+        mockNodeXYZOffsetValue16 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue17 = mock(NodeXYZOffsetValue.class);
+        mockNodeXYZOffsetValue18 = mock(NodeXYZOffsetValue.class);
 
         encoder = new Encoder();
 
@@ -233,15 +351,129 @@ public class RGAEncodeTest {
         when(mockGeometryContainer5.getGeometryContainerID()).thenReturn(GeometryContainer.MOTOR_VEHICLE_LANE_GEOMETRY_LAYER_ID);
         when(mockGeometryContainer5.getMotorVehicleLaneGeometryLayer()).thenReturn(mockMotorVehicleLaneGeometryLayer3);
 
+        when(mockDuplicateXYZNodeInfo2.getRefLaneID()).thenReturn(33);
+        when(mockLaneConstructorType4.getChoice()).thenReturn(LaneConstructorType.DUPLICATE_NODE);
+        when(mockLaneConstructorType4.getDuplicateXYZNodeInfo()).thenReturn(mockDuplicateXYZNodeInfo2);
+        when(mockIndvBikeLaneGeometryInfo1.getLaneID()).thenReturn(14);
+        when(mockIndvBikeLaneGeometryInfo1.getLaneConstructorType()).thenReturn(mockLaneConstructorType4);
+        mockIndvBikeLaneGeometryInfoList1 = Arrays.asList(mockIndvBikeLaneGeometryInfo1);
+        when(mockBicycleLaneGeometryLayer1.getLaneGeomLaneSet()).thenReturn(mockIndvBikeLaneGeometryInfoList1);
+        when(mockGeometryContainer6.getGeometryContainerID()).thenReturn(GeometryContainer.BICYCLE_LANE_GEOMETRY_LAYER_ID);
+        when(mockGeometryContainer6.getBicycleLaneGeometryLayer()).thenReturn(mockBicycleLaneGeometryLayer1);
+
+        when(mockNodeXYZOffsetValue7.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B10);
+        when(mockNodeXYZOffsetValue7.getOffsetB10()).thenReturn((long)2);
+        when(mockNodeXYZOffsetValue8.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B11);
+        when(mockNodeXYZOffsetValue8.getOffsetB11()).thenReturn((long)3);
+        when(mockNodeXYZOffsetValue9.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B12);
+        when(mockNodeXYZOffsetValue9.getOffsetB12()).thenReturn((long)4);
+        when(mockNodeXYZOffsetInfo3.getNodeXOffsetValue()).thenReturn(mockNodeXYZOffsetValue7);
+        when(mockNodeXYZOffsetInfo3.getNodeYOffsetValue()).thenReturn(mockNodeXYZOffsetValue8);
+        when(mockNodeXYZOffsetInfo3.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue9);
+        when(mockComputedXYZNodeInfo2.getRefLaneID()).thenReturn(34);
+        when(mockComputedXYZNodeInfo2.getLaneCenterLineXYZOffset()).thenReturn(mockNodeXYZOffsetInfo3);
+        when(mockComputedXYZNodeInfo2.getLanePlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo2);
+        when(mockLaneConstructorType5.getChoice()).thenReturn(LaneConstructorType.COMPUTED_NODE);
+        when(mockLaneConstructorType5.getComputedXYZNodeInfo()).thenReturn(mockComputedXYZNodeInfo2);
+        when(mockIndvBikeLaneGeometryInfo2.getLaneID()).thenReturn(15);
+        when(mockIndvBikeLaneGeometryInfo2.getLaneConstructorType()).thenReturn(mockLaneConstructorType5);
+        mockIndvBikeLaneGeometryInfoList2 = Arrays.asList(mockIndvBikeLaneGeometryInfo2);
+        when(mockBicycleLaneGeometryLayer2.getLaneGeomLaneSet()).thenReturn(mockIndvBikeLaneGeometryInfoList2);
+        when(mockGeometryContainer7.getGeometryContainerID()).thenReturn(GeometryContainer.BICYCLE_LANE_GEOMETRY_LAYER_ID);
+        when(mockGeometryContainer7.getBicycleLaneGeometryLayer()).thenReturn(mockBicycleLaneGeometryLayer2);
+
+        when(mockNodeXYZOffsetValue10.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B13);
+        when(mockNodeXYZOffsetValue10.getOffsetB13()).thenReturn((long)10);
+        when(mockNodeXYZOffsetValue11.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B14);
+        when(mockNodeXYZOffsetValue11.getOffsetB14()).thenReturn((long)15);
+        when(mockNodeXYZOffsetValue12.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B16);
+        when(mockNodeXYZOffsetValue12.getOffsetB16()).thenReturn((long)20);
+        when(mockNodeXYZOffsetInfo4.getNodeXOffsetValue()).thenReturn(mockNodeXYZOffsetValue10);
+        when(mockNodeXYZOffsetInfo4.getNodeYOffsetValue()).thenReturn(mockNodeXYZOffsetValue11);
+        when(mockNodeXYZOffsetInfo4.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue12);
+        when(mockIndividualXYZNodeGeometryInfo2.getNodeXYZOffsetInfo()).thenReturn(mockNodeXYZOffsetInfo4);
+        mockIndividualXYZNodeGeometryInfoList2 = Arrays.asList(mockIndividualXYZNodeGeometryInfo2);
+        when(mockPhysicalXYZNodeInfo2.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList2);
+        when(mockLaneConstructorType6.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
+        when(mockLaneConstructorType6.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo2);
+        when(mockIndvBikeLaneGeometryInfo3.getLaneID()).thenReturn(16);
+        when(mockIndvBikeLaneGeometryInfo3.getLaneConstructorType()).thenReturn(mockLaneConstructorType6);
+        mockIndvBikeLaneGeometryInfoList3 = Arrays.asList(mockIndvBikeLaneGeometryInfo3);
+        when(mockBicycleLaneGeometryLayer3.getLaneGeomLaneSet()).thenReturn(mockIndvBikeLaneGeometryInfoList3);
+        when(mockGeometryContainer8.getGeometryContainerID()).thenReturn(GeometryContainer.BICYCLE_LANE_GEOMETRY_LAYER_ID);
+        when(mockGeometryContainer8.getBicycleLaneGeometryLayer()).thenReturn(mockBicycleLaneGeometryLayer3);
+
+        when(mockDuplicateXYZNodeInfo3.getRefLaneID()).thenReturn(43);
+        when(mockLaneConstructorType7.getChoice()).thenReturn(LaneConstructorType.DUPLICATE_NODE);
+        when(mockLaneConstructorType7.getDuplicateXYZNodeInfo()).thenReturn(mockDuplicateXYZNodeInfo3);
+        when(mockIndvCrosswalkLaneGeometryInfo1.getLaneID()).thenReturn(17);
+        when(mockIndvCrosswalkLaneGeometryInfo1.getLaneConstructorType()).thenReturn(mockLaneConstructorType7);
+        mockIndvCrosswalkLaneGeometryInfoList1 = Arrays.asList(mockIndvCrosswalkLaneGeometryInfo1);
+        when(mockCrosswalkLaneGeometryLayer1.getLaneGeomLaneSet()).thenReturn(mockIndvCrosswalkLaneGeometryInfoList1);
+        when(mockGeometryContainer9.getGeometryContainerID()).thenReturn(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
+        when(mockGeometryContainer9.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer1);
+
+        when(mockNodeXYZOffsetValue13.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B10);
+        when(mockNodeXYZOffsetValue13.getOffsetB10()).thenReturn((long)2);
+        when(mockNodeXYZOffsetValue14.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B11);
+        when(mockNodeXYZOffsetValue14.getOffsetB11()).thenReturn((long)3);
+        when(mockNodeXYZOffsetValue15.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B12);
+        when(mockNodeXYZOffsetValue15.getOffsetB12()).thenReturn((long)4);
+        when(mockNodeXYZOffsetInfo5.getNodeXOffsetValue()).thenReturn(mockNodeXYZOffsetValue13);
+        when(mockNodeXYZOffsetInfo5.getNodeYOffsetValue()).thenReturn(mockNodeXYZOffsetValue14);
+        when(mockNodeXYZOffsetInfo5.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue15);
+        when(mockComputedXYZNodeInfo3.getRefLaneID()).thenReturn(44);
+        when(mockComputedXYZNodeInfo3.getLaneCenterLineXYZOffset()).thenReturn(mockNodeXYZOffsetInfo5);
+        when(mockComputedXYZNodeInfo3.getLanePlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo3);
+        when(mockLaneConstructorType8.getChoice()).thenReturn(LaneConstructorType.COMPUTED_NODE);
+        when(mockLaneConstructorType8.getComputedXYZNodeInfo()).thenReturn(mockComputedXYZNodeInfo3);
+        when(mockIndvCrosswalkLaneGeometryInfo2.getLaneID()).thenReturn(18);
+        when(mockIndvCrosswalkLaneGeometryInfo2.getLaneConstructorType()).thenReturn(mockLaneConstructorType8);
+        mockIndvCrosswalkLaneGeometryInfoList2 = Arrays.asList(mockIndvCrosswalkLaneGeometryInfo2);
+        when(mockCrosswalkLaneGeometryLayer2.getLaneGeomLaneSet()).thenReturn(mockIndvCrosswalkLaneGeometryInfoList2);
+        when(mockGeometryContainer10.getGeometryContainerID()).thenReturn(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
+        when(mockGeometryContainer10.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer2);
+
+        when(mockNodeXYZOffsetValue16.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B13);
+        when(mockNodeXYZOffsetValue16.getOffsetB13()).thenReturn((long)101);
+        when(mockNodeXYZOffsetValue17.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B14);
+        when(mockNodeXYZOffsetValue17.getOffsetB14()).thenReturn((long)151);
+        when(mockNodeXYZOffsetValue18.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B16);
+        when(mockNodeXYZOffsetValue18.getOffsetB16()).thenReturn((long)201);
+        when(mockNodeXYZOffsetInfo6.getNodeXOffsetValue()).thenReturn(mockNodeXYZOffsetValue16);
+        when(mockNodeXYZOffsetInfo6.getNodeYOffsetValue()).thenReturn(mockNodeXYZOffsetValue17);
+        when(mockNodeXYZOffsetInfo6.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue18);
+        when(mockIndividualXYZNodeGeometryInfo3.getNodeXYZOffsetInfo()).thenReturn(mockNodeXYZOffsetInfo6);
+        mockIndividualXYZNodeGeometryInfoList3 = Arrays.asList(mockIndividualXYZNodeGeometryInfo3);
+        when(mockPhysicalXYZNodeInfo3.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList3);
+        when(mockLaneConstructorType9.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
+        when(mockLaneConstructorType9.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo3);
+        when(mockIndvCrosswalkLaneGeometryInfo3.getLaneID()).thenReturn(19);
+        when(mockIndvCrosswalkLaneGeometryInfo3.getLaneConstructorType()).thenReturn(mockLaneConstructorType9);
+        mockIndvCrosswalkLaneGeometryInfoList3 = Arrays.asList(mockIndvCrosswalkLaneGeometryInfo3);
+        when(mockCrosswalkLaneGeometryLayer3.getLaneGeomLaneSet()).thenReturn(mockIndvCrosswalkLaneGeometryInfoList3);
+        when(mockGeometryContainer11.getGeometryContainerID()).thenReturn(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
+        when(mockGeometryContainer11.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer3);
+
         when(mockRGA.getBaseLayer()).thenReturn(mockBaseLayer);
-        mockGeometryContainerList = Arrays.asList(mockGeometryContainer1, mockGeometryContainer2, mockGeometryContainer3, mockGeometryContainer4, mockGeometryContainer5);
+        mockGeometryContainerList = Arrays.asList(mockGeometryContainer1, mockGeometryContainer2,
+                mockGeometryContainer3, mockGeometryContainer4, mockGeometryContainer5, mockGeometryContainer6,
+                mockGeometryContainer7, mockGeometryContainer8, mockGeometryContainer9, mockGeometryContainer10,
+                mockGeometryContainer11);
         when(mockRGA.getGeometryContainers()).thenReturn(mockGeometryContainerList);
     }
 
     @Test
     public void rgaEncodeTester() {
         ByteArrayObject res = encoder.encode(mockRGA);
-        byte[] expected = { 0, 43, 44, 0, 4, 4, 88, 44, -102, -46, 116, -125, -75, -92, -23, 5, 8, 6, -65, 68, 85, 65, 2, 1, 48, -98, -63, 64, 32, 96, -64, 32, -128, 48, 70, -30, -94, -127, -65, -33, -94, 42, -36, -64, 5, 26, 64 };
-        // Assert.assertArrayEquals(expected, res.getMessage());
+        byte[] expected = { 0, 43, -128, -111, 2, 4, 4, 88, 44, -102, -46, 116, -125, -75, -92, -23, 5, 8, 6, -65, 68,
+                85, 65, 2, 1, 48, -98, -63, 64, 32, 96, -64, 32, -128, 48, 70, -30, -94, -127, -65, -33, -94, 42, -36,
+                -64, 5, 26, 66, -128, 12, 16, -125, 0, 0, -128, 16, 4, 16, 0, 11, 65, 112, 66, -64, 0, -62, 24, 18, 2,
+                44, 3, 52, 2, 0, 4, 48, 0, 13, 0, 0, 120, 50, 34, 9, 101, 64, 100, 0, -127, 0, 1, -56, 66, 8, 40, 0, 30,
+                68, 66, 64, 69, -128, 102, -128, 64, -125, 0, 2, 0, 0, 15, 0, -92, 64, 30, -88, 1, 64, 12, 16, 0, 69,
+                10, -64, -62, -128, 4, -120, -80, 72, 8, -80, 12, -48, 8, 12, 48, 0, 76, 0, 1, -32, -54, -120, 37, -43,
+                1, -110, 0 };
+       
+        Assert.assertArrayEquals(expected, res.getMessage());
     }
 }

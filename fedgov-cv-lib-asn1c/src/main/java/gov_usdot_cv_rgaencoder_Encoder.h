@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 LEIDOS.
+ * Copyright (C) 2025 LEIDOS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,8 @@
  */
 
 #include <jni.h>
+#include "LaneConstructorType.h" 
+#include "NodeXYZOffsetValue.h" 
 /* Header for class gov_usdot_cv_lib_asn1c_RGAMessage*/
 
 #ifndef _Included_gov_usdot_cv_lib_asn1c_RGAMessage
@@ -48,6 +50,10 @@ extern "C" {
  */
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA
   (JNIEnv *, jobject, jobject, jobject);
+
+void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, LaneConstructorType_t *laneConstructorType);
+void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffsetValue_t *offsetValue);
+
 #ifdef __cplusplus
 }
 #endif
