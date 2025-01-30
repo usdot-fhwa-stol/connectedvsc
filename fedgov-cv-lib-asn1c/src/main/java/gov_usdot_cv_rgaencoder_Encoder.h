@@ -51,7 +51,20 @@ extern "C" {
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA
   (JNIEnv *, jobject, jobject, jobject);
 
+/*
+ * Method to populate a LaneConstructorType_t structure from corresponding Java object
+ * @param env JNI environment pointer.
+ * @param laneConstructorTypeObj Java object containing lane construction type data.
+ * @param laneConstructorType Pointer to the C structure
+ */
 void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, LaneConstructorType_t *laneConstructorType);
+
+/*
+ * Method to populate a NodeXYZOffsetValue_t structure from corresponding Java object
+ * @param env JNI environment pointer.
+ * @param offsetValueObj Java object containing offset value data.
+ * @param offsetValue Pointer to the C structure
+ */
 void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffsetValue_t *offsetValue);
 
 #ifdef __cplusplus

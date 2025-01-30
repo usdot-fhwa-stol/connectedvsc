@@ -16,13 +16,14 @@
 
 package gov.usdot.cv.rgaencoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MotorVehicleLaneGeometryLayer {
     private List<IndvMtrVehLaneGeometryInfo> laneGeomLaneSet;
 
     public MotorVehicleLaneGeometryLayer() {
-        this.laneGeomLaneSet = null;
+        this.laneGeomLaneSet = new ArrayList<>();
     }
 
     public MotorVehicleLaneGeometryLayer(List<IndvMtrVehLaneGeometryInfo> laneGeomLaneSet) {
@@ -35,6 +36,12 @@ public class MotorVehicleLaneGeometryLayer {
 
     public void setLaneGeomLaneSet(List<IndvMtrVehLaneGeometryInfo> laneGeomLaneSet) {
         this.laneGeomLaneSet = laneGeomLaneSet;
+    }
+
+    public void addIndvMtrVehLaneGeometryInfo(IndvMtrVehLaneGeometryInfo indvMtrVehLaneGeometryInfo) {
+        if (indvMtrVehLaneGeometryInfo != null) {
+            this.laneGeomLaneSet.add(indvMtrVehLaneGeometryInfo);
+        }
     }
 
     @Override

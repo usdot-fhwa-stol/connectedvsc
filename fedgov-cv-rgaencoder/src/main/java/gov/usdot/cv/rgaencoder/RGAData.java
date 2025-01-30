@@ -49,6 +49,12 @@ public class RGAData {
         this.geometryContainers = geometryContainers;
     }
 
+    public void addGeometryContainer(GeometryContainer geometryContainer) {
+        if (geometryContainer != null) {
+            this.geometryContainers.add(geometryContainer);
+        }
+    }
+
     @Override
     public String toString() {
         return "RGAData [baseLayer" + baseLayer + ", geometryContainers=" + 

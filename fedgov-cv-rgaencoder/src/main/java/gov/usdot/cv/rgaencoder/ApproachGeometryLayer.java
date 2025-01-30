@@ -15,13 +15,14 @@
 */
 
 package gov.usdot.cv.rgaencoder;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApproachGeometryLayer {
     private List<IndividualApproachGeometryInfo> approachGeomApproachSet;
 
     public ApproachGeometryLayer() {
-        this.approachGeomApproachSet = null;
+        this.approachGeomApproachSet = new ArrayList<>();
     }
 
     public ApproachGeometryLayer(List<IndividualApproachGeometryInfo> approachGeomApproachSet) {
@@ -34,6 +35,12 @@ public class ApproachGeometryLayer {
 
     public void setApproachGeomApproachSet(List<IndividualApproachGeometryInfo> approachGeomApproachSet) {
         this.approachGeomApproachSet = approachGeomApproachSet;
+    }
+
+    public void addIndividualApproachGeometryInfo(IndividualApproachGeometryInfo individualApproachGeometryInfo) {
+        if (individualApproachGeometryInfo != null) {
+            this.approachGeomApproachSet.add(individualApproachGeometryInfo);
+        }
     }
 
     @Override

@@ -16,13 +16,14 @@
 
 package gov.usdot.cv.rgaencoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BicycleLaneGeometryLayer {
     private List<IndvBikeLaneGeometryInfo> laneGeomLaneSet;
 
     public BicycleLaneGeometryLayer() {
-        this.laneGeomLaneSet = null;
+        this.laneGeomLaneSet = new ArrayList<>();
     }
 
     public BicycleLaneGeometryLayer(List<IndvBikeLaneGeometryInfo> laneGeomLaneSet) {
@@ -35,6 +36,12 @@ public class BicycleLaneGeometryLayer {
 
     public void setLaneGeomLaneSet(List<IndvBikeLaneGeometryInfo> laneGeomLaneSet) {
         this.laneGeomLaneSet = laneGeomLaneSet;
+    }
+
+    public void addIndvBikeLaneGeometryInfo(IndvBikeLaneGeometryInfo indvBikeLaneGeometryInfo) {
+        if (indvBikeLaneGeometryInfo != null) {
+            this.laneGeomLaneSet.add(indvBikeLaneGeometryInfo);
+        }
     }
 
     @Override

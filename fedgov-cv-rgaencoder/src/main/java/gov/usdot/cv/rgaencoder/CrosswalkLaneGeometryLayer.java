@@ -16,13 +16,14 @@
 
 package gov.usdot.cv.rgaencoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CrosswalkLaneGeometryLayer {
     private List<IndvCrosswalkLaneGeometryInfo> laneGeomLaneSet;
 
     public CrosswalkLaneGeometryLayer() {
-        this.laneGeomLaneSet = null;
+        this.laneGeomLaneSet = new ArrayList<>();
     }
 
     public CrosswalkLaneGeometryLayer(List<IndvCrosswalkLaneGeometryInfo> laneGeomLaneSet) {
@@ -35,6 +36,12 @@ public class CrosswalkLaneGeometryLayer {
 
     public void setLaneGeomLaneSet(List<IndvCrosswalkLaneGeometryInfo> laneGeomLaneSet) {
         this.laneGeomLaneSet = laneGeomLaneSet;
+    }
+
+    public void addIndvCrosswalkLaneGeometryInfo(IndvCrosswalkLaneGeometryInfo indvCrosswalkLaneGeometryInfo) {
+        if (indvCrosswalkLaneGeometryInfo != null) {
+            this.laneGeomLaneSet.add(indvCrosswalkLaneGeometryInfo);
+        }
     }
 
     @Override

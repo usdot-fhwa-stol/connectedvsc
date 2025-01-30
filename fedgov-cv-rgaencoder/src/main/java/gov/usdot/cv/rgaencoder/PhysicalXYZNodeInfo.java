@@ -16,13 +16,14 @@
 
 package gov.usdot.cv.rgaencoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PhysicalXYZNodeInfo {
     private List<IndividualXYZNodeGeometryInfo> nodeXYZGeometryNodeSet;
 
     public PhysicalXYZNodeInfo() {
-        this.nodeXYZGeometryNodeSet = null;
+        this.nodeXYZGeometryNodeSet = new ArrayList<>();
     }
 
     public PhysicalXYZNodeInfo(List<IndividualXYZNodeGeometryInfo> nodeXYZGeometryNodeSet) {
@@ -35,6 +36,12 @@ public class PhysicalXYZNodeInfo {
 
     public void setNodeXYZGeometryNodeSet(List<IndividualXYZNodeGeometryInfo> nodeXYZGeometryNodeSet) {
         this.nodeXYZGeometryNodeSet = nodeXYZGeometryNodeSet;
+    }
+
+    public void addIndividualXYZNodeGeometryInfo(IndividualXYZNodeGeometryInfo individualXYZNodeGeometryInfo) {
+        if (individualXYZNodeGeometryInfo != null) {
+            this.nodeXYZGeometryNodeSet.add(individualXYZNodeGeometryInfo);
+        }
     }
 
     @Override
