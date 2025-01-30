@@ -47,6 +47,13 @@ extern "C" {
 /*
  * Class:     gov_usdot_cv_lib_asn1c_RGAMessage
  * Method:    encodeRGA
+ * Encodes an RGA message into a UPER-encoded byte array.
+ * 
+ * @param JNIEnv* - Pointer to the JNI environment
+ * @param jobject - Reference to the calling Java object
+ * @param jobject - Java object representing the base layer
+ * @param jobject - Java object representing the geometry containers
+ * @return jbyteArray - Encoded ASN.1 message as a Java byte array, or NULL if encoding fails
  */
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA
   (JNIEnv *, jobject, jobject, jobject);
