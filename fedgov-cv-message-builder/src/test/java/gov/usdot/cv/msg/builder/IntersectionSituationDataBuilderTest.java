@@ -170,7 +170,7 @@ public class IntersectionSituationDataBuilderTest {
     @Test
     public void rgaMessageFromUI() {
         String filePath = "src/test/resources/samplerga3.json"; 
-        String expectedHexString = "002b290000408a76dcde99cb343d50cb53f4571024aa19221bdc3404041406182c4203fdfa2b88280011a400";
+        String expectedHexString = "002b320200408a76dcde99cb343d50cb53f4571024aa19221bdc3404041406182c4203fdfa2b88280011a40001c70420c41461c800";
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 

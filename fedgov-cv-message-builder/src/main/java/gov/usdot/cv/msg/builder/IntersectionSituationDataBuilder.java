@@ -58,9 +58,12 @@ import gov.usdot.cv.msg.builder.util.JSONMapper;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
+import gov.usdot.cv.rgaencoder.ApproachGeometryLayer;
 import gov.usdot.cv.rgaencoder.BaseLayer;
 import gov.usdot.cv.rgaencoder.DDate;
 import gov.usdot.cv.rgaencoder.DDateTime;
+import gov.usdot.cv.rgaencoder.GeometryContainer;
+import gov.usdot.cv.rgaencoder.IndividualApproachGeometryInfo;
 import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
@@ -244,6 +247,11 @@ public class IntersectionSituationDataBuilder {
 	private RGAData buildRGAData(IntersectionInputData isdInputData) {
 		RGAData rgaData = new RGAData();
 		rgaData.setBaseLayer(buildBaseLayer(isdInputData));
+		List<GeometryContainer> geometryContainers = buildGeometryContainers(isdInputData);
+		if(geometryContainers.size() > 0) {
+			System.out.println("geometryContainers");
+			rgaData.setGeometryContainers(geometryContainers);
+		}
 		return rgaData;
 	}
 
@@ -306,6 +314,32 @@ public class IntersectionSituationDataBuilder {
 		baseLayer.setContentDateTime(dDateTime);
 		
 		return baseLayer;
+	}
+
+	public List<GeometryContainer> buildGeometryContainers(IntersectionInputData isdInputData) {
+		List<GeometryContainer> geometryContainers = new ArrayList<>();
+
+		if (isdInputData.mapData.intersectionGeometry.laneList.approach == null) {
+			return geometryContainers;
+		}
+
+		Approach[] approaches = isdInputData.mapData.intersectionGeometry.laneList.approach;
+		GeometryContainer geometryContainer = new GeometryContainer();
+		ApproachGeometryLayer approachGeometryLayer = new ApproachGeometryLayer();
+
+		for (int approachIndex = 0; approachIndex < approaches.length; approachIndex++) {
+			Approach approach = approaches[approachIndex];
+			if (approach.approachID != IntersectionInputData.CrosswalkLane.CROSSWALK_APPROACH_ID) {
+				IndividualApproachGeometryInfo individualApproachGeometryInfo = new IndividualApproachGeometryInfo();
+				individualApproachGeometryInfo.setApproachID(approach.approachID);
+				approachGeometryLayer.addIndividualApproachGeometryInfo(individualApproachGeometryInfo);
+			}
+		}
+
+		geometryContainer.setGeometryContainerID(1);
+		geometryContainer.setApproachGeometryLayer(approachGeometryLayer);
+		geometryContainers.add(geometryContainer);
+		return geometryContainers;
 	}
 
 	public IntersectionGeometry[] buildIntersections(IntersectionInputData isdInputData) {
