@@ -334,7 +334,7 @@ public class IntersectionSituationDataBuilder {
 		for (int approachIndex = 0; approachIndex < approaches.length; approachIndex++) {
 			Approach approach = approaches[approachIndex];
 
-			// Omitting crosswalk lanes
+			// Excluding crosswalk lanes as currently crosswalks do not have an approach id and it is default to -1 
 			if (approach.approachID != IntersectionInputData.CrosswalkLane.CROSSWALK_APPROACH_ID) {
 				IndividualApproachGeometryInfo individualApproachGeometryInfo = new IndividualApproachGeometryInfo();
 				
