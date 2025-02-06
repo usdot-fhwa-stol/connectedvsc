@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 LEIDOS.
+ * Copyright (C) 2025 LEIDOS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -316,9 +316,13 @@ public class IntersectionSituationDataBuilder {
 		return baseLayer;
 	}
 
+	/**
+	 * This function builds and returns list of geometry containers for RGA Data
+	 */
 	public List<GeometryContainer> buildGeometryContainers(IntersectionInputData isdInputData) {
 		List<GeometryContainer> geometryContainers = new ArrayList<>();
 
+		// Checking if approaches are null 
 		if (isdInputData.mapData.intersectionGeometry.laneList.approach == null) {
 			return geometryContainers;
 		}
@@ -329,15 +333,22 @@ public class IntersectionSituationDataBuilder {
 
 		for (int approachIndex = 0; approachIndex < approaches.length; approachIndex++) {
 			Approach approach = approaches[approachIndex];
+
+			// Omitting crosswalk lanes
 			if (approach.approachID != IntersectionInputData.CrosswalkLane.CROSSWALK_APPROACH_ID) {
 				IndividualApproachGeometryInfo individualApproachGeometryInfo = new IndividualApproachGeometryInfo();
+				
+				// Setting approach ID
 				individualApproachGeometryInfo.setApproachID(approach.approachID);
 				approachGeometryLayer.addIndividualApproachGeometryInfo(individualApproachGeometryInfo);
 			}
 		}
 
+		// Setting the Approach Geometry Layer
 		geometryContainer.setGeometryContainerID(1);
 		geometryContainer.setApproachGeometryLayer(approachGeometryLayer);
+
+		// Adding to the list of containers
 		geometryContainers.add(geometryContainer);
 		return geometryContainers;
 	}
