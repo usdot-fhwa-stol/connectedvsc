@@ -250,215 +250,217 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 	memset(&rgaDataSet, 0, sizeof(RGADataSet_t));
 
 	rgaDataSet.baseLayer = rgaBaseLayer;
-	rgaDataSet.geometryContainer = calloc(1, sizeof(*rgaDataSet.geometryContainer));
 
-	// Extracting and Setting Geometry Container
-	jclass geometryContainersList = (*env)->GetObjectClass(env, geometryContainers);
-	jmethodID geometryContainersListSizeMethod = (*env)->GetMethodID(env, geometryContainersList, "size", "()I");
-	jmethodID geometryContainersListGetMethod = (*env)->GetMethodID(env, geometryContainersList, "get", "(I)Ljava/lang/Object;");
-
-	jint geometryContainersListSize = (*env)->CallIntMethod(env, geometryContainers, geometryContainersListSizeMethod);
-
-	if (geometryContainersListSize > 0)
+	if (geometryContainers != NULL)
 	{
-		printf("Encoding Geometry Containers \n");
+		// Extracting and Setting Geometry Container
+		jclass geometryContainersList = (*env)->GetObjectClass(env, geometryContainers);
+		jmethodID geometryContainersListSizeMethod = (*env)->GetMethodID(env, geometryContainersList, "size", "()I");
+		jmethodID geometryContainersListGetMethod = (*env)->GetMethodID(env, geometryContainersList, "get", "(I)Ljava/lang/Object;");
 
-		for (int gIndex = 0; gIndex < geometryContainersListSize; gIndex++)
+		jint geometryContainersListSize = (*env)->CallIntMethod(env, geometryContainers, geometryContainersListSizeMethod);
+
+		if (geometryContainersListSize > 0)
 		{
-			RGAGeometryLayers_t *geometryLayer = calloc(1, sizeof(RGAGeometryLayers_t));
-			jobject geometryContainerObject = (*env)->CallObjectMethod(env, geometryContainers, geometryContainersListGetMethod, gIndex);
-			jclass geometryContainerClass = (*env)->GetObjectClass(env, geometryContainerObject);
+			rgaDataSet.geometryContainer = calloc(1, sizeof(*rgaDataSet.geometryContainer));
+			printf("Encoding Geometry Containers \n");
 
-			// Retrieve geometryContainer-ID
-			jmethodID getGeometryContainerID = (*env)->GetMethodID(env, geometryContainerClass, "getGeometryContainerID", "()I");
-			jint geometryContainerID = (*env)->CallIntMethod(env, geometryContainerObject, getGeometryContainerID);
-
-			geometryLayer->geometryContainer_ID = geometryContainerID;
-
-			// Populate the geometryContainer_Value based on the containerID
-			switch (geometryContainerID)
+			for (int gIndex = 0; gIndex < geometryContainersListSize; gIndex++)
 			{
-			case APPROACH_GEOMETRY_LAYER_ID: // ApproachGeometryLayer
-				geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_ApproachGeometryLayer;
+				RGAGeometryLayers_t *geometryLayer = calloc(1, sizeof(RGAGeometryLayers_t));
+				jobject geometryContainerObject = (*env)->CallObjectMethod(env, geometryContainers, geometryContainersListGetMethod, gIndex);
+				jclass geometryContainerClass = (*env)->GetObjectClass(env, geometryContainerObject);
 
-				// Retrieving the ApproachGeometryLayer object
-				jmethodID getApproachGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getApproachGeometryLayer", "()Lgov/usdot/cv/rgaencoder/ApproachGeometryLayer;");
-				jobject approachGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getApproachGeometryLayerMethod);
+				// Retrieve geometryContainer-ID
+				jmethodID getGeometryContainerID = (*env)->GetMethodID(env, geometryContainerClass, "getGeometryContainerID", "()I");
+				jint geometryContainerID = (*env)->CallIntMethod(env, geometryContainerObject, getGeometryContainerID);
 
-				// Populating ApproachGeometryLayer_t
-				ApproachGeometryLayer_t *approachGeometryLayer = calloc(1, sizeof(ApproachGeometryLayer_t));
+				geometryLayer->geometryContainer_ID = geometryContainerID;
 
-				// Populating the approachGeomApproachSet from the ApproachGeometryLayer object
-				jclass approachGeometryLayerClass = (*env)->GetObjectClass(env, approachGeometryLayerObj);
-				jmethodID getApproachGeomApproachSetMethod = (*env)->GetMethodID(env, approachGeometryLayerClass, "getApproachGeomApproachSet", "()Ljava/util/List;");
-				jobject approachGeomApproachSetList = (*env)->CallObjectMethod(env, approachGeometryLayerObj, getApproachGeomApproachSetMethod);
-
-				jclass approachGeomApproachSetClass = (*env)->GetObjectClass(env, approachGeomApproachSetList);
-				jmethodID approachGeomApproachSetSizeMethod = (*env)->GetMethodID(env, approachGeomApproachSetClass, "size", "()I");
-				jmethodID approachGeomApproachSetGetMethod = (*env)->GetMethodID(env, approachGeomApproachSetClass, "get", "(I)Ljava/lang/Object;");
-
-				jint approachGeomApproachSetSize = (*env)->CallIntMethod(env, approachGeomApproachSetList, approachGeomApproachSetSizeMethod);
-
-				for (jint aIndex = 0; aIndex < approachGeomApproachSetSize; aIndex++)
+				// Populate the geometryContainer_Value based on the containerID
+				switch (geometryContainerID)
 				{
-					jobject individualApproachGeometryInfoObj = (*env)->CallObjectMethod(env, approachGeomApproachSetList, approachGeomApproachSetGetMethod, aIndex);
-					jclass individualApproachGeometryInfoClass = (*env)->GetObjectClass(env, individualApproachGeometryInfoObj);
+				case APPROACH_GEOMETRY_LAYER_ID: // ApproachGeometryLayer
+					geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_ApproachGeometryLayer;
 
-					jmethodID getApproachIDMethod = (*env)->GetMethodID(env, individualApproachGeometryInfoClass, "getApproachID", "()I");
-					jint approachID = (*env)->CallIntMethod(env, individualApproachGeometryInfoObj, getApproachIDMethod);
+					// Retrieving the ApproachGeometryLayer object
+					jmethodID getApproachGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getApproachGeometryLayer", "()Lgov/usdot/cv/rgaencoder/ApproachGeometryLayer;");
+					jobject approachGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getApproachGeometryLayerMethod);
 
-					IndividualApproachGeometryInfo_t *approachInfo = calloc(1, sizeof(IndividualApproachGeometryInfo_t));
+					// Populating ApproachGeometryLayer_t
+					ApproachGeometryLayer_t *approachGeometryLayer = calloc(1, sizeof(ApproachGeometryLayer_t));
 
-					approachInfo->approachID = approachID;
+					// Populating the approachGeomApproachSet from the ApproachGeometryLayer object
+					jclass approachGeometryLayerClass = (*env)->GetObjectClass(env, approachGeometryLayerObj);
+					jmethodID getApproachGeomApproachSetMethod = (*env)->GetMethodID(env, approachGeometryLayerClass, "getApproachGeomApproachSet", "()Ljava/util/List;");
+					jobject approachGeomApproachSetList = (*env)->CallObjectMethod(env, approachGeometryLayerObj, getApproachGeomApproachSetMethod);
 
-					// Adding to approachGeomApproachSet
-					ASN_SEQUENCE_ADD(&approachGeometryLayer->approachGeomApproachSet.list, approachInfo);
+					jclass approachGeomApproachSetClass = (*env)->GetObjectClass(env, approachGeomApproachSetList);
+					jmethodID approachGeomApproachSetSizeMethod = (*env)->GetMethodID(env, approachGeomApproachSetClass, "size", "()I");
+					jmethodID approachGeomApproachSetGetMethod = (*env)->GetMethodID(env, approachGeomApproachSetClass, "get", "(I)Ljava/lang/Object;");
+
+					jint approachGeomApproachSetSize = (*env)->CallIntMethod(env, approachGeomApproachSetList, approachGeomApproachSetSizeMethod);
+
+					for (jint aIndex = 0; aIndex < approachGeomApproachSetSize; aIndex++)
+					{
+						jobject individualApproachGeometryInfoObj = (*env)->CallObjectMethod(env, approachGeomApproachSetList, approachGeomApproachSetGetMethod, aIndex);
+						jclass individualApproachGeometryInfoClass = (*env)->GetObjectClass(env, individualApproachGeometryInfoObj);
+
+						jmethodID getApproachIDMethod = (*env)->GetMethodID(env, individualApproachGeometryInfoClass, "getApproachID", "()I");
+						jint approachID = (*env)->CallIntMethod(env, individualApproachGeometryInfoObj, getApproachIDMethod);
+
+						IndividualApproachGeometryInfo_t *approachInfo = calloc(1, sizeof(IndividualApproachGeometryInfo_t));
+
+						approachInfo->approachID = approachID;
+
+						// Adding to approachGeomApproachSet
+						ASN_SEQUENCE_ADD(&approachGeometryLayer->approachGeomApproachSet.list, approachInfo);
+					}
+
+					geometryLayer->geometryContainer_Value.choice.ApproachGeometryLayer = *approachGeometryLayer;
+					break;
+				case MOTOR_VEHICLE_LANE_GEOMETRY_LAYER_ID: // MotorVehicleLaneGeometryLayer
+					geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_MotorVehicleLaneGeometryLayer;
+
+					// Retrieving the MotorVehicleLaneGeometryLayer object
+					jmethodID getMotorVehicleLaneGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getMotorVehicleLaneGeometryLayer", "()Lgov/usdot/cv/rgaencoder/MotorVehicleLaneGeometryLayer;");
+					jobject motorVehicleLaneGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getMotorVehicleLaneGeometryLayerMethod);
+
+					// Populating MotorVehicleLaneGeometryLayer_t
+					MotorVehicleLaneGeometryLayer_t *motorVehicleLaneGeometryLayer = calloc(1, sizeof(MotorVehicleLaneGeometryLayer_t));
+
+					// Populating the MotorVehicleLaneGeometryLayer laneGeomLaneSet from the MotorVehicleLaneGeometryLayer object
+					jclass motorVehicleLaneGeometryLayerClass = (*env)->GetObjectClass(env, motorVehicleLaneGeometryLayerObj);
+					jmethodID getLaneGeomLaneSetMethod = (*env)->GetMethodID(env, motorVehicleLaneGeometryLayerClass, "getLaneGeomLaneSet", "()Ljava/util/List;");
+					jobject laneGeomLaneSetList = (*env)->CallObjectMethod(env, motorVehicleLaneGeometryLayerObj, getLaneGeomLaneSetMethod);
+
+					jclass laneGeomLaneSetClass = (*env)->GetObjectClass(env, laneGeomLaneSetList);
+					jmethodID laneGeomLaneSetSizeMethod = (*env)->GetMethodID(env, laneGeomLaneSetClass, "size", "()I");
+					jmethodID laneGeomLaneSetGetMethod = (*env)->GetMethodID(env, laneGeomLaneSetClass, "get", "(I)Ljava/lang/Object;");
+
+					jint laneGeomLaneSetSize = (*env)->CallIntMethod(env, laneGeomLaneSetList, laneGeomLaneSetSizeMethod);
+
+					for (jint lIndex = 0; lIndex < laneGeomLaneSetSize; lIndex++)
+					{
+						jobject indvMtrVehLaneGeometryInfoObj = (*env)->CallObjectMethod(env, laneGeomLaneSetList, laneGeomLaneSetGetMethod, lIndex);
+						jclass indvMtrVehLaneGeometryInfoClass = (*env)->GetObjectClass(env, indvMtrVehLaneGeometryInfoObj);
+
+						jmethodID getLaneIDMethod = (*env)->GetMethodID(env, indvMtrVehLaneGeometryInfoClass, "getLaneID", "()I");
+						jint laneID = (*env)->CallIntMethod(env, indvMtrVehLaneGeometryInfoObj, getLaneIDMethod);
+
+						IndvMtrVehLaneGeometryInfo_t *indvMtrVehLaneGeometryInfo = calloc(1, sizeof(IndvMtrVehLaneGeometryInfo_t));
+						indvMtrVehLaneGeometryInfo->laneID = laneID;
+
+						jmethodID getLaneConstructorTypeMethod = (*env)->GetMethodID(env, indvMtrVehLaneGeometryInfoClass, "getLaneConstructorType", "()Lgov/usdot/cv/rgaencoder/LaneConstructorType;");
+						jobject laneConstructorTypeObj = (*env)->CallObjectMethod(env, indvMtrVehLaneGeometryInfoObj, getLaneConstructorTypeMethod);
+
+						populateLaneConstructorType(env, laneConstructorTypeObj, &(indvMtrVehLaneGeometryInfo->laneConstructorType));
+
+						ASN_SEQUENCE_ADD(&motorVehicleLaneGeometryLayer->laneGeomLaneSet.list, indvMtrVehLaneGeometryInfo);
+					}
+
+					geometryLayer->geometryContainer_Value.choice.MotorVehicleLaneGeometryLayer = *motorVehicleLaneGeometryLayer;
+					break;
+
+				case BICYCLE_LANE_GEOMETRY_LAYER_ID:
+					// Handle BicycleLaneGeometryLayer
+					geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_BicycleLaneGeometryLayer;
+
+					// Retrieving the BicycleLaneGeometryLayer object
+					jmethodID getBicycleLaneGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getBicycleLaneGeometryLayer", "()Lgov/usdot/cv/rgaencoder/BicycleLaneGeometryLayer;");
+					jobject bicycleLaneGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getBicycleLaneGeometryLayerMethod);
+
+					// Populating BicycleLaneGeometryLayer_t
+					BicycleLaneGeometryLayer_t *bicycleLaneGeometryLayer = calloc(1, sizeof(BicycleLaneGeometryLayer_t));
+
+					// Retrieve and populate BicycleLaneGeometryLayer laneGeomLaneSet
+					jclass bicycleLaneGeometryLayerClass = (*env)->GetObjectClass(env, bicycleLaneGeometryLayerObj);
+					jmethodID getBicycleLaneGeomLaneSetMethod = (*env)->GetMethodID(env, bicycleLaneGeometryLayerClass, "getLaneGeomLaneSet", "()Ljava/util/List;");
+					jobject bicycleLaneGeomLaneSetList = (*env)->CallObjectMethod(env, bicycleLaneGeometryLayerObj, getBicycleLaneGeomLaneSetMethod);
+
+					jclass bicycleLaneGeomLaneSetClass = (*env)->GetObjectClass(env, bicycleLaneGeomLaneSetList);
+					jmethodID bicycleLaneGeomLaneSetSizeMethod = (*env)->GetMethodID(env, bicycleLaneGeomLaneSetClass, "size", "()I");
+					jmethodID bicycleLaneGeomLaneSetGetMethod = (*env)->GetMethodID(env, bicycleLaneGeomLaneSetClass, "get", "(I)Ljava/lang/Object;");
+
+					jint bicycleLaneGeomLaneSetSize = (*env)->CallIntMethod(env, bicycleLaneGeomLaneSetList, bicycleLaneGeomLaneSetSizeMethod);
+
+					for (jint bIndex = 0; bIndex < bicycleLaneGeomLaneSetSize; bIndex++)
+					{
+						jobject indvBikeLaneGeometryInfoObj = (*env)->CallObjectMethod(env, bicycleLaneGeomLaneSetList, bicycleLaneGeomLaneSetGetMethod, bIndex);
+						jclass indvBikeLaneGeometryInfoClass = (*env)->GetObjectClass(env, indvBikeLaneGeometryInfoObj);
+
+						jmethodID getBikeLaneIDMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getLaneID", "()I");
+						jint bikeLaneID = (*env)->CallIntMethod(env, indvBikeLaneGeometryInfoObj, getBikeLaneIDMethod);
+
+						IndvBikeLaneGeometryInfo_t *indvBikeLaneGeometryInfo = calloc(1, sizeof(IndvBikeLaneGeometryInfo_t));
+						indvBikeLaneGeometryInfo->laneID = bikeLaneID;
+
+						// Retrieve and set laneConstructorType
+						jmethodID getBikeLaneConstructorTypeMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getLaneConstructorType", "()Lgov/usdot/cv/rgaencoder/LaneConstructorType;");
+						jobject bikeLaneConstructorTypeObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getBikeLaneConstructorTypeMethod);
+
+						populateLaneConstructorType(env, bikeLaneConstructorTypeObj, &(indvBikeLaneGeometryInfo->laneConstructorType));
+
+						ASN_SEQUENCE_ADD(&bicycleLaneGeometryLayer->laneGeomLaneSet.list, indvBikeLaneGeometryInfo);
+					}
+					geometryLayer->geometryContainer_Value.choice.BicycleLaneGeometryLayer = *bicycleLaneGeometryLayer;
+
+					break;
+
+				case CROSSWALK_LANE_GEOMETRY_LAYER_ID:
+					// Handle CrosswalkLaneGeometryLayer
+					geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_CrosswalkLaneGeometryLayer;
+
+					// Retrieving the CrosswalkLaneGeometryLayer object
+					jmethodID getCrosswalkLaneGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getCrosswalkLaneGeometryLayer", "()Lgov/usdot/cv/rgaencoder/CrosswalkLaneGeometryLayer;");
+					jobject crosswalkLaneGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getCrosswalkLaneGeometryLayerMethod);
+
+					// Populating CrosswalkLaneGeometryLayer_t
+					CrosswalkLaneGeometryLayer_t *crosswalkLaneGeometryLayer = calloc(1, sizeof(CrosswalkLaneGeometryLayer_t));
+
+					// Retrieve and populate CrosswalkLaneGeometryLayer laneGeomLaneSet
+					jclass crosswalkLaneGeometryLayerClass = (*env)->GetObjectClass(env, crosswalkLaneGeometryLayerObj);
+					jmethodID getCrosswalkLaneGeomLaneSetMethod = (*env)->GetMethodID(env, crosswalkLaneGeometryLayerClass, "getLaneGeomLaneSet", "()Ljava/util/List;");
+					jobject crossWalkLaneGeomLaneSetList = (*env)->CallObjectMethod(env, crosswalkLaneGeometryLayerObj, getCrosswalkLaneGeomLaneSetMethod);
+
+					jclass crosswalkLaneGeomLaneSetClass = (*env)->GetObjectClass(env, crossWalkLaneGeomLaneSetList);
+					jmethodID crosswalkLaneGeomLaneSetSizeMethod = (*env)->GetMethodID(env, crosswalkLaneGeomLaneSetClass, "size", "()I");
+					jmethodID crosswalkLaneGeomLaneSetGetMethod = (*env)->GetMethodID(env, crosswalkLaneGeomLaneSetClass, "get", "(I)Ljava/lang/Object;");
+
+					jint crosswalkLaneGeomLaneSetSize = (*env)->CallIntMethod(env, crossWalkLaneGeomLaneSetList, crosswalkLaneGeomLaneSetSizeMethod);
+
+					for (jint cIndex = 0; cIndex < crosswalkLaneGeomLaneSetSize; cIndex++)
+					{
+						jobject indvCrosswalkLaneGeometryInfoObj = (*env)->CallObjectMethod(env, crossWalkLaneGeomLaneSetList, crosswalkLaneGeomLaneSetGetMethod, cIndex);
+						jclass indvCrosswalkLaneGeometryInfoClass = (*env)->GetObjectClass(env, indvCrosswalkLaneGeometryInfoObj);
+
+						jmethodID getCrossWalkLaneIDMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getLaneID", "()I");
+						jint crosswalkLaneID = (*env)->CallIntMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrossWalkLaneIDMethod);
+
+						IndvCrosswalkLaneGeometryInfo_t *indvCrosswalkLaneGeometryInfo = calloc(1, sizeof(IndvCrosswalkLaneGeometryInfo_t));
+						indvCrosswalkLaneGeometryInfo->laneID = crosswalkLaneID;
+
+						// Retrieve and set laneConstructorType
+						jmethodID getCrosswalkLaneConstructorTypeMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getLaneConstructorType", "()Lgov/usdot/cv/rgaencoder/LaneConstructorType;");
+						jobject crosswalkLaneConstructorTypeObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrosswalkLaneConstructorTypeMethod);
+
+						populateLaneConstructorType(env, crosswalkLaneConstructorTypeObj, &indvCrosswalkLaneGeometryInfo->laneConstructorType);
+
+						ASN_SEQUENCE_ADD(&crosswalkLaneGeometryLayer->laneGeomLaneSet.list, indvCrosswalkLaneGeometryInfo);
+					}
+					geometryLayer->geometryContainer_Value.choice.CrosswalkLaneGeometryLayer = *crosswalkLaneGeometryLayer;
+					break;
+
+				default:
+					// Handle unknown ID
+					geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_NOTHING;
+					break;
 				}
 
-				geometryLayer->geometryContainer_Value.choice.ApproachGeometryLayer = *approachGeometryLayer;
-				break;
-			case MOTOR_VEHICLE_LANE_GEOMETRY_LAYER_ID: // MotorVehicleLaneGeometryLayer
-				geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_MotorVehicleLaneGeometryLayer;
-
-				// Retrieving the MotorVehicleLaneGeometryLayer object
-				jmethodID getMotorVehicleLaneGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getMotorVehicleLaneGeometryLayer", "()Lgov/usdot/cv/rgaencoder/MotorVehicleLaneGeometryLayer;");
-				jobject motorVehicleLaneGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getMotorVehicleLaneGeometryLayerMethod);
-
-				// Populating MotorVehicleLaneGeometryLayer_t
-				MotorVehicleLaneGeometryLayer_t *motorVehicleLaneGeometryLayer = calloc(1, sizeof(MotorVehicleLaneGeometryLayer_t));
-
-				// Populating the MotorVehicleLaneGeometryLayer laneGeomLaneSet from the MotorVehicleLaneGeometryLayer object
-				jclass motorVehicleLaneGeometryLayerClass = (*env)->GetObjectClass(env, motorVehicleLaneGeometryLayerObj);
-				jmethodID getLaneGeomLaneSetMethod = (*env)->GetMethodID(env, motorVehicleLaneGeometryLayerClass, "getLaneGeomLaneSet", "()Ljava/util/List;");
-				jobject laneGeomLaneSetList = (*env)->CallObjectMethod(env, motorVehicleLaneGeometryLayerObj, getLaneGeomLaneSetMethod);
-
-				jclass laneGeomLaneSetClass = (*env)->GetObjectClass(env, laneGeomLaneSetList);
-				jmethodID laneGeomLaneSetSizeMethod = (*env)->GetMethodID(env, laneGeomLaneSetClass, "size", "()I");
-				jmethodID laneGeomLaneSetGetMethod = (*env)->GetMethodID(env, laneGeomLaneSetClass, "get", "(I)Ljava/lang/Object;");
-
-				jint laneGeomLaneSetSize = (*env)->CallIntMethod(env, laneGeomLaneSetList, laneGeomLaneSetSizeMethod);
-
-				for (jint lIndex = 0; lIndex < laneGeomLaneSetSize; lIndex++)
-				{
-					jobject indvMtrVehLaneGeometryInfoObj = (*env)->CallObjectMethod(env, laneGeomLaneSetList, laneGeomLaneSetGetMethod, lIndex);
-					jclass indvMtrVehLaneGeometryInfoClass = (*env)->GetObjectClass(env, indvMtrVehLaneGeometryInfoObj);
-
-					jmethodID getLaneIDMethod = (*env)->GetMethodID(env, indvMtrVehLaneGeometryInfoClass, "getLaneID", "()I");
-					jint laneID = (*env)->CallIntMethod(env, indvMtrVehLaneGeometryInfoObj, getLaneIDMethod);
-
-					IndvMtrVehLaneGeometryInfo_t *indvMtrVehLaneGeometryInfo = calloc(1, sizeof(IndvMtrVehLaneGeometryInfo_t));
-					indvMtrVehLaneGeometryInfo->laneID = laneID;
-
-					jmethodID getLaneConstructorTypeMethod = (*env)->GetMethodID(env, indvMtrVehLaneGeometryInfoClass, "getLaneConstructorType", "()Lgov/usdot/cv/rgaencoder/LaneConstructorType;");
-					jobject laneConstructorTypeObj = (*env)->CallObjectMethod(env, indvMtrVehLaneGeometryInfoObj, getLaneConstructorTypeMethod);
-
-					populateLaneConstructorType(env, laneConstructorTypeObj, &(indvMtrVehLaneGeometryInfo->laneConstructorType));
-
-					ASN_SEQUENCE_ADD(&motorVehicleLaneGeometryLayer->laneGeomLaneSet.list, indvMtrVehLaneGeometryInfo);
-				}
-
-				geometryLayer->geometryContainer_Value.choice.MotorVehicleLaneGeometryLayer = *motorVehicleLaneGeometryLayer;
-				break;
-
-			case BICYCLE_LANE_GEOMETRY_LAYER_ID:
-				// Handle BicycleLaneGeometryLayer
-				geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_BicycleLaneGeometryLayer;
-
-				// Retrieving the BicycleLaneGeometryLayer object
-				jmethodID getBicycleLaneGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getBicycleLaneGeometryLayer", "()Lgov/usdot/cv/rgaencoder/BicycleLaneGeometryLayer;");
-				jobject bicycleLaneGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getBicycleLaneGeometryLayerMethod);
-
-				// Populating BicycleLaneGeometryLayer_t
-				BicycleLaneGeometryLayer_t *bicycleLaneGeometryLayer = calloc(1, sizeof(BicycleLaneGeometryLayer_t));
-
-				// Retrieve and populate BicycleLaneGeometryLayer laneGeomLaneSet
-				jclass bicycleLaneGeometryLayerClass = (*env)->GetObjectClass(env, bicycleLaneGeometryLayerObj);
-				jmethodID getBicycleLaneGeomLaneSetMethod = (*env)->GetMethodID(env, bicycleLaneGeometryLayerClass, "getLaneGeomLaneSet", "()Ljava/util/List;");
-				jobject bicycleLaneGeomLaneSetList = (*env)->CallObjectMethod(env, bicycleLaneGeometryLayerObj, getBicycleLaneGeomLaneSetMethod);
-
-				jclass bicycleLaneGeomLaneSetClass = (*env)->GetObjectClass(env, bicycleLaneGeomLaneSetList);
-				jmethodID bicycleLaneGeomLaneSetSizeMethod = (*env)->GetMethodID(env, bicycleLaneGeomLaneSetClass, "size", "()I");
-				jmethodID bicycleLaneGeomLaneSetGetMethod = (*env)->GetMethodID(env, bicycleLaneGeomLaneSetClass, "get", "(I)Ljava/lang/Object;");
-
-				jint bicycleLaneGeomLaneSetSize = (*env)->CallIntMethod(env, bicycleLaneGeomLaneSetList, bicycleLaneGeomLaneSetSizeMethod);
-
-				for (jint bIndex = 0; bIndex < bicycleLaneGeomLaneSetSize; bIndex++)
-				{
-					jobject indvBikeLaneGeometryInfoObj = (*env)->CallObjectMethod(env, bicycleLaneGeomLaneSetList, bicycleLaneGeomLaneSetGetMethod, bIndex);
-					jclass indvBikeLaneGeometryInfoClass = (*env)->GetObjectClass(env, indvBikeLaneGeometryInfoObj);
-
-					jmethodID getBikeLaneIDMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getLaneID", "()I");
-					jint bikeLaneID = (*env)->CallIntMethod(env, indvBikeLaneGeometryInfoObj, getBikeLaneIDMethod);
-
-					IndvBikeLaneGeometryInfo_t *indvBikeLaneGeometryInfo = calloc(1, sizeof(IndvBikeLaneGeometryInfo_t));
-					indvBikeLaneGeometryInfo->laneID = bikeLaneID;
-
-					// Retrieve and set laneConstructorType
-					jmethodID getBikeLaneConstructorTypeMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getLaneConstructorType", "()Lgov/usdot/cv/rgaencoder/LaneConstructorType;");
-					jobject bikeLaneConstructorTypeObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getBikeLaneConstructorTypeMethod);
-
-					populateLaneConstructorType(env, bikeLaneConstructorTypeObj, &(indvBikeLaneGeometryInfo->laneConstructorType));
-
-					ASN_SEQUENCE_ADD(&bicycleLaneGeometryLayer->laneGeomLaneSet.list, indvBikeLaneGeometryInfo);
-				}
-				geometryLayer->geometryContainer_Value.choice.BicycleLaneGeometryLayer = *bicycleLaneGeometryLayer;
-
-				break;
-
-			case CROSSWALK_LANE_GEOMETRY_LAYER_ID:
-				// Handle CrosswalkLaneGeometryLayer
-				geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_CrosswalkLaneGeometryLayer;
-
-				// Retrieving the CrosswalkLaneGeometryLayer object
-				jmethodID getCrosswalkLaneGeometryLayerMethod = (*env)->GetMethodID(env, geometryContainerClass, "getCrosswalkLaneGeometryLayer", "()Lgov/usdot/cv/rgaencoder/CrosswalkLaneGeometryLayer;");
-				jobject crosswalkLaneGeometryLayerObj = (*env)->CallObjectMethod(env, geometryContainerObject, getCrosswalkLaneGeometryLayerMethod);
-
-				// Populating CrosswalkLaneGeometryLayer_t
-				CrosswalkLaneGeometryLayer_t *crosswalkLaneGeometryLayer = calloc(1, sizeof(CrosswalkLaneGeometryLayer_t));
-
-				// Retrieve and populate CrosswalkLaneGeometryLayer laneGeomLaneSet
-				jclass crosswalkLaneGeometryLayerClass = (*env)->GetObjectClass(env, crosswalkLaneGeometryLayerObj);
-				jmethodID getCrosswalkLaneGeomLaneSetMethod = (*env)->GetMethodID(env, crosswalkLaneGeometryLayerClass, "getLaneGeomLaneSet", "()Ljava/util/List;");
-				jobject crossWalkLaneGeomLaneSetList = (*env)->CallObjectMethod(env, crosswalkLaneGeometryLayerObj, getCrosswalkLaneGeomLaneSetMethod);
-
-				jclass crosswalkLaneGeomLaneSetClass = (*env)->GetObjectClass(env, crossWalkLaneGeomLaneSetList);
-				jmethodID crosswalkLaneGeomLaneSetSizeMethod = (*env)->GetMethodID(env, crosswalkLaneGeomLaneSetClass, "size", "()I");
-				jmethodID crosswalkLaneGeomLaneSetGetMethod = (*env)->GetMethodID(env, crosswalkLaneGeomLaneSetClass, "get", "(I)Ljava/lang/Object;");
-
-				jint crosswalkLaneGeomLaneSetSize = (*env)->CallIntMethod(env, crossWalkLaneGeomLaneSetList, crosswalkLaneGeomLaneSetSizeMethod);
-
-				for (jint cIndex = 0; cIndex < crosswalkLaneGeomLaneSetSize; cIndex++)
-				{
-					jobject indvCrosswalkLaneGeometryInfoObj = (*env)->CallObjectMethod(env, crossWalkLaneGeomLaneSetList, crosswalkLaneGeomLaneSetGetMethod, cIndex);
-					jclass indvCrosswalkLaneGeometryInfoClass = (*env)->GetObjectClass(env, indvCrosswalkLaneGeometryInfoObj);
-
-					jmethodID getCrossWalkLaneIDMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getLaneID", "()I");
-					jint crosswalkLaneID = (*env)->CallIntMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrossWalkLaneIDMethod);
-
-					IndvCrosswalkLaneGeometryInfo_t *indvCrosswalkLaneGeometryInfo = calloc(1, sizeof(IndvCrosswalkLaneGeometryInfo_t));
-					indvCrosswalkLaneGeometryInfo->laneID = crosswalkLaneID;
-
-					// Retrieve and set laneConstructorType
-					jmethodID getCrosswalkLaneConstructorTypeMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getLaneConstructorType", "()Lgov/usdot/cv/rgaencoder/LaneConstructorType;");
-					jobject crosswalkLaneConstructorTypeObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrosswalkLaneConstructorTypeMethod);
-
-					populateLaneConstructorType(env, crosswalkLaneConstructorTypeObj, &indvCrosswalkLaneGeometryInfo->laneConstructorType);
-
-					ASN_SEQUENCE_ADD(&crosswalkLaneGeometryLayer->laneGeomLaneSet.list, indvCrosswalkLaneGeometryInfo);
-				}
-				geometryLayer->geometryContainer_Value.choice.CrosswalkLaneGeometryLayer = *crosswalkLaneGeometryLayer;
-				break;
-
-			default:
-				// Handle unknown ID
-				geometryLayer->geometryContainer_Value.present = RGAGeometryLayers__geometryContainer_Value_PR_NOTHING;
-				break;
+				ASN_SEQUENCE_ADD(&rgaDataSet.geometryContainer->list, geometryLayer);
 			}
-
-			ASN_SEQUENCE_ADD(&rgaDataSet.geometryContainer->list, geometryLayer);
 		}
 	}
-
 	rgaDataSet.movementsContainer = NULL;
 	rgaDataSet.wayUseContainer = NULL;
 	rgaDataSet.signalControlSupportContainer = NULL;
