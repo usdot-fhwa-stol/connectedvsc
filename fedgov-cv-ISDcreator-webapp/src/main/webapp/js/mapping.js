@@ -6,6 +6,7 @@
 /**
  * DEFINE GLOBAL VARIABLES
  */
+
     var map;
     var vectors, lanes, laneMarkers, box, laneConnections, errors, trace, laneWidths;
     var fromProjection, toProjection;
@@ -26,8 +27,9 @@
     var nodeObject = [];
     var revisionNum = 0;
     var cachedSessionKey = null;
-    let cachedApiKey='';
+    let cachedApiKey='AjicerIt5MpzLjpjIIeC9tPTfYspCXApgBxWIEWEZ4AtBYByxJ7BBiiefwAZtCBD';
     let cachedUsername = null;
+    let azureApiKey = 'dtCq3hh0v9ryfET1T6268NDkntdI12SjDncgQkBuCpgFnAsS0qMRJQQJ99BBACYeBjF4WcqXAAAgAZMP2IF9'
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
         19567.87923828125, 9783.939619140625, 4891.9698095703125,
@@ -1153,7 +1155,6 @@ var tmp = 0;
  */
 
 function onFeatureAdded(){
-
 	laneMarkers.destroyFeatures();
 	for(var i=0; i< lanes.features.length; i++){
 

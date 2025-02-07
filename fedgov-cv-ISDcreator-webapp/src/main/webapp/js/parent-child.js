@@ -1,7 +1,7 @@
 /**
  * Created by martzth on 6/16/2015.
  */
-
+import {loadFile} from "./files.js"
 
 /**
  * Purpose: switch between child and parent maps
@@ -9,7 +9,7 @@
  * so there are functions to hide/show access to form fields
  */
 
-var selected;
+let selected;
 
 $(function() {
     $("#btn-group").children().hide();
@@ -20,7 +20,7 @@ $(function() {
 });
 
 
-function openChildMap(){
+function openChildMap(map, lanes,vectors, laneMarkers, laneWidths, box, errors){
     selected = "child";
     confirmClear();
     $("#map-type").text("CHILD MAP");
@@ -33,7 +33,7 @@ function openChildMap(){
     $("#lane-tab-header").addClass("active");
     $("#lane-tab").addClass("active");
     $("#builder, #drawLanes, #measureLanes, #editLanes, #drawStopBar, #editStopBar, #deleteMarker, #approachControlLabel, #laneControlLabel, #measureControlLabel").show();
-    loadFile();
+    loadFile(map, lanes,vectors,laneMarkers , laneWidths, box, errors, selected);
 }
 
 function openParentMap(){
@@ -96,27 +96,36 @@ function updateChildParent(){
 
 function confirmClear() {
 
-    if (lanes.features.length != 0 || laneMarkers.features.length != 0 || vectors.features.length != 0 || box.features.length != 0) {
-        var r = confirm("This will reset the map and delete any progress. Continue?");
-    } else {
-        r = true;
-    }
+    // if (lanes.features.length != 0 || laneMarkers.features.length != 0 || vectors.features.length != 0 || box.features.length != 0) {
+    //     var r = confirm("This will reset the map and delete any progress. Continue?");
+    // } else {
+    //     r = true;
+    // }
 
-    if (r == true) {
-        lanes.destroyFeatures();
-        laneMarkers.destroyFeatures();
-        vectors.destroyFeatures();
-        box.destroyFeatures();
-        errors.clearMarkers();
-        laneWidths.destroyFeatures();
-        deleteTrace();
+    // if (r == true) {
+    //     lanes.destroyFeatures();
+    //     laneMarkers.destroyFeatures();
+    //     vectors.destroyFeatures();
+    //     box.destroyFeatures();
+    //     errors.clearMarkers();
+    //     laneWidths.destroyFeatures();
+    //     deleteTrace();
 
-        $("#btn-group").children().hide();
-        $(".builder").hide();
-        $(".encoder").hide();
-        $("#attributes").hide();
-        $("#help").show();
-    }
+    //     $("#btn-group").children().hide();
+    //     $(".builder").hide();
+    //     $(".encoder").hide();
+    //     $("#attributes").hide();
+    //     $("#help").show();
+    // }
 
 }
 
+export {
+    openChildMap,
+    openParentMap,
+    newParentMap,
+    newChildMap,
+    updateChildParent,
+    confirmClear,
+    selected
+}

@@ -124,7 +124,7 @@ $(document).ready(function() {
      */
 
     function clone(object, point) {
-        var lonlat = map.getLonLatFromPixel(point);
+        var lonlat = mapUpdate.getLonLatFromPixel(point);
 
         var cloned_feature = new OpenLayers.Feature.Vector(
             new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat),
@@ -253,10 +253,10 @@ function updatePlaceLocationView(inputPlaceText){
                 let search_lon = location.lng;
                 setCookie("isd_latitude", search_lat, 365);
                 setCookie("isd_longitude", search_lon, 365);
-                setCookie("isd_zoom", map.getZoom(), 365);
+                setCookie("isd_zoom", mapUpdate.getZoom(), 365);
                 location = new OpenLayers.LonLat(search_lon, search_lat);
-                location.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-                map.setCenter(location, 18);
+                location.transform(new OpenLayers.Projection("EPSG:4326"), mapUpdate.getProjectionObject());
+                mapUpdate.setCenter(location, 18);
             }
             catch (err) {
                 console.log("No vectors to reset view");
