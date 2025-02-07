@@ -1,4 +1,5 @@
 import { getElevation } from "./api.js";
+import { toggleWidthArray } from "./utils.js";
 /*********************************************************************************************************************/
 /**
  * Purpose: dot functions that bind the metadata to the feature object
@@ -340,101 +341,6 @@ function connectComputedDots(i, points, initialize){
 		}
 		lanes.redraw();
     }
-}
-
-function toggleWidthArray(lanes, vectors, laneWidths) {
-  if (laneWidths.getSource().getFeatures().length == 0) {
-      var masterWidth;
-			let vectorFeatures = vectors.getSource().getFeatures();
-			let laneFeatures = lanes.getSource().getFeatures();
-      for (var f = 0; f < vectorFeatures.length; f++) {
-          if (vectorFeatures[f].get("marker").name == "Reference Point Marker") {
-              masterWidth = parseFloat(vectorFeatures[f].get("masterLaneWidth"));
-          }
-					console.log(vectorFeatures[f].get("marker"))
-					console.log(vectorFeatures[f])
-      }
-
-      for (var i = 0; i < laneFeatures.length; i++) {
-
-          var widthList = [];
-          var widthDeltaTotal = 0;
-          var flipped = false;
-          var isNegative = {"value": false, "node": "", "lane": ""};
-
-          for (var j = 0; j < laneFeatures[i].geometry.components.length; j++) {
-
-              var point1 = '';
-              var point2 = '';
-
-              if (j < lanes.features[i].geometry.components.length - 1) {
-                  if (lanes.features[i].geometry.components[j].x == lanes.features[i].geometry.components[j + 1].x && lanes.features[i].geometry.components[j].y == lanes.features[i].geometry.components[j + 1].y) {
-                      j++; //to prevent dots that are the exact same.
-                  }
-              }
-
-              if (j < lanes.features[i].geometry.components.length - 1) {
-                  point1 = new OpenLayers.LonLat(lanes.features[i].geometry.components[j].x, lanes.features[i].geometry.components[j].y).transform(toProjection, fromProjection);
-                  point2 = new OpenLayers.LonLat(lanes.features[i].geometry.components[j + 1].x, lanes.features[i].geometry.components[j + 1].y).transform(toProjection, fromProjection);
-              } else {
-                  point1 = new OpenLayers.LonLat(lanes.features[i].geometry.components[j].x, lanes.features[i].geometry.components[j].y).transform(toProjection, fromProjection);
-                  if (lanes.features[i].geometry.components[j].x == lanes.features[i].geometry.components[j - 1].x && lanes.features[i].geometry.components[j].y == lanes.features[i].geometry.components[j - 1].y) {
-                      point2 = new OpenLayers.LonLat(lanes.features[i].geometry.components[j - 2].x, lanes.features[i].geometry.components[j - 2].y).transform(toProjection, fromProjection); //to prevent dots that are the exact same.
-                      flipped = true;
-                  } else {
-                      point2 = new OpenLayers.LonLat(lanes.features[i].geometry.components[j - 1].x, lanes.features[i].geometry.components[j - 1].y).transform(toProjection, fromProjection);
-                  }
-              }
-
-              var widthDelta = parseFloat(lanes.features[i].attributes.laneWidth[j]);
-              if (isNaN(widthDelta) || widthDelta == null || typeof widthDelta == "undefined") {
-                  widthDelta = 0
-              }
-
-              widthDeltaTotal = widthDeltaTotal + widthDelta;
-
-              if (masterWidth + widthDeltaTotal < 0){
-                  console.log(masterWidth + widthDeltaTotal)
-                  isNegative = {"value": true, "node": j+1, "lane": i};
-                  widthDeltaTotal = 0 - masterWidth;
-              }
-
-              var inverse = inverseVincenty(point1.lat, point1.lon, point2.lat, point2.lon);
-
-              var direct1 = directVincenty(point1.lat, point1.lon, inverse.bearing + 90, (((masterWidth + widthDeltaTotal) / 2) / 100));
-              var direct2 = directVincenty(point1.lat, point1.lon, inverse.bearing - 90, (((masterWidth + widthDeltaTotal) / 2) / 100));
-
-              var newPoint1 = new OpenLayers.Geometry.Point(direct1.lon, direct1.lat).transform(fromProjection, toProjection);
-              var newPoint2 = new OpenLayers.Geometry.Point(direct2.lon, direct2.lat).transform(fromProjection, toProjection);
-
-              if (j == lanes.features[i].geometry.components.length - 1) {
-                  j++; //flips the j value since it's the last lane point and we need to build in reverse
-              }
-
-              if (isOdd(j) && !flipped) {
-                  widthList.push(newPoint1, newPoint2);
-                  widthBox = new OpenLayers.Geometry.LinearRing(widthList);
-                  laneWidths.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([widthBox])));
-                  widthList = [];
-                  widthList.push(newPoint1, newPoint2);
-              } else {
-                  widthList.push(newPoint2, newPoint1);
-                  widthBox = new OpenLayers.Geometry.LinearRing(widthList);
-                  laneWidths.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([widthBox])));
-                  widthList = [];
-                  widthList.push(newPoint2, newPoint1);
-                  flipped = false;
-              }
-
-          }
-      }
-  } else {
-      laneWidths.getSource().clear();
-  }
-
-  if (isNegative.value){
-      alert("Width deltas sum to less than zero on lane " + lanes.features[isNegative.lane].attributes.laneNumber + " at node " + isNegative.node + "!");
-  }
 }
 
 export {

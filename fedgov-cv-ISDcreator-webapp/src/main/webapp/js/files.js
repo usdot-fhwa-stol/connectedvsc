@@ -89,7 +89,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 	let vectorLayerAsOL = new ol.format.GeoJSON().readFeatures(data.vectors,{featureProjection: 'EPSG:3857' , dataProjection: 'EPSG:3857'});
 	let lanesLayerAsOL = new ol.format.GeoJSON().readFeatures(data.lanes,{featureProjection: 'EPSG:3857', dataProjection: 'EPSG:3857'});
 	let laneMarkersLayerAsOL = new ol.format.GeoJSON().readFeatures(data.laneMarkers,{featureProjection: 'EPSG:3857', dataProjection: 'EPSG:3857'});
-  let stopLayerAsOL = new ol.format.GeoJSON().readFeatures(data.box, {featureProjection: 'EPSG:3857' , dataProjection: 'EPSG:3857'});
+  	let stopLayerAsOL = new ol.format.GeoJSON().readFeatures(data.box, {featureProjection: 'EPSG:3857' , dataProjection: 'EPSG:3857'});
 	let lanesSource = new ol.source.Vector({
     features: lanesLayerAsOL,
   });
@@ -105,7 +105,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 		features: stopLayerAsOL
 	})
 
-  // console.log(data.vectors)
+//   console.log(data.vectors)
   // console.log(data.lanes)
   // console.log(data.laneMarkers)
   // console.log(data.box)
@@ -117,7 +117,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 	}
   
 	if (c == true) {
-    vectors.setSource(vectorsSource);
+    	vectors.setSource(vectorsSource);
 		lanes.setSource(lanesSource);
 		laneMarkers.setSource(laneMarkersSource);
 		box.setSource(stopBoxSource);
@@ -156,7 +156,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 				viewZoom = getCookie("isd_zoom");
 			}
 			map.getView().setCenter(center);
-      map.getView().setZoom(viewZoom);
+      		map.getView().setZoom(viewZoom);
 			// unselectFeature(feat[0])
 		}
 		catch (err) {
@@ -319,8 +319,9 @@ function saveFile( data, vectors, selected )
 export {
     loadFile,
     loadMap,
-		saveFile,
-		saveMap,
-		toggleControlsOn,
-		toggleControl
+	saveFile,
+	saveMap,
+	toggleControlsOn,
+	toggleControl,
+	revisionNum
 }

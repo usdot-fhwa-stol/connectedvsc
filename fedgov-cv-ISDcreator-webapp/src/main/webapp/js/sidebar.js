@@ -16,6 +16,6 @@ function toggle() {
         $("#sidebar").animate({"left":-800},1000);
         $("sidebar").hide();
         toggleControlsOn('none');
-        laneConnections.removeAllFeatures();
+        // laneConnections.removeAllFeatures();
     }
 }

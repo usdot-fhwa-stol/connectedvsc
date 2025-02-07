@@ -98,18 +98,20 @@ const vectorStyle = (feature)=>{
 const widthStyle = (feature) => {
   return new ol.style.Style({
     stroke: new ol.style.Stroke({
-      color: widthDefault.strokeColor,
-      width: widthDefault.strokeWidth,
-      opacity: widthDefault.strokeOpacity
+      color: `rgba(255, 255, 0, ${widthDefault.strokeOpacity})`, 
+      width: widthDefault.strokeWidth
     }),
     fill: new ol.style.Fill({
-      color: widthDefault.fillColor,
-      opacity: widthDefault.fillOpacity
+      color: `rgba(255, 255, 0, ${widthDefault.fillOpacity})`
     }),
     image: new ol.style.Circle({
       radius: widthDefault.pointRadius,
       fill: new ol.style.Fill({
-        color: widthDefault.fillColor
+        color: `rgba(255, 255, 0, ${widthDefault.fillOpacity})`
+      }),
+      stroke: new ol.style.Stroke({
+        color: `rgba(255, 255, 0, ${widthDefault.strokeOpacity})`, 
+        width: widthDefault.strokeWidth
       })
     })
   });

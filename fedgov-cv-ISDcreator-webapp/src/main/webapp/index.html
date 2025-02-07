@@ -109,13 +109,13 @@
 					<li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Show <span class="caret"></span></a>
 			          <ul class="dropdown-menu" role="menu">
-						  <li class="builder"><a href="#" onclick="toggle(); return false;"><i class="fa fa-list"></i>&nbsp;&nbsp;Builder</a></li>
+						  <li class="builder"><a href="#" id="builderShow"><i class="fa fa-list"></i>&nbsp;&nbsp;Builder</a></li>
 						  <li class="divider"></li>
-						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="ToggleLanes(); return false;"><i id="laneIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Lanes</a></li>
-						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="ToggleBars(); return false;"><i id="boxIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Approaches</a></li>
-						  <li><a href="#" data-toggle="collapse" data-target=".navbar-collapse.in" onclick="TogglePoints(); return false;"><i id="pointIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Reference Points</a></li>
+						  <li><a href="#" id="toggleLanes" data-toggle="collapse" data-target=".navbar-collapse.in"><i id="laneIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Lanes</a></li>
+						  <li><a href="#" id="toggleBars"  data-toggle="collapse" data-target=".navbar-collapse.in"><i id="boxIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Approaches</a></li>
+						  <li><a href="#" id="togglePoints" data-toggle="collapse" data-target=".navbar-collapse.in"><i id="pointIcon" class="fa fa-check-square-o"></i>&nbsp;&nbsp;Reference Points</a></li>
 						  <li class="divider"></li>
-						  <li><a href="#" onclick="toggleWidthArray();">Toggle Lane Widths</a></li>
+						  <li><a href="#" id="toggleLaneWidth" >Toggle Lane Widths</a></li>
 			          </ul>
 			        </li>
 					<li class="dropdown">
@@ -1256,7 +1256,7 @@
 		<div class="btn-toolbar" aria-label="Toolbar with button groups" role="toolbar" data-toggle="buttons">
 			<div id="btn-group" class="btn-group">
 				<button class="btn btn-info btn-end-right" name="layerControl" id="help" value="help" data-toggle="tooltip" data-placement="top" title="Help"><i class="fa fa-question"></i></button>
-                <button class="btn btn-primary btn-end-right" name="layerControl" id="builder" value="builder" onclick="toggle(); return false;" data-placement="top" title="Builder"><i class="fa fa-list"></i></button>
+                <button class="btn btn-primary btn-end-right" name="layerControl" id="builder" value="builder"  data-placement="top" title="Builder"><i class="fa fa-list"></i></button>
 
 				<button id="approachControlLabel" type="button" class="btn btn-primary" disabled>Approach</button>
 				<button class="btn btn-default" name="layerControl" id="drawStopBar" value="bar" data-toggle="tooltip" data-placement="top" title="Draw Approaches"><i class="fa fa-pencil-square-o"></i></button>
@@ -1318,9 +1318,9 @@
   <!-- <script src="js/parent-child.js"></script> -->
 	<script src="js/config.js"></script>
 	<!-- <script  src="js/mapTools.js"></script> -->
-	<script src="js/sidebar.js"></script>
+	<!-- <script src="js/sidebar.js"></script> -->
 	<!-- <script src="js/main.js"></script> -->
-	<script src="js/navbar.js"></script>
+	<!-- <script src="js/navbar.js"></script> -->
 	<script src="js/depositor.js"></script>
 	<script src="js/bing.js"></script>
 	<script src="js/latlon-vincenty.js"></script>
