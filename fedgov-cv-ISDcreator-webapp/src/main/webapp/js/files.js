@@ -1,4 +1,4 @@
-import { getCookie } from "./utils.js";
+import { getCookie, unselectFeature } from "./utils.js";
 import { onFeatureAdded } from "./features.js";
 let isLoadMap = false;
 
@@ -12,7 +12,7 @@ let tempLayerID;
 let calls =0;
 let filesToSend; //2019/04, MF:Added for onTraceChangeRSM()
 let trace; //2019/04, MF:Added since it was not declared.
-let revisionNum =0;
+let revisionNum = 0;
 
 /**
  * Purpose: loads file
@@ -21,7 +21,7 @@ let revisionNum =0;
  */
 
 function loadFile(map, lanes, vectors, laneMarkers, laneWidths, box, errors, selected) {
-		let c = false;
+	let c = false;
     if (lanes.getSource().getFeatures().length != 0 || laneMarkers.getSource().getFeatures().length != 0 || vectors.getSource().getFeatures().length != 0 || box.getSource().getFeatures().length != 0) {
          c = confirm("Loading a new map will clear all current work. Continue?");
     } else {
@@ -31,14 +31,14 @@ function loadFile(map, lanes, vectors, laneMarkers, laneWidths, box, errors, sel
 	loadType= "load";
 	calls = 0;
 
-   if (c == true) {
+   if (c === true) {
         lanes.getSource().clear();
         laneMarkers.getSource().clear();
         vectors.getSource().clear();
         box.getSource().clear();
-				errors.getSource().clear();
-				// deleteTrace();
-				laneWidths.getSource().clear();
+		errors.getSource().clear();
+		// deleteTrace();
+		laneWidths.getSource().clear();
 
         let ua = window.navigator.userAgent;
         let msie10 = ua.indexOf('MSIE ');
@@ -91,24 +91,24 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 	let laneMarkersLayerAsOL = new ol.format.GeoJSON().readFeatures(data.laneMarkers,{featureProjection: 'EPSG:3857', dataProjection: 'EPSG:3857'});
   	let stopLayerAsOL = new ol.format.GeoJSON().readFeatures(data.box, {featureProjection: 'EPSG:3857' , dataProjection: 'EPSG:3857'});
 	let lanesSource = new ol.source.Vector({
-    features: lanesLayerAsOL,
-  });
+    	features: lanesLayerAsOL,
+  	});
 
-  let vectorsSource = new ol.source.Vector({
-    features: vectorLayerAsOL,
-  });
+	let vectorsSource = new ol.source.Vector({
+		features: vectorLayerAsOL,
+	});
 
 	let laneMarkersSource = new ol.source.Vector({
-    features: laneMarkersLayerAsOL,
-  });
+    	features: laneMarkersLayerAsOL,
+  	});
 	let stopBoxSource  = new ol.source.Vector({
 		features: stopLayerAsOL
 	})
 
-//   console.log(data.vectors)
-  // console.log(data.lanes)
-  // console.log(data.laneMarkers)
-  // console.log(data.box)
+	// console.log(data.vectors)
+	// console.log(data.lanes)
+	// console.log(data.laneMarkers)
+	// console.log(data.box)
 	let c = false;
 	if ((lanesLayerAsOL.length != 0 || laneMarkersLayerAsOL.length != 0 || stopLayerAsOL.length != 0) && selected == 'parent'){
 		c = confirm("You are trying to load a child map using the parent open command. Functionality will be limited to parent controls. Continue?");
@@ -116,7 +116,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 		c = true;
 	}
   
-	if (c == true) {
+	if (c === true) {
     	vectors.setSource(vectorsSource);
 		lanes.setSource(lanesSource);
 		laneMarkers.setSource(laneMarkersSource);
@@ -132,7 +132,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 			if (feat[a].getProperties().marker.name == "Reference Point Marker") {
 				let intersectionID = feat[a].getProperties().intersectionID;
 				let regionID = feat[a].getProperties().regionID ? feat[a].getProperties().regionID : '';
-        console.log("intersection ID" + intersectionID + ", region ID" + regionID)
+        		console.log("intersection ID" + intersectionID + ", region ID" + regionID)
 			}
 		};
 
@@ -140,10 +140,10 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 		for (let i = 0; i < ft.length; i++) {
 			if ( typeof ft[i].getProperties().elevation == 'string') {
 				let temp = ft[i].getProperties().elevation;
-        // console.log(temp)
+        		// console.log(temp)
 				ft[i].getProperties().elevation = [];
 				for (let j = 0; j < ft[i].getGeometry().getCoordinates().length; j++) {
-          let latlon = new ol.proj.toLonLat(ft[i].getGeometry().getCoordinates()[j])
+          			let latlon = new ol.proj.toLonLat(ft[i].getGeometry().getCoordinates()[j])
 					ft[i].getProperties().elevation[j] = ({'value': temp, 'edited': false, 'latlon': latlon});
 				}
 			}
@@ -156,10 +156,15 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 				viewZoom = getCookie("isd_zoom");
 			}
 			map.getView().setCenter(center);
-      		map.getView().setZoom(viewZoom);
-			// unselectFeature(feat[0])
+			map.getView().setZoom(viewZoom);
+			let overlayLayersGroup = new ol.layer.Group({
+				title: 'Overlays',
+				layers: [vectors]
+			  });
+			unselectFeature(map, overlayLayersGroup, feat[0]);
 		}
 		catch (err) {
+			console.error(err)
 			console.log("No vectors to reset view");
 		}
 
@@ -168,22 +173,106 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 
 		toggleControlsOn('modify', lanes, vectors, laneMarkers, laneWidths, true);
 		toggleControlsOn('none', lanes, vectors, laneMarkers, laneWidths, true);
+		console.log("loaded map")
 	}
 
+}
+
+
+
+function loadKMLTrace() {
+
+	var c = confirm("Loading a new KML stencil will clear any other stencil. Continue?");
+	if (c === true) {
+		if (trace != undefined){
+			trace.destroy();
+		}
+
+		var ua = window.navigator.userAgent;
+		var msie10 = ua.indexOf('MSIE ');
+		var msie11 = ua.indexOf('Trident/');
+		var msie12 = ua.indexOf('Edge/');
+
+		if (msie10 > 0 || msie11 > 0 || msie12 > 0){
+			$('#open_file_modal').modal('show');
+			$('#fileToLoad2').one('change', onTraceChange); //Modal uses fileToLoad2
+		}
+		else {
+			$('#kmlToLoad').click();
+			$('#kmlToLoad').one('change', onTraceChange);
+		}
+
+	}
+}
+
+//03/2019 MF: Added new function for RSM
+function loadRSMTrace() {
+
+	var c = confirm("Loading a new RSM stencil will clear any other stencil. Continue?");
+	if (c === true) {
+		if (trace != undefined){
+			trace.destroy();
+		}
+
+		var ua = window.navigator.userAgent;
+		var msie10 = ua.indexOf('MSIE ');
+		var msie11 = ua.indexOf('Trident/');
+		var msie12 = ua.indexOf('Edge/');
+
+		if (msie10 > 0 || msie11 > 0 || msie12 > 0){
+			$('#open_file_modal').modal('show');
+			$('#fileToLoad2').one('change', onTraceChangeRSM); //Modal uses fileToLoad2
+		}
+		else {
+			$('#rsmToLoad').click();
+			$('#rsmToLoad').one('change', onTraceChangeRSM);
+		}
+
+	}
+}
+
+function loadUpdateFile(map, lanes, vectors, laneMarkers, laneWidths, box, selected) {
+	loadType= "update";
+	calls = 0;
+	for (let a = 0; a < vectors.getSource().getFeatures().length; a++) {
+		let feature = vectors.getSource().getFeatures()[a];
+		if (feature.get('marker').name === "Reference Point Marker") {
+			tempSpeedLimits = feature.get('speedLimitType');
+			tempLayerID = feature.get('layerID');
+		}
+	}
+
+	var ua = window.navigator.userAgent;
+	var msie10 = ua.indexOf('MSIE ');
+	var msie11 = ua.indexOf('Trident/');
+	var msie12 = ua.indexOf('Edge/');
+
+	if (msie10 > 0 || msie11 > 0 || msie12 > 0) {
+		$('#open_file_modal').modal('show');
+		$('#fileToLoad2').one('change', (event) => {
+			onchange(event, map, lanes, vectors, laneMarkers, box, laneWidths, selected)
+		});
+	}
+	else {
+		$('#fileToLoad').click();
+		$('#fileToLoad').one('change', (event) => {
+			onchange(event, map, lanes, vectors, laneMarkers, box, laneWidths, selected)
+		});
+	}
 }
 
 function toggleControlsOn(state, lanes, vectors, laneMarkers, laneWidths, isLoadMap) {
 	if( state == 'help'){
 		$("#instructions_modal").modal('show');
 	} else {
-	$("#instructions_modal").modal('hide');
-	toggleControl(state);
-        if( state == 'modify' || state == 'del') {
-            laneMarkers.getSource().clear();
-            // controls.del.unselectAll();
-        } else {
-            onFeatureAdded(lanes, vectors, laneMarkers, laneWidths, isLoadMap);
-        }
+		$("#instructions_modal").modal('hide');
+		toggleControl(state);
+		if( state == 'modify' || state == 'del') {
+			laneMarkers.getSource().clear();
+			// controls.del.unselectAll();
+		} else {
+			onFeatureAdded(lanes, vectors, laneMarkers, laneWidths, isLoadMap);
+		}
     }
 }
 
@@ -215,7 +304,6 @@ function saveMap(vectors, box, lanes, laneMarkers, selected)
 					let lanesFeatures = lanes.getSource().getFeatures();
 					let laneMarkersFeatures = laneMarkers.getSource().getFeatures();
 					for ( let f = 0; f < vectorsFeatures.length; f++) {
-						console.log(vectorsFeatures[f]);
 						if (vectorsFeatures[f].get("marker").name == "Reference Point Marker") {
 								revisionNum = $('#revision_num').val();
 								$('#revision').val(revisionNum);
@@ -316,6 +404,17 @@ function saveFile( data, vectors, selected )
 	}	
 }
 
+function deleteTrace(){
+	if (trace != undefined){
+		trace.destroy();
+		trace = undefined;
+		alert("Stencil Deleted");
+	}
+	else{
+	    alert("No stencil to delete.")
+	}
+}
+
 export {
     loadFile,
     loadMap,
@@ -323,5 +422,8 @@ export {
 	saveMap,
 	toggleControlsOn,
 	toggleControl,
-	revisionNum
+	revisionNum,
+	loadKMLTrace,
+	loadRSMTrace,
+	loadUpdateFile
 }

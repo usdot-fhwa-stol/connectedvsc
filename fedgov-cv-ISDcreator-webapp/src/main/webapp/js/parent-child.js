@@ -1,7 +1,7 @@
 /**
  * Created by martzth on 6/16/2015.
  */
-import {loadFile} from "./files.js"
+import {loadFile, loadUpdateFile} from "./files.js"
 
 /**
  * Purpose: switch between child and parent maps
@@ -22,7 +22,7 @@ $(function() {
 
 function openChildMap(map, lanes,vectors, laneMarkers, laneWidths, box, errors){
     selected = "child";
-    confirmClear();
+    confirmClear(lanes,vectors, laneMarkers, laneWidths, box, errors);
     $("#map-type").text("CHILD MAP");
     $(".builder").show();
     $(".encoder").show();
@@ -33,12 +33,12 @@ function openChildMap(map, lanes,vectors, laneMarkers, laneWidths, box, errors){
     $("#lane-tab-header").addClass("active");
     $("#lane-tab").addClass("active");
     $("#builder, #drawLanes, #measureLanes, #editLanes, #drawStopBar, #editStopBar, #deleteMarker, #approachControlLabel, #laneControlLabel, #measureControlLabel").show();
-    loadFile(map, lanes,vectors,laneMarkers , laneWidths, box, errors, selected);
+    loadFile(map, lanes, vectors, laneMarkers , laneWidths, box, errors, selected);
 }
 
-function openParentMap(){
+function openParentMap(map, lanes,vectors, laneMarkers, laneWidths, box, errors){
     selected = "parent";
-    confirmClear();
+    confirmClear(lanes, vectors, laneMarkers, laneWidths, box, errors);
     $("#map-type").text("PARENT MAP");
     $(".builder").show();
     $(".encoder").hide();
@@ -49,12 +49,12 @@ function openParentMap(){
     $("#intersection-tab-header").addClass("active");
     $("#intersection-tab").addClass("active");
     $("#dragSigns, #deleteMarker, #builder").show();
-    loadFile();
+    loadFile(map, lanes, vectors, laneMarkers, laneWidths, box, errors, selected);
 }
 
-function newParentMap(){
+function newParentMap(lanes, vectors, laneMarkers, laneWidths, box, errors){
     selected = "parent";
-    confirmClear();
+    confirmClear(lanes, vectors, laneMarkers, laneWidths, box, errors);
     $("#map-type").text("PARENT MAP");
     $(".builder").show();
     $(".encoder").hide();
@@ -67,9 +67,9 @@ function newParentMap(){
     $("#dragSigns, #deleteMarker, #builder").show();
 }
 
-function newChildMap(){
+function newChildMap(map, lanes,vectors, laneMarkers, laneWidths, box, errors){
     selected = "child";
-    confirmClear();
+    confirmClear(lanes,vectors, laneMarkers, laneWidths, box, errors);
     alert("Use the file dialog to open a parent map.")
     $("#map-type").text("CHILD MAP");
     $(".builder").show();
@@ -81,42 +81,44 @@ function newChildMap(){
     $("#lane-tab-header").addClass("active");
     $("#lane-tab").addClass("active");
     $("#builder, #drawLanes, #measureLanes, #editLanes, #drawStopBar, #editStopBar, #deleteMarker, #approachControlLabel, #laneControlLabel, #measureControlLabel").show();
-    loadFile();
+    loadFile(map, lanes,vectors, laneMarkers, laneWidths, box, errors, selected);
 }
 
-function updateChildParent(){
+function updateChildParent(map, lanes, vectors, laneMarkers, laneWidths, box){
     selected = "child";
     var c = confirm("This will reset the verified point and marker. Continue?");
     if (c == true) {
         alert("Use the file dialog to select the parent map you wish to use to replace the current markers.")
-        loadUpdateFile();
+        loadUpdateFile(map, lanes, vectors, laneMarkers, laneWidths, box, selected);
     }
 }
 
 
-function confirmClear() {
+function confirmClear(lanes, vectors, laneMarkers, laneWidths, box, errors) {
+    let lanesFeatures = lanes.getSource().getFeatures();
+    let laneMarkersFeatures = laneMarkers.getSource().getFeatures();
+    let vectorsFeatures = vectors.getSource().getFeatures();
+    let boxFeatures = box.getSource().getFeatures();
+    let r = true;
+    if (lanesFeatures.length != 0 || laneMarkersFeatures.length != 0 || vectorsFeatures.length != 0 || boxFeatures.length != 0) {
+        r = confirm("This will reset the map and delete any progress. Continue?");
+    }
 
-    // if (lanes.features.length != 0 || laneMarkers.features.length != 0 || vectors.features.length != 0 || box.features.length != 0) {
-    //     var r = confirm("This will reset the map and delete any progress. Continue?");
-    // } else {
-    //     r = true;
-    // }
+    if (r === true) {
+        lanes.getSource().clear();
+        laneMarkers.getSource().clear();
+        vectors.getSource().clear();
+        box.getSource().clear();
+        laneWidths.getSource().clear();
+        errors.getSource().clear();
+        // deleteTrace();
 
-    // if (r == true) {
-    //     lanes.destroyFeatures();
-    //     laneMarkers.destroyFeatures();
-    //     vectors.destroyFeatures();
-    //     box.destroyFeatures();
-    //     errors.clearMarkers();
-    //     laneWidths.destroyFeatures();
-    //     deleteTrace();
-
-    //     $("#btn-group").children().hide();
-    //     $(".builder").hide();
-    //     $(".encoder").hide();
-    //     $("#attributes").hide();
-    //     $("#help").show();
-    // }
+        $("#btn-group").children().hide();
+        $(".builder").hide();
+        $(".encoder").hide();
+        $("#attributes").hide();
+        $("#help").show();
+    }
 
 }
 

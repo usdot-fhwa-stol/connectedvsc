@@ -81,14 +81,12 @@
 					<li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">File <span class="caret"></span></a>
 			          <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" onclick="newParentMap()">New Parent Map</a></li>
-					    <li><a href="#" onclick="newChildMap()">New Child Map</a></li>
-						<li><a href="#" onclick="updateChildParent()">Update Child Markers</a></li>
+                        <li><a href="#" id="newParentMap">New Parent Map</a></li>
+					    <li><a href="#" id = "newChildMap">New Child Map</a></li>
+						<li><a href="#" id="updateChildParent">Update Child Markers</a></li>
                         <li class="divider"></li>
-                        <!-- <li id="openChild"><a href="#" onclick="openChildMap();">Open Child Map</a></li> -->
-                        <li id="openChild"><a href="#" >Open Child Map</a></li>
-						<li id="openParent"><a href="#" onclick="openParentMap();">Open Parent Map</a></li>
-			            <!-- <li><a href="#" onclick="saveMap();">Save</a></li> -->
+                        <li id="openChild"><a href="#">Open Child Map</a></li>
+						<li id="openParent"><a href="#">Open Parent Map</a></li>
 			            <li id = "saveMap"><a href="#" >Save</a></li>
 			            <li><input type="file" id="fileToLoad"></li>
 						<li class="divider"></li>
@@ -155,7 +153,7 @@
 
     <!-- Builder Tools -->
 	<div id="sidebar" class="nano">
-		<div class="close" onclick="toggle();">x</div>
+		<div class="close builder">x</div>
 		<h4>Builder</h4>
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs" id="poi-tabs">

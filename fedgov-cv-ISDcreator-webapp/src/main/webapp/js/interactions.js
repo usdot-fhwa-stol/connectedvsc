@@ -1,6 +1,6 @@
-import { populateAttributeWindow, populateRefWindow, referencePointWindow, hideRGAFields, toggleLaneTypeAttributes, updateDisplayedLaneAttributes, rebuildConnections } from "./utils.js";
+import { populateAttributeWindow, populateRefWindow, referencePointWindow, hideRGAFields, toggleLaneTypeAttributes, updateDisplayedLaneAttributes, rebuildConnections, rebuildSpeedForm, removeSpeedForm, addSpeedForm } from "./utils.js";
 
-function laneSelectInteractionCallback(evt, overlayLayers, lanes, laneWidths, deleteMode, selected){
+function laneSelectInteractionCallback(evt, overlayLayersGroup, lanes, laneWidths, deleteMode, selected){
     if (evt.selected?.length > 0) {
       console.log('Lane feature selected:', evt.selected[0]);
     }else{
@@ -10,7 +10,7 @@ function laneSelectInteractionCallback(evt, overlayLayers, lanes, laneWidths, de
 
     let selectedLane = evt.selected[0];
     // Find the layer by checking which vector source contains the feature
-    const laneLayer = overlayLayers.getLayers().getArray().find(layer=>{
+    const laneLayer = overlayLayersGroup.getLayers().getArray().find(layer=>{
       return selectedLane && layer instanceof ol.layer.Vector && layer.getSource().hasFeature(selectedLane)
     })
 
@@ -67,19 +67,7 @@ function laneSelectInteractionCallback(evt, overlayLayers, lanes, laneWidths, de
 }
 
 
-function vectorAddInteractionCallback(evt){
-  if (evt.selected?.length > 0) {
-    console.log('Vector feature added:', evt.selected[0]);
-  }else{
-    console.log("No vector feature added, ignore");
-    return;
-  }
-
-  let selectedVector = evt.selected[0];
-  updateFeatureLocation(selectedVector);
-}
-
-function laneMarkersInteractionCallback(evt, overlayLayers, lanes, laneConnections, deleteMode, selected) {
+function laneMarkersInteractionCallback(evt, overlayLayersGroup, lanes, laneConnections, deleteMode, selected, speedForm) {
   if (evt.selected?.length > 0) {
     console.log('Lane marker feature selected:', evt.selected[0]);
 
@@ -89,7 +77,7 @@ function laneMarkersInteractionCallback(evt, overlayLayers, lanes, laneConnectio
     } else {
       $(".selection-panel").text('Lane Configuration');
     }
-    const laneMarkersLayer = overlayLayers.getLayers().getArray().find(layer=>{
+    const laneMarkersLayer = overlayLayersGroup.getLayers().getArray().find(layer=>{
       return selectedMarker && layer instanceof ol.layer.Vector && layer.getSource().hasFeature(selectedMarker)
     })
     // delete marker and return
@@ -204,44 +192,35 @@ function laneMarkersInteractionCallback(evt, overlayLayers, lanes, laneConnectio
     }
              
     if (! selectedMarker.get("signalPhase")) {
-        // signalPhase = null;
         $('#phase .dropdown-toggle').html("Select a Signal Phase <span class='caret'></span>");
     } else {
-        // signalPhase = selectedMarker.attributes.signalPhase;
         $('#phase .dropdown-toggle').html(selectedMarker.get("signalPhase") + " <span class='caret'></span>");
         $('#phase' + selectedMarker.get("signalPhase").substring(1, 2)).show();
     }
     
     if (! selectedMarker.get("stateConfidence") ) {
-            // stateConfidence = null;
-            $('#confidence .dropdown-toggle').html("Select a Confidence <span class='caret'></span>");
-        } else {
-            // stateConfidence = selectedMarker.attributes.stateConfidence;
-            $('#confidence .dropdown-toggle').html(selectedMarker.get("stateConfidence") + " <span class='caret'></span>");
-        }
-
-        if (! selectedMarker.get("laneNumber")) {
-            // laneNum = null;
-            $('#lane_number .dropdown-toggle').html("Select a Lane Number <span class='caret'></span>");
-        } else {
-            // laneNum = selectedMarker.attributes.laneNumber;
-            $('#lane_number .dropdown-toggle').html(selectedMarker.get("laneNumber") + " <span class='caret'></span>");
-        }
-        
-        if (! selectedMarker.get("laneType") ) {
-            // laneType = null;
-            $('#lane_type .dropdown-toggle').html("Select a Lane Type <span class='caret'></span>");
-        } else if (  selectedMarker.get("number") == 0 ) {
-            // laneType = selectedMarker.attributes.laneType;
-            $('#lane_type .dropdown-toggle').html(selectedMarker.get("laneType")  + " <span class='caret'></span>");
-            toggleLaneTypeAttributes(selectedMarker.get("laneType") );
+        $('#confidence .dropdown-toggle').html("Select a Confidence <span class='caret'></span>");
+    } else {
+        $('#confidence .dropdown-toggle').html(selectedMarker.get("stateConfidence") + " <span class='caret'></span>");
     }
 
-    if (!lanes.getSource().getFeatures()[selectedMarker.get("lane")].get("speedLimitType")) {
-      // removeSpeedForm();
-      // addSpeedForm();
+    if (! selectedMarker.get("laneNumber")) {
+        $('#lane_number .dropdown-toggle').html("Select a Lane Number <span class='caret'></span>");
     } else {
-      // rebuildSpeedForm(lanes.getSource().getFeatures()[selectedMarker.get("lane")].get("speedLimitType"));
+        $('#lane_number .dropdown-toggle').html(selectedMarker.get("laneNumber") + " <span class='caret'></span>");
+    }
+    
+    if (! selectedMarker.get("laneType") ) {
+        $('#lane_type .dropdown-toggle').html("Select a Lane Type <span class='caret'></span>");
+    } else if (  selectedMarker.get("number") == 0 ) {
+        $('#lane_type .dropdown-toggle').html(selectedMarker.get("laneType")  + " <span class='caret'></span>");
+        toggleLaneTypeAttributes(selectedMarker.get("laneType") );
+    }
+    if (!lanes.getSource().getFeatures()[selectedMarker.get("lane")].get("speedLimitType")) {
+      removeSpeedForm(speedForm);
+      addSpeedForm(speedForm);
+    } else {
+      rebuildSpeedForm(speedForm, lanes.getSource().getFeatures()[selectedMarker.get("lane")].get("speedLimitType"));
     }
           
     $('#shared_with').multiselect('deselectAll', false);
@@ -288,8 +267,6 @@ function laneMarkersInteractionCallback(evt, overlayLayers, lanes, laneConnectio
                   }
               }
           }
-          console.log(startPoint)
-          console.log(endPoint)
           let angleDeg = 0;
           if(typeof startPoint !== 'undefined' && typeof endPoint !== 'undefined') {
               //Q III
@@ -368,18 +345,20 @@ function laneMarkersInteractionCallback(evt, overlayLayers, lanes, laneConnectio
             $("#scale-Y").val(selectedMarker.get("scaleY"));
         }
     }
-  } else if(evt.deselected?.length > 0) {
+    return selectedMarker;
+  } else if (evt.deselected?.length > 0) {
     console.log('Lane marker feature deselected:', evt.deselected[0]);
     $("#attributes").hide();
     // resetLaneAttributes();
     laneConnections.getSource().clear();
+    return null;
   } else {
     console.log("No lane marker feature selected, ignore");
-    return;
+    return null;
   }
 }
 
-function vectorSelectInteractionCallback(evt, overlayLayers, lanes, deleteMode, selected, rgaEnabled){
+function vectorSelectInteractionCallback(evt, overlayLayersGroup, lanes, deleteMode, selected, rgaEnabled, speedForm){
   if (evt.selected?.length > 0) {
     console.log('Vector feature selected:', evt.selected[0]);
     let selectedVector = evt.selected[0];
@@ -391,31 +370,44 @@ function vectorSelectInteractionCallback(evt, overlayLayers, lanes, deleteMode, 
       image: new ol.style.Icon(IconInfo)
     }));
 
-    const vectorLayer = overlayLayers.getLayers().getArray().find(layer=>{
+    const vectorLayer = overlayLayersGroup.getLayers().getArray().find(layer=>{
       return selectedVector && layer instanceof ol.layer.Vector && layer.getSource().hasFeature(selectedVector)
     })
 
     if (deleteMode){
       deleteMarker(vectorLayer, selectedVector, lanes, selected);
     } else {
-      updateFeatureLocation( selectedVector, selected, rgaEnabled);
+      updateFeatureLocation( selectedVector, selected, rgaEnabled, speedForm);
     }   
-
+    return selectedVector;
   }else if (evt.deselected?.length >0 ){
     console.log('Vector feature deselected:', evt.deselected[0]);
     $("#attributes").hide();
+    return null;
   }else{
     console.log("No vector feature selected, ignore");
-  }
-  
+    return null;
+  }  
 }
 
+function vectorAddInteractionCallback(evt, selected, rgaEnabled, speedForm) {
+  if (evt.feature) {
+    console.log('Vector feature added:', evt.feature);
+  }else{
+    console.log("No vector feature added, ignore");
+    return null;
+  }
 
-function boxSelectInteractionCallback(evt, overlayLayers, lanes, deleteMode, selected) {
+  let selectedVector = evt.feature;
+  updateFeatureLocation(selectedVector, selected, rgaEnabled, speedForm);
+  return selectedVector;
+}
+
+function boxSelectInteractionCallback(evt, overlayLayersGroup, lanes, deleteMode, selected) {
   if (evt.selected?.length > 0) {
     console.log('box/stopBar feature selected:', evt.selected[0]);
     let selectedBox = evt.selected[0];
-    const boxLayer = overlayLayers.getLayers().getArray().find(layer=>{
+    const boxLayer = overlayLayersGroup.getLayers().getArray().find(layer=>{
       return selectedBox && layer instanceof ol.layer.Vector && layer.getSource().hasFeature(selectedBox)
     })
     if (deleteMode) {
@@ -493,11 +485,14 @@ function boxSelectInteractionCallback(evt, overlayLayers, lanes, deleteMode, sel
       // approachID = selectedBox.get("approachID");
       $('#approach_name .dropdown-toggle').html(selectedBox.get("approachID") + " <span class='caret'></span>");
     }
+    return selectedBox;
   }else if (evt.deselected?.length >0 ){
     console.log('box/stopBar feature deselected:', evt.deselected[0]);
     $("#attributes").hide();
+    return null;
   } else {
     console.log("No box/stopBar feature selected, ignore");
+    return null;
   }
 }
   
@@ -507,8 +502,8 @@ function boxSelectInteractionCallback(evt, overlayLayers, lanes, deleteMode, sel
  * @params  the feature and it's metadata
  * @event changes the location on the map by redrawing
  */
-function updateFeatureLocation( feature, selected, rgaEnabled) {
-	referencePointWindow(feature, selected, rgaEnabled);
+function updateFeatureLocation( feature, selected, rgaEnabled, speedForm) {
+	referencePointWindow(feature, selected, rgaEnabled, speedForm);
   feature.set("LonLat", new ol.proj.toLonLat(feature.getGeometry().getCoordinates()));
 	$('#long').val(feature.get("LonLat")[0]);
   $('#lat').val(feature.get("LonLat")[1]);

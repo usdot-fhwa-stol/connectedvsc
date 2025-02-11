@@ -1,5 +1,7 @@
 
 let numRows = -1;
+let speedLimits = [];
+let tmp_lane_attributes = {}
 import { getElev, getNearestIntersectionJSON } from "./api.js";
 import { toggleControlsOn } from "./files.js";
 
@@ -60,7 +62,7 @@ function add_rga_fields_validation(enable=true){
  * @event loads the sidebar and all of the metadata into the forms
  */
 
-function referencePointWindow(feature, selected, rgaEnabled){
+function referencePointWindow(feature, selected, rgaEnabled, speedForm){
   $("#attributes").hide();
   //---------------------------------------
   $(".selection-panel").text('Reference Point Configuration');
@@ -234,10 +236,10 @@ function referencePointWindow(feature, selected, rgaEnabled){
   }
   
   if (! feature.get("speedLimitType")) {
-    //  removeSpeedForm();
-    //  addSpeedForm();
+     removeSpeedForm(speedForm);
+     addSpeedForm(speedForm);
   } else {
-    //  rebuildSpeedForm(feature.get("speedLimitType"));
+     rebuildSpeedForm(feature.get("speedLimitType"));
   }
 
   $("#attributes").show();
@@ -247,10 +249,9 @@ function referencePointWindow(feature, selected, rgaEnabled){
 async function populateRefWindow(feature, lat, lon)
 {
   getNearestIntersectionJSON(feature, lat, lon);
-
+  let elev = -9999;
 	if(!feature.get("elevation")){
-    let elev = getElev(lat, lon);
-    
+    elev = await getElev(lat, lon);
     if (!feature.get("elevation")?.value) {
       $('#elev').val(elev);
     }
@@ -284,62 +285,84 @@ function toggleLaneTypeAttributes(attribute, values) {
 		$('.' + laneTypeOptions[i] + '_type_attributes').parent().hide();
 	}
 	
-	updateTypeAttributes(attribute)
+	let typeAttribute_object = updateTypeAttributes(attribute);
 	
 	if ( $('.' + attribute + '_type_attributes').length === 0 ){
 	    $('#' + attribute + '_type_attributes').multiselect({
 	        onChange: function(option, checked){
-	            updateTypeAttributes(attribute)
+            typeAttribute_object = updateTypeAttributes(attribute)
 	        },
 	        maxHeight: 200,
 	        buttonClass: attribute + '_type_attributes btn btn-default',
 	        buttonText: function(options, select) {
-	            if (options.length === 0) {
-	                return 'Select '+ attribute + ' Type Attribute'
-	            } else if (options.length > 1) {
-	                return options.length + ' selected';
-	            } else {
-	                let labels = [];
-	                options.each(function() {
-	                    if ($(this).attr('label') !== undefined) {
-	                        labels.push($(this).attr('label'));
-	                    }
-	                    else {
-	                        labels.push($(this).html());
-	                    }
-	                });
-	                return labels.join(', ') + '';
-	            }
+            if (options.length === 0) {
+              return 'Select '+ attribute + ' Type Attribute'
+            } else if (options.length > 1) {
+              return options.length + ' selected';
+            } else {
+              let labels = [];
+              options.each(function() {
+                if ($(this).attr('label') !== undefined) {
+                    labels.push($(this).attr('label'));
+                }
+                else {
+                    labels.push($(this).html());
+                }
+              });
+              return labels.join(', ') + '';
+            }
 	        }
 	    });
 	}
 	
 	$('#' + attribute + '_type_attributes').multiselect('deselectAll', false);
-    $('#' + attribute + '_type_attributes').multiselect("refresh");
-    $('.' + attribute + '_type_attributes').parent().show();
-    $("label[for='lane_type_attributes']").show();
-    $(".lane_type_attributes").show();
+  $('#' + attribute + '_type_attributes').multiselect("refresh");
+  $('.' + attribute + '_type_attributes').parent().show();
+  $("label[for='lane_type_attributes']").show();
+  $(".lane_type_attributes").show();
+  return typeAttribute_object;
 }
 
 function updateSharedWith(){
-    sharedWith_object = $('#shared_with option:selected').map(function(a, item){return item.value;})
+    return $('#shared_with option:selected').map(function(a, item){return item.value;})
 }
 
 function updateTypeAttributes(attribute) {
-	// typeAttributeName = attribute;
-	// typeAttribute_object = $('#' + attribute + '_type_attributes option:selected').map(function(a, item){return item.value;})
+  let typeAttribute_object = $('#' + attribute + '_type_attributes option:selected').map(function(a, item){ return item.value;})
+  return typeAttribute_object;
 }
 
+// sets the temporary lane attributes to the actual lane object
+function setLaneAttributes(selectedMarker) {
+  if( tmp_lane_attributes == null) {
+      // no attributes to add
+      return;
+  }
+  if( !selectedMarker.get('lane_attributes') ) {
+      selectedMarker.set('lane_attributes',{});
+  }
 
-function removeLaneAttributes( attribute ) {
+  for( let attribute in tmp_lane_attributes ) {
+      selectedMarker.get('lane_attributes')[attribute] = tmp_lane_attributes[attribute]
+  }
+
+  resetLaneAttributes()
+}
+
+// clears the temporary lane objects
+function resetLaneAttributes() {
+  tmp_lane_attributes = {};
+}
+
+function removeLaneAttributes(selectedMarker, attribute ) {
   let attrId = parseInt(attribute.id.match(/(\d+)$/)[0], 10);
   if( tmp_lane_attributes[attrId] ) {
       delete tmp_lane_attributes[attrId];
       return
   }
-  if( selectedMarker.attributes['lane_attributes'] )
-      if( selectedMarker.attributes['lane_attributes'][attrId] )
-          delete selectedMarker.attributes['lane_attributes'][attrId];
+  if( selectedMarker.get('lane_attributes') )
+      if( selectedMarker.get('lane_attributes')[attrId] )
+          delete selectedMarker.get('lane_attributes')[attrId];
 }
 
 function updateDisplayedLaneAttributes( feature ){
@@ -368,6 +391,26 @@ function removeDisplayedLaneAttributes(){
       '<p class="help-block text-center">drop content here</p>');
 }
 
+
+function saveConnections(selectedMarker) {
+  let nodeObject = [];
+  for(let i = 0; i <= numRows; i++) {
+      let ids = $('#maneuvers' + i + ' > ul > li > img');
+    let maneuvers = [];
+    for(let j = 0; j < ids.length; j++) {
+        maneuvers.push(ids[j].id.match(/\d+$/g)[0]);
+    }
+    nodeObject.push({
+        connectionId: $('#connectionId' + i + ' .dropdown-toggle').text().replace('\u200b', ""),
+        remoteID: $('input[name="remoteID' + i + '"]').val(),
+        fromLane: selectedMarker.get("laneNumber"),
+        toLane: $('input[name="toLane' + i + '"]').val(),
+        signal_id: $('input[name="signal_id' + i + '"]').val(),
+        maneuvers: maneuvers
+    });
+  }
+  return nodeObject;
+}
 /**
  * Purpose: makes the attributes dragable
  * @params  element
@@ -407,23 +450,31 @@ function rebuildConnections(connections) {
   if (connections === null || connections === undefined || connections.length < 1) {
       addRow(null, null);
   } else {
-      for(var i = 0; i < connections.length; i++) {
-          addRow(null, connections[i]);
-      }
+    for(let i = 0; i < connections.length; i++) {
+        addRow(null, connections[i]);
+    }
   }
 }
 
 
-function addRow(readOnly, valueSets) {
+async function addRow(readOnly, valueSets) {
   let rowHtml;
-  $.get("js/row.html", function (data) {
-    rowHtml = data;
-  })
+  let response = await fetch("js/row.html");
+  rowHtml = await response.text();
   $('#tab_intersects tbody').append(rowHtml);
   numRows++;
   changeRow('New', numRows, readOnly, valueSets);
   populateConnectionIdDropdown(numRows)
   makeDroppable(numRows);
+}
+
+function deleteRow(rowNum) {
+  console.log("delete row " + rowNum);
+  $('#row' + rowNum).remove();
+  for(let i = rowNum + 1; i <= numRows; i++) {
+      changeRow(i, i - 1, null, null);
+  }
+  numRows--;
 }
 
 
@@ -439,19 +490,18 @@ function changeRow(oldVal, newVal, readOnly, valueSets) {
   $('input[name="signal_id' + oldVal + '"]').attr('name', 'signal_id' + newVal);
   $('#maneuvers' + oldVal).attr('id', 'maneuvers' + newVal);
   $('#attr_droppable' + oldVal).attr('id', 'attr_droppable' + newVal);
-  $('#delete' + oldVal).attr('onclick', 'deleteRow(' + newVal + ')')
-      .attr('id', 'delete' + newVal);
+  $('#rowDelete' + oldVal).attr('id', 'rowDelete' + newVal);
   if (readOnly && readOnly !== undefined) {
-      for (var i = 0; i < readOnly.length; i++) {
+      for (let i = 0; i < readOnly.length; i++) {
           $('input[name="' + readOnly[i] + newVal + '"').prop('readonly', true);
       }
   }
   if (valueSets && valueSets !== undefined) {
-      for (var set in valueSets) {
+      for (let set in valueSets) {
           if (valueSets.hasOwnProperty(set)) {
               if (set === 'maneuvers') {
-                  for (var k = 0; k < valueSets[set].length; k++) {
-                      for(var j = 0; j < lane_attributes.length; j++) {
+                  for (let k = 0; k < valueSets[set].length; k++) {
+                      for(let j = 0; j < lane_attributes.length; j++) {
                           if (lane_attributes[j].id.toString() === valueSets[set][k]){
                               addLaneManeuversToContainer($('#attr_droppable' + newVal),
                                   '<img id="lane_img_'+ newVal +'_' + lane_attributes[j].id + '" class="dragged-img" src="'+ lane_attributes[j].img_src +'">');
@@ -469,21 +519,57 @@ function changeRow(oldVal, newVal, readOnly, valueSets) {
 }
 
 
+/**
+ * Purpose: series of functions that allow the attribute container to work
+ * @params  element, container
+ * @event allows icon to be dragged and dropped onto the other sidebar, plus trash
+ */
+
+function addLaneManeuversToContainer(container, attribute) {
+  for(let i = 0; i < container.children().length; i++) {
+      if (container.children()[i].id === attribute.id) {
+          return;
+      }
+  }
+  container.append( attribute );
+}
+
+
+// adds the attribute (image) to the displayed container
+function addLaneAttributeToContainer( container, attribute ) {
+  let attr_id = parseInt(attribute.id.match(/(\d+)$/)[0], 10);
+  let lane_attr = lane_attributes[attr_id];
+
+  // if attribute already exists in the lane attributes, skip, do not add
+  if (selectedMarker.get('lane_attributes') &&
+      selectedMarker.get('lane_attributes')[attr_id]) {
+      return;
+  }
+
+  // skip adding the attribute if it's already in the temp attributes, otherwise add it
+  if(!tmp_lane_attributes[attr_id] ) {
+      tmp_lane_attributes[attr_id] = lane_attr
+  }
+  else { return; }
+
+  container.append( attribute );
+}
+
 function populateConnectionIdDropdown(rowId) {
 	// Add an empty option at the top. Use a non-breaking space(uni-code 200b), to force the
 	// entry in the dropdown menu to maintain the same height as the rest of the list.
 	$('#connectionId' + rowId + ' .dropdown-menu').append(
-    		$('<li><a href="#">\u200b</a></li>').click(function(){
-    			    var selText = $(this).children('a').text();
-    			    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+'<span class="caret"></span>');
-    		    }))
-    for(let i = 1; i <= 255; i++) {
-        $('#connectionId' + rowId + ' .dropdown-menu').append(
-        		$('<li><a href="#">' + i + '</a></li>').click(function(){
-        			    var selText = $(this).children('a').text();
-        			    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+'<span class="caret"></span>');
-        		    }))
-    }
+    $('<li><a href="#">\u200b</a></li>').click(function(){
+    let selText = $(this).children('a').text();
+    $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+'<span class="caret"></span>');
+  }))
+  for(let i = 1; i <= 255; i++) {
+    $('#connectionId' + rowId + ' .dropdown-menu').append(
+    $('<li><a href="#">' + i + '</a></li>').click(function(){
+      let selText = $(this).children('a').text();
+      $(this).parents('.btn-group').find('.dropdown-toggle').html(selText+'<span class="caret"></span>');
+    }))
+  }
 }
 
 
@@ -495,7 +581,7 @@ function populateConnectionIdDropdown(rowId) {
 
 function makeDroppable (id){
   //--- Drop Functionality
-  var containerName = "attr_droppable";
+  let containerName = "attr_droppable";
   if (id !== null && id !== undefined){
       containerName += id;
   }
@@ -509,8 +595,8 @@ function makeDroppable (id){
       },
       drop: function( event, ui ) {
           $(this).find( "p").remove();
-          var container = $(this);
-          var attr = $(ui.helper.children());
+          let container = $(this);
+          let attr = $(ui.helper.children());
           if (id !== null && id !== undefined) {
               attr[0].id = "lane_img_" + id + "_" + attr[0].id.match(/\d+$/g)[0];
           }
@@ -534,7 +620,7 @@ function makeDroppable (id){
   $('.trash_droppable').droppable({
       accept: ".dragged-img",
       drop: function( event, ui ) {
-          var attr = $(ui.helper)[0];
+          let attr = $(ui.helper)[0];
           attr.remove();
           removeLaneAttributes(attr);
       }
@@ -798,6 +884,84 @@ function toDeg(radians){
   return radians * (180/pi);
 }
 
+
+/*****************************************
+ * Speed Limit Values
+ * Methods
+ *****************************************/
+
+
+function removeSpeedForm(speedForm) {
+    speedForm.removeAllForms();
+}
+
+function addSpeedForm(speedForm) {
+    speedForm.addForm();
+}
+
+function rebuildSpeedForm(speedForm, speedLimitArray) {
+    let results = speedLimitArray.length
+    for (let i = 0; i < results; i++) {
+        speedForm.addForm();
+        let forms = speedForm.getForms(i);
+        forms[i].inject(
+            {'velocity': speedLimitArray[i].velocity}
+        );
+        $("#speedForm_"+ i + "_speedLimitType").val(speedLimitArray[i].speedLimitType)
+    }
+    resetSpeedDropdowns(speedForm);
+    speedLimits = [];
+}
+
+function saveSpeedForm(speedForm) {
+    let forms = (speedForm.getForms()).length;
+    for (let i = 0; i < forms; i++) {
+        speedLimits.push({
+            speedLimitType: $("#speedForm_"+ i + "_speedLimitType option:selected").text(),
+            velocity: $("#speedForm_" + i + "_velocity").val()
+        });
+    }
+    removeSpeedForm(speedForm);
+    return speedLimits;
+}
+
+function resetSpeedDropdowns(speedForm){
+    $("[id*=speedLimitType] > option").each(function() {
+        if ($(this).val() !== "") {
+            $(this).prop('disabled', false);
+        }
+    });
+    let forms = (speedForm.getForms()).length;
+    for (let i = 0; i < forms; i++) {
+        let current = $("#speedForm_"+ i + "_speedLimitType option:selected").text();
+        $("[id*=speedLimitType] option[value='"+current+"']").prop('disabled', true);
+    }
+}
+
+function getSelectedInteraction(map, selectedFeature){
+  return map.getInteractions().getArray().find(interaction => {
+    return selectedFeature && interaction instanceof ol.interaction.Select && interaction.getFeatures().getArray().includes(selectedFeature);
+  })
+}
+
+function getSelectedLayer(overlayLayersGroup, selectedFeature){
+  return overlayLayersGroup.getLayers().getArray().find(layer => {
+    return selectedFeature && layer instanceof ol.layer.Vector && layer.getSource().hasFeature(selectedFeature);
+  })
+}
+
+function unselectFeature(map, overlayLayersGroup,  selectedFeature ) {
+  resetLaneAttributes()
+	if( getSelectedLayer(overlayLayersGroup, selectedFeature) != null ) {
+    console.log("unselecting ", selectedFeature)
+    let selectedInteraction = getSelectedInteraction(map, selectedFeature);
+    if (selectedInteraction) {
+      selectedInteraction.getFeatures().clear(); 
+    }		
+	}
+}
+
+
 export {
   getCookie,
   isOdd,
@@ -822,7 +986,16 @@ export {
   updateDisplayedLaneAttributes,
   removeLaneAttributes,
   rebuildConnections,
-  numRows,
   makeDraggable,
-  makeDroppable
+  makeDroppable,
+  setLaneAttributes,
+  saveConnections,
+  addSpeedForm,
+  resetSpeedDropdowns,
+  saveSpeedForm,
+  rebuildSpeedForm,
+  unselectFeature,
+  removeSpeedForm,
+  addRow,
+  deleteRow
 }
