@@ -1,6 +1,8 @@
 
-const google_elevation_url = '/msp/googlemap/api/elevation';
-const intersection_url = "//api.geonames.org/findNearestIntersectionJSON"
+const google_elevation_url = 'http://localhost:8080/googlemap/api/elevation';
+const google_places_autocomplete_url = 'http://localhost:8080/googlemap/api/places/autocomplete';
+const google_places_searchText_url = 'http://localhost:8080/googlemap/api/places/searchText'; 
+const intersection_url = "/api.geonames.org/findNearestIntersectionJSON"
 async function getElevation(dot, latlon, i, j, callback){
     try {
       const response = await fetch(google_elevation_url + "/" + latlon.lat + '/' + latlon.lon);
@@ -19,7 +21,7 @@ async function getElevation(dot, latlon, i, j, callback){
 
 async function getElev(lat, lon) {
   try {
-    const response = await fetch(google_elevation_url + "/" + lat + '/' + lon);
+    const response = await fetch(google_elevation_url + "/" + lat + '/' + lon,{mode: 'cors'});
     const result = await response.json();
     let elev = result?.elevation;
     if (elev == null || elev == undefined) {
@@ -47,7 +49,7 @@ async function getNearestIntersectionJSON(feature, lat, lon) {
       console.log("intersection not found");      
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching nearest intersection");
   }
 }
 
@@ -61,7 +63,7 @@ async function populateAutocompleteSearchPlacesDropdown(map, inputText){
   let search_place_dropdown = $("#dropdown-menu-search");
   await $.ajax({
               type: 'POST',
-              url: "/msp/googlemap/api/places/autocomplete",
+              url: google_places_autocomplete_url,
               data: JSON.stringify({inputText: inputText}),
               headers: {
                   'Content-Type': 'application/json'
@@ -76,7 +78,9 @@ async function populateAutocompleteSearchPlacesDropdown(map, inputText){
                   for(let key in suggestions){
                       let suggestedResult = suggestions[key]["placePrediction"]["text"]["text"];
                       let place_item = $("<li><a><i class=\"fa fa-map-marker\" style=\"cursor: not-allowed\"></i> <span style=\"margin-left: 5px; cursor: pointer; width: 200px; display: inline-flex; overflow: hidden; text-overflow: ellipsis;\">"+suggestedResult+"</span></a></li> ");
-                      place_item.click(map, clickPlaceHandler);
+                      place_item.click((event) => {
+                          clickPlaceHandler(map, event);
+                      });
                       search_place_dropdown.append(place_item);
                   }
                   search_place_dropdown.show();
@@ -97,7 +101,7 @@ function clickPlaceHandler(map, event){
   if(place.length>0){
       $("#address-search").val(place);
       $("#dropdown-menu-search").hide();
-      updatePlaceLocationView(place);
+      updatePlaceLocationView(map, place);
   }
 }
 
@@ -108,7 +112,7 @@ function clickPlaceHandler(map, event){
 */
 function updatePlaceLocationView(map, inputPlaceText){
   $.ajax({
-      url: "/msp/googlemap/api/places/searchText",
+      url: google_places_searchText_url,
       data: JSON.stringify({inputText: inputPlaceText}),
       type: 'POST',
       headers: {
@@ -121,7 +125,7 @@ function updatePlaceLocationView(map, inputPlaceText){
               let search_lon = location.lng;
               setCookie("isd_latitude", search_lat, 365);
               setCookie("isd_longitude", search_lon, 365);
-              setCookie("isd_zoom", map.getZoom(), 365);
+              setCookie("isd_zoom", map.getView().getZoom(), 365);
               map.getView().setCenter(new ol.proj.fromLonLat([search_lon, search_lat]), 18);
           }
           catch (err) {

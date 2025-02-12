@@ -1,7 +1,7 @@
 /**
  * Created by martzth on 6/16/2015.
  */
-import {loadFile, loadUpdateFile} from "./files.js"
+import {deleteTrace, loadFile, loadUpdateFile} from "./files.js"
 
 /**
  * Purpose: switch between child and parent maps
@@ -87,7 +87,7 @@ function newChildMap(map, lanes,vectors, laneMarkers, laneWidths, box, errors){
 function updateChildParent(map, lanes, vectors, laneMarkers, laneWidths, box){
     selected = "child";
     var c = confirm("This will reset the verified point and marker. Continue?");
-    if (c == true) {
+    if (c === true) {
         alert("Use the file dialog to select the parent map you wish to use to replace the current markers.")
         loadUpdateFile(map, lanes, vectors, laneMarkers, laneWidths, box, selected);
     }
@@ -111,7 +111,7 @@ function confirmClear(lanes, vectors, laneMarkers, laneWidths, box, errors) {
         box.getSource().clear();
         laneWidths.getSource().clear();
         errors.getSource().clear();
-        // deleteTrace();
+        deleteTrace();
 
         $("#btn-group").children().hide();
         $(".builder").hide();

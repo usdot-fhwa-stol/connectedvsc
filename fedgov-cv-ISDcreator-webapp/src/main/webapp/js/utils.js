@@ -1,7 +1,7 @@
 
 let numRows = -1;
 let speedLimits = [];
-let tmp_lane_attributes = {}
+let tmpLaneAttributes = {}
 import { getElev, getNearestIntersectionJSON } from "./api.js";
 import { toggleControlsOn } from "./files.js";
 
@@ -35,24 +35,6 @@ function isOdd(num) { return (num % 2) == 1;}
   }else{        
      $(".extra_rga_field").show();
   }
-}
-
-function enable_rga_fields(enable=true){    
-  if(enable){        
-       $(".extra_rga_field_input").prop('disabled', false);
-  }else{     
-       $(".extra_rga_field_input").prop('disabled', true);
-  }
-  add_rga_fields_validation(enable);
-}
-
-function add_rga_fields_validation(enable=true){
-  if(enable){
-    $("input:text.required").attr('data-parsley-required', true);
-  }else{
-    $("input:text.required").attr('data-parsley-required', false);
-  }
-
 }
 
 /*********************************************************************************************************************/
@@ -143,7 +125,7 @@ function referencePointWindow(feature, selected, rgaEnabled, speedForm){
         
   if(feature.get("marker").name == "Reference Point Marker"){    
       //Enable or disable rga fields on reference point marker depend on whether current RGA toggle is enabled/disabled.
-      enable_rga_fields(rgaEnabled);
+      enableRGAFields(rgaEnabled);
   }
 
   $('#revision').val(feature.get("revisionNum"));
@@ -334,7 +316,7 @@ function updateTypeAttributes(attribute) {
 
 // sets the temporary lane attributes to the actual lane object
 function setLaneAttributes(selectedMarker) {
-  if( tmp_lane_attributes == null) {
+  if( tmpLaneAttributes == null) {
       // no attributes to add
       return;
   }
@@ -342,8 +324,8 @@ function setLaneAttributes(selectedMarker) {
       selectedMarker.set('lane_attributes',{});
   }
 
-  for( let attribute in tmp_lane_attributes ) {
-      selectedMarker.get('lane_attributes')[attribute] = tmp_lane_attributes[attribute]
+  for( let attribute in tmpLaneAttributes ) {
+      selectedMarker.get('lane_attributes')[attribute] = tmpLaneAttributes[attribute]
   }
 
   resetLaneAttributes()
@@ -351,13 +333,13 @@ function setLaneAttributes(selectedMarker) {
 
 // clears the temporary lane objects
 function resetLaneAttributes() {
-  tmp_lane_attributes = {};
+  tmpLaneAttributes = {};
 }
 
 function removeLaneAttributes(selectedMarker, attribute ) {
   let attrId = parseInt(attribute.id.match(/(\d+)$/)[0], 10);
-  if( tmp_lane_attributes[attrId] ) {
-      delete tmp_lane_attributes[attrId];
+  if( tmpLaneAttributes[attrId] ) {
+      delete tmpLaneAttributes[attrId];
       return
   }
   if( selectedMarker.get('lane_attributes') )
@@ -392,25 +374,6 @@ function removeDisplayedLaneAttributes(){
 }
 
 
-function saveConnections(selectedMarker) {
-  let nodeObject = [];
-  for(let i = 0; i <= numRows; i++) {
-      let ids = $('#maneuvers' + i + ' > ul > li > img');
-    let maneuvers = [];
-    for(let j = 0; j < ids.length; j++) {
-        maneuvers.push(ids[j].id.match(/\d+$/g)[0]);
-    }
-    nodeObject.push({
-        connectionId: $('#connectionId' + i + ' .dropdown-toggle').text().replace('\u200b', ""),
-        remoteID: $('input[name="remoteID' + i + '"]').val(),
-        fromLane: selectedMarker.get("laneNumber"),
-        toLane: $('input[name="toLane' + i + '"]').val(),
-        signal_id: $('input[name="signal_id' + i + '"]').val(),
-        maneuvers: maneuvers
-    });
-  }
-  return nodeObject;
-}
 /**
  * Purpose: makes the attributes dragable
  * @params  element
@@ -444,14 +407,35 @@ function populateAttributeWindow(lat, lon) {
 }
 
 
+function saveConnections(selectedMarker) {
+  let nodeObject = [];
+  for(let i = 0; i <= numRows; i++) {
+      let ids = $('#maneuvers' + i + ' > ul > li > img');
+    let maneuvers = [];
+    for(let j = 0; j < ids.length; j++) {
+        maneuvers.push(ids[j].id.match(/\d+$/g)[0]);
+    }
+    nodeObject.push({
+        connectionId: $('#connectionId' + i + ' .dropdown-toggle').text().replace('\u200b', ""),
+        remoteID: $('input[name="remoteID' + i + '"]').val(),
+        fromLane: selectedMarker.get("laneNumber"),
+        toLane: $('input[name="toLane' + i + '"]').val(),
+        signal_id: $('input[name="signal_id' + i + '"]').val(),
+        maneuvers: maneuvers
+    });
+  }
+  return nodeObject;
+}
+
 function rebuildConnections(connections) {
   //TODO clear if empty rows
   $('#tab_intersects > tbody').empty();
+  numRows = -1;
   if (connections === null || connections === undefined || connections.length < 1) {
-      addRow(null, null);
+     addRow(null, null);
   } else {
     for(let i = 0; i < connections.length; i++) {
-        addRow(null, connections[i]);
+       addRow(null, connections[i]);
     }
   }
 }
@@ -469,7 +453,6 @@ async function addRow(readOnly, valueSets) {
 }
 
 function deleteRow(rowNum) {
-  console.log("delete row " + rowNum);
   $('#row' + rowNum).remove();
   for(let i = rowNum + 1; i <= numRows; i++) {
       changeRow(i, i - 1, null, null);
@@ -536,7 +519,7 @@ function addLaneManeuversToContainer(container, attribute) {
 
 
 // adds the attribute (image) to the displayed container
-function addLaneAttributeToContainer( container, attribute ) {
+function addLaneAttributeToContainer(container, attribute ) {
   let attr_id = parseInt(attribute.id.match(/(\d+)$/)[0], 10);
   let lane_attr = lane_attributes[attr_id];
 
@@ -547,8 +530,8 @@ function addLaneAttributeToContainer( container, attribute ) {
   }
 
   // skip adding the attribute if it's already in the temp attributes, otherwise add it
-  if(!tmp_lane_attributes[attr_id] ) {
-      tmp_lane_attributes[attr_id] = lane_attr
+  if(!tmpLaneAttributes[attr_id] ) {
+      tmpLaneAttributes[attr_id] = lane_attr
   }
   else { return; }
 
@@ -962,11 +945,156 @@ function unselectFeature(map, overlayLayersGroup,  selectedFeature ) {
 }
 
 
+function setRGAStatus() {
+  console.log("setRGAStatus")
+  let rgaEnabled = false;
+  if($('#rga_switch').is(":checked")){
+      rgaEnabled = true;
+  }else{
+      rgaEnabled = false;
+  }
+  enableRGAFields(rgaEnabled);
+  return rgaEnabled;
+}
+
+function resetRGAStatus(){
+  $("#rga_switch").prop('checked', false);
+}
+
+function enableRGAFields(enable=true){    
+  if(enable){        
+      $(".extra_rga_field_input").prop('disabled', false);
+  }else{     
+      $(".extra_rga_field_input").prop('disabled', true);
+  }
+  addRGAFieldsValidation(enable);
+ }
+  
+function addRGAFieldsValidation(enable=true){
+  if(enable){
+    $("input:text.required").attr('data-parsley-required', true);
+  }else{
+    $("input:text.required").attr('data-parsley-required', false);
+  }
+}
+
+
+function onRegionIdChangeCallback(regionId){
+  console.log(regionId)
+  if(!isNaN(regionId) && parseFloat(regionId)===0){
+      $("#road_authority_id").attr('data-parsley-required', true);
+      $("#road_authority_id_type").attr('data-parsley-required', true);
+  }else{
+      $("#road_authority_id").attr('data-parsley-required', false);
+      $("#road_authority_id_type").attr('data-parsley-required', false);
+  }
+}
+
+function onRoadAuthorityIdChangeCallback() {
+  let roadAuthorityIdType = $("#road_authority_id_type").val();
+  const roadAuthorityIdInput = $("#road_authority_id");
+  // Get the Parsley instance of the input field
+  const parsleyInstance = roadAuthorityIdInput.parsley();
+  // Reset previous errors
+  parsleyInstance.removeError('raid'); // Ensure no lingering custom errors
+
+  if (roadAuthorityIdType !== "") {
+    $("#road_authority_id").attr('data-parsley-required', true);
+    let roadAuthorityIdInputVal = $("#road_authority_id").val();
+    if (roadAuthorityIdInputVal != "") {
+      let roadAuthorityIdInputValArr = roadAuthorityIdInputVal.split(".").map(Number);
+      // Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+      if(roadAuthorityIdInputValArr.length < 2) {
+        parsleyInstance.addError('raid', {
+                    message: "For RAID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+      }
+      if (roadAuthorityIdType === "full") {
+        if (roadAuthorityIdInputValArr[0] != 0 && roadAuthorityIdInputValArr[0] != 1 && roadAuthorityIdInputValArr[0] != 2) {
+          parsleyInstance.addError('raid', {
+                        message: "For Full RAID, the first integer must be 0-2.",
+                        updateClass: true
+                    });
+          return;
+        }
+
+        if ((roadAuthorityIdInputValArr[1] < 0 || roadAuthorityIdInputValArr[1] > 39) && (roadAuthorityIdInputValArr[0] == 0 || roadAuthorityIdInputValArr[0] == 1)) {
+          parsleyInstance.addError('raid', {
+                        message: "For Full RAID, if the first integer is either 0 or 1, the second integer cannot be greater than 39.",
+                        updateClass: true
+                    });
+          return;
+        }
+
+        for (let r = 1; r < roadAuthorityIdInputValArr.length; r++) {
+          if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+            parsleyInstance.addError('raid', {
+                            message: `For Full RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
+            return;
+          }
+        }
+      } else if (roadAuthorityIdType === "relative") {
+        for (let r = 0; r < roadAuthorityIdInputValArr.length; r++) {
+          if (roadAuthorityIdInputValArr[r] < 0 || roadAuthorityIdInputValArr[r] > 2147483647) {
+            parsleyInstance.addError('raid', {
+                            message: `For Relative RAID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+                            updateClass: true
+                        });
+            return;
+          }
+        }
+      }
+    }
+  } else {
+    $("#road_authority_id").attr('data-parsley-required', false);
+  }
+}
+
+function onMappedGeomIdChangeCallback(){
+  const mappedGeomIdInput = $("#mapped_geometry_id");
+  // Get the Parsley instance of the input field
+  const parsleyInstance = mappedGeomIdInput.parsley();
+
+  $("#mapped_geometry_id").attr('data-parsley-required', true);
+  let mappedGeomIdInputVal = $("#mapped_geometry_id").val();
+
+  // Reset previous errors
+  parsleyInstance.removeError('mapped'); // Ensure no lingering custom errors
+
+  if (mappedGeomIdInputVal != "") {
+    let mappedGeomIdInputValArr = mappedGeomIdInputVal.split(".").map(Number);
+      // Refer to this for the limit on individual components: https://luca.ntop.org/Teaching/Appunti/asn1.html
+      if(mappedGeomIdInputValArr.length < 2) {
+        parsleyInstance.addError('mapped', {
+                    message: "For Mapped Geometry ID, enter at least two integers separated by a period.",
+                    updateClass: true
+                });
+                return;
+      }
+
+      for (let r = 0; r < mappedGeomIdInputValArr.length; r++) {
+        if (mappedGeomIdInputValArr[r] < 0 || mappedGeomIdInputValArr[r] > 2147483647) {
+          parsleyInstance.addError('mapped', {
+            message: `For Mapped Geometry ID, integer at position ${r + 1} cannot be greater than 2147483647.`,
+            updateClass: true
+          });
+          return;
+        }
+      }
+  }
+}
+
+  
 export {
   getCookie,
   isOdd,
-  enable_rga_fields,
-  add_rga_fields_validation,
+  setRGAStatus,
+  enableRGAFields,
+  addRGAFieldsValidation,
   referencePointWindow,
   populateRefWindow,
   hideRGAFields,
@@ -997,5 +1125,10 @@ export {
   unselectFeature,
   removeSpeedForm,
   addRow,
-  deleteRow
+  deleteRow,
+  resetLaneAttributes,
+  onMappedGeomIdChangeCallback,
+  onRegionIdChangeCallback,
+  onRoadAuthorityIdChangeCallback,
+  resetRGAStatus
 }

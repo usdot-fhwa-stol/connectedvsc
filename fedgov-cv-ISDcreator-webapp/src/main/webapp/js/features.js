@@ -61,7 +61,7 @@ function onFeatureAdded(lanes, vectors, laneMarkers, laneWidths, isLoadMap){
 				if (typeof laneFeat.getGeometry().getCoordinates()[j].nodeInitialized === 'undefined') {
 					// Insert new values for elevation and laneWidth for the new dot
 					getElevation(dot, latLon, i, j, function(elev, i, j, latLon, dot){
-					laneFeat.get("elevation")[j] = {'value': elev, 'edited': true, 'latlon': latLon};
+						laneFeat.get("elevation")[j] = {'value': elev, 'edited': true, 'latlon': latLon};
 					});
 					laneFeat.get("laneWidth")[j] = 0;
 					
@@ -79,7 +79,7 @@ function onFeatureAdded(lanes, vectors, laneMarkers, laneWidths, isLoadMap){
 								}
 							}
 						}
-						laneFeat.attributes.newNodes.push(j);
+						laneFeat.get("newNodes").push(j);
 					}					
 					// Mark the dot as being seen
 					laneFeat.getGeometry().getCoordinates()[j].nodeInitialized = true;
@@ -187,7 +187,8 @@ function buildComputedFeature(i, laneNumber, referenceLaneID, referenceLaneNumbe
 							Number(inverse.bearing) + Number(rotation), Number(inverse.distance));
 			let newPoint = new ol.geom.Point(ol.proj.fromLonLat([direct.lon, direct.lat]));
 			let newDot = new ol.Feature(newPoint);
-			let newLonLat = ol.proj.toLonLat(newDot.getGeometry().getCoordinates());
+			let newLonLatCoordinates = ol.proj.toLonLat(newDot.getGeometry().getCoordinates());
+			let newLonLat ={lon: newLonLatCoordinates[0], lat: newLonLatCoordinates[1]};
 			
 			points.push(newPoint);
 			buildComputedDot(i, j, laneNumber,

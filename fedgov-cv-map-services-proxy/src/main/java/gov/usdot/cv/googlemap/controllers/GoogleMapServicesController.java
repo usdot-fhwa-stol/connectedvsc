@@ -24,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,7 @@ import gov.usdot.cv.googlemap.services.GoogleElevationsService;
 import gov.usdot.cv.googlemap.services.GooglePlacesService;
 
 @RestController
+@CrossOrigin(origins = "${allowed.origins}")
 @RequestMapping("/googlemap/api")
 public class GoogleMapServicesController {
     @Autowired

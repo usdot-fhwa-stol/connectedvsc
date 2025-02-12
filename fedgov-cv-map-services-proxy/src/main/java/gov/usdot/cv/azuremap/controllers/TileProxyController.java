@@ -33,9 +33,9 @@ public class TileProxyController {
     this.tilesetUrl = tilesetUrl;
   }
 
-  @GetMapping("/proxy/tileset/{z}/{x}/{y}")
-  public ResponseEntity<byte[]> getTile(@PathVariable int z, @PathVariable int x, @PathVariable int y) {
-    String url = String.format(tilesetUrl, z, x, y, apiKey);
+  @GetMapping("/proxy/tileset/{tilesetId}/{z}/{x}/{y}")
+  public ResponseEntity<byte[]> getTile(@PathVariable String tilesetId ,@PathVariable int z, @PathVariable int x, @PathVariable int y) {
+    String url = String.format(tilesetUrl, tilesetId, z, x, y, apiKey);
     logger.info("Fetching tile from URL: {}", url);
     // Make the request to Azure Maps
     HttpHeaders headers = new HttpHeaders();

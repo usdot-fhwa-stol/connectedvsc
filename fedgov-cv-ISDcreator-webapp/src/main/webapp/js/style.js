@@ -81,6 +81,9 @@ const laneStyle = (feature) => {
 
 const barStyle = (feature) => {
   return new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(255, 255, 255, 0)', 
+    }),
     stroke: new ol.style.Stroke({
       color: barDefault.strokeColor,
       width: barDefault.strokeWidth,
@@ -88,6 +91,18 @@ const barStyle = (feature) => {
     })
   });
 };
+
+const barHighlightedStyle = ()=>{
+  return new ol.style.Style({
+    fill: new ol.style.Fill({
+      color: 'rgba(61, 65, 176, 0.5)',
+    }),
+    stroke: new ol.style.Stroke({
+      color: 'rgb(6, 14, 226)',
+      width: 3,
+    })
+  });
+}
 
 
 const vectorStyle = (feature)=>{
@@ -171,5 +186,6 @@ export {
   connectionsStyle,
   errorMarkerStyle,
   barStyle,
-  pointStyle
+  pointStyle,
+  barHighlightedStyle 
 };

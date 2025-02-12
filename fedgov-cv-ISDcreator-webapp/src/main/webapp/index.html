@@ -71,7 +71,7 @@
                     <li><div class="rga_label">RGA Enabled</div></li>
                     <li style="padding: 10px 5px">                     
                         <div class="onoffswitch">
-                            <input class="onoffswitch-checkbox" type="checkbox" role="switch" onclick="set_rga_status()" id="rga_switch"><!-- Switch to enable or disable RGA -->
+                            <input class="onoffswitch-checkbox" type="checkbox" role="switch"  id="rga_switch"><!-- Switch to enable or disable RGA -->
                             <label class="onoffswitch-label" for="rga_switch">
                                 <span class="onoffswitch-inner"></span>
                                 <span class="onoffswitch-switch"></span>
@@ -90,9 +90,9 @@
 			            <li id = "saveMap"><a href="#" >Save</a></li>
 			            <li><input type="file" id="fileToLoad"></li>
 						<li class="divider"></li>
-                        <li><a href="#" onclick="loadKMLTrace();">Open KML Stencil</a></li>
-                        <li><a href="#" onclick="loadRSMTrace();">Open RSM Stencil</a></li>
-                        <li><a href="#" onclick="deleteTrace();">Delete Stencil</a></li>
+                        <li><a href="#" id="loadKMLTrace">Open KML Stencil</a></li>
+                        <li><a href="#" id="loadRSMTrace">Open RSM Stencil</a></li>
+                        <li><a href="#" id="deleteTrace">Delete Stencil</a></li>
                         <li><input type="file" id="kmlToLoad"></li>
                         <li><input type="file" id="rsmToLoad" multiple></li>
 			          </ul>
@@ -402,7 +402,7 @@
 							</div>
 							<div class="row region">
 								<div class="col-sm-4"><label for="region">Region ID:</label></div>
-                                                                <div class="col-sm-7"><input class="form-control" id="region" placeholder="0 to 65535" onchange="onRegionIdChangeCallback(this.value);" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
+                                                                <div class="col-sm-7"><input class="form-control" id="region" placeholder="0 to 65535" data-parsley-pattern="^[0-9]+$" data-parsley-range="[0, 65535]" data-parsley-pattern-message="This value must be an integer."></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="region_id"></i></div>
 							</div>
 							<div class="row intersection">
@@ -433,12 +433,12 @@
 							</div>
 							<div class="row road_authority_id">
 								<div class="col-sm-4"><label for="road_authority_id">Road Authority ID:</label></div>
-								<div class="col-sm-7"><input class="form-control" onkeyup="onRoadAuthorityIdChangeCallback()" id="road_authority_id" placeholder="xx.xx.xx" data-parsley-required="true"></div>
+								<div class="col-sm-7"><input class="form-control"  id="road_authority_id" placeholder="xx.xx.xx" data-parsley-required="true"></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="road_authority_id"></i></div>
 							</div>
 							<div class="row mapped_geometry_id extra_rga_field">
 								<div class="col-sm-4"><label for="mapped_geometry_id">Mapped Geometry ID:</label></div>
-								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" onkeyup="onMappedGeomIdChangeCallback()" id="mapped_geometry_id" placeholder="xx.xx.xx" data-parsley-required="true"></div>
+								<div class="col-sm-7"><input class="form-control extra_rga_field_input required" id="mapped_geometry_id" placeholder="xx.xx.xx" data-parsley-required="true"></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="mapped_geometry_id"></i></div>
 							</div>
 							<div class="row content_version extra_rga_field">

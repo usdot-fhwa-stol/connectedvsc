@@ -10,8 +10,8 @@ let tempSpeedLimits = [];
 let loadType;
 let tempLayerID;
 let calls =0;
-let filesToSend; //2019/04, MF:Added for onTraceChangeRSM()
-let trace; //2019/04, MF:Added since it was not declared.
+let filesToSend; 
+let trace; 
 let revisionNum = 0;
 
 /**
@@ -37,7 +37,7 @@ function loadFile(map, lanes, vectors, laneMarkers, laneWidths, box, errors, sel
         vectors.getSource().clear();
         box.getSource().clear();
 		errors.getSource().clear();
-		// deleteTrace();
+		deleteTrace();
 		laneWidths.getSource().clear();
 
         let ua = window.navigator.userAgent;
@@ -178,28 +178,25 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 
 }
 
-
-
-function loadKMLTrace() {
-
-	var c = confirm("Loading a new KML stencil will clear any other stencil. Continue?");
+function loadKMLTrace(map) {
+	let c = confirm("Loading a new KML stencil will clear any other stencil. Continue?");
 	if (c === true) {
 		if (trace != undefined){
-			trace.destroy();
+			trace.getSource().clear();
 		}
 
-		var ua = window.navigator.userAgent;
-		var msie10 = ua.indexOf('MSIE ');
-		var msie11 = ua.indexOf('Trident/');
-		var msie12 = ua.indexOf('Edge/');
+		let ua = window.navigator.userAgent;
+		let msie10 = ua.indexOf('MSIE ');
+		let msie11 = ua.indexOf('Trident/');
+		let msie12 = ua.indexOf('Edge/');
 
 		if (msie10 > 0 || msie11 > 0 || msie12 > 0){
 			$('#open_file_modal').modal('show');
-			$('#fileToLoad2').one('change', onTraceChange); //Modal uses fileToLoad2
+			$('#fileToLoad2').one('change', (event)=> onTraceChange(map, event)); //Modal uses fileToLoad2
 		}
 		else {
 			$('#kmlToLoad').click();
-			$('#kmlToLoad').one('change', onTraceChange);
+			$('#kmlToLoad').one('change',  (event)=> onTraceChange(map, event));
 		}
 
 	}
@@ -207,25 +204,24 @@ function loadKMLTrace() {
 
 //03/2019 MF: Added new function for RSM
 function loadRSMTrace() {
-
-	var c = confirm("Loading a new RSM stencil will clear any other stencil. Continue?");
+	let c = confirm("Loading a new RSM stencil will clear any other stencil. Continue?");
 	if (c === true) {
 		if (trace != undefined){
-			trace.destroy();
+			trace.getSource().clear();
 		}
 
-		var ua = window.navigator.userAgent;
-		var msie10 = ua.indexOf('MSIE ');
-		var msie11 = ua.indexOf('Trident/');
-		var msie12 = ua.indexOf('Edge/');
+		let ua = window.navigator.userAgent;
+		let msie10 = ua.indexOf('MSIE ');
+		let msie11 = ua.indexOf('Trident/');
+		let msie12 = ua.indexOf('Edge/');
 
 		if (msie10 > 0 || msie11 > 0 || msie12 > 0){
 			$('#open_file_modal').modal('show');
-			$('#fileToLoad2').one('change', onTraceChangeRSM); //Modal uses fileToLoad2
+			$('#fileToLoad2').one('change', (event)=> onTraceChangeRSM(map, event) ); //Modal uses fileToLoad2
 		}
 		else {
 			$('#rsmToLoad').click();
-			$('#rsmToLoad').one('change', onTraceChangeRSM);
+			$('#rsmToLoad').one('change', (event)=> onTraceChangeRSM(map, event));
 		}
 
 	}
@@ -242,10 +238,10 @@ function loadUpdateFile(map, lanes, vectors, laneMarkers, laneWidths, box, selec
 		}
 	}
 
-	var ua = window.navigator.userAgent;
-	var msie10 = ua.indexOf('MSIE ');
-	var msie11 = ua.indexOf('Trident/');
-	var msie12 = ua.indexOf('Edge/');
+	let ua = window.navigator.userAgent;
+	let msie10 = ua.indexOf('MSIE ');
+	let msie11 = ua.indexOf('Trident/');
+	let msie12 = ua.indexOf('Edge/');
 
 	if (msie10 > 0 || msie11 > 0 || msie12 > 0) {
 		$('#open_file_modal').modal('show');
@@ -291,40 +287,39 @@ function toggleControl(element) {
 
 function saveMap(vectors, box, lanes, laneMarkers, selected)
 {
-		$('#revision_modal').modal('show')
+	$('#revision_modal').modal('show')
   	let clickCounter = 0;
-		$('#revision_modal .btn').click(function(event){
-				if(clickCounter++ > 0){
-						return;
-				}
+	$('#revision_modal .btn').click(function(event){
+		if(clickCounter++ > 0){
+				return;
+		}
 
-				if(($('#revision_num').val()).match(/^\d+$/)){
-					let vectorsFeatures = vectors.getSource().getFeatures();
-					let boxFeatures = box.getSource().getFeatures();
-					let lanesFeatures = lanes.getSource().getFeatures();
-					let laneMarkersFeatures = laneMarkers.getSource().getFeatures();
-					for ( let f = 0; f < vectorsFeatures.length; f++) {
-						if (vectorsFeatures[f].get("marker").name == "Reference Point Marker") {
-								revisionNum = $('#revision_num').val();
-								$('#revision').val(revisionNum);
-								vectorsFeatures[f].set("revisionNum", revisionNum);
-						}
-					}
-
-					let layers = {
-							"vectors" : new ol.format.GeoJSON().writeFeatures(vectorsFeatures, true),
-							"box" :new ol.format.GeoJSON().writeFeatures(boxFeatures, true),
-							"lanes" : new ol.format.GeoJSON().writeFeatures(lanesFeatures, true),
-							"laneMarkers" : new ol.format.GeoJSON().writeFeatures(laneMarkersFeatures, true)
-						};
-						saveFile( layers, vectors, selected );
-				} else {
-					alert("Must enter a number value.");
-					return false;
+		if(($('#revision_num').val()).match(/^\d+$/)){
+			let vectorsFeatures = vectors.getSource().getFeatures();
+			let boxFeatures = box.getSource().getFeatures();
+			let lanesFeatures = lanes.getSource().getFeatures();
+			let laneMarkersFeatures = laneMarkers.getSource().getFeatures();
+			for ( let f = 0; f < vectorsFeatures.length; f++) {
+				if (vectorsFeatures[f].get("marker").name == "Reference Point Marker") {
+						revisionNum = $('#revision_num').val();
+						$('#revision').val(revisionNum);
+						vectorsFeatures[f].set("revisionNum", revisionNum);
 				}
+			}
+
+			let layers = {
+					"vectors" : new ol.format.GeoJSON().writeFeatures(vectorsFeatures, true),
+					"box" :new ol.format.GeoJSON().writeFeatures(boxFeatures, true),
+					"lanes" : new ol.format.GeoJSON().writeFeatures(lanesFeatures, true),
+					"laneMarkers" : new ol.format.GeoJSON().writeFeatures(laneMarkersFeatures, true)
+				};
+				saveFile( layers, vectors, selected );
+		} else {
+			alert("Must enter a number value.");
+			return false;
+		}
 	});
 }
-
 
 /**
  * Purpose: saves compiled object as geojson file
@@ -404,9 +399,9 @@ function saveFile( data, vectors, selected )
 	}	
 }
 
-function deleteTrace(){
+function deleteTrace() {
 	if (trace != undefined){
-		trace.destroy();
+		trace.getSource().clear();
 		trace = undefined;
 		alert("Stencil Deleted");
 	}
@@ -414,6 +409,220 @@ function deleteTrace(){
 	    alert("No stencil to delete.")
 	}
 }
+
+
+function destroyClickedElement(event){
+	document.body.removeChild(event.target);
+}
+
+function onTraceChange(map, event) {
+	let reader = new FileReader();
+	reader.onload = (event) => { onTraceReaderLoad(map, event) };
+	reader.readAsText(event.target.files[0]);
+}
+
+/*
+2019/04, MF: Event to process all the RSM file, convert to KML, and load onto the map.
+*/
+function onTraceChangeRSM (map, event) {
+    filesToSend = [];
+    console.log("# of files: " + event.target.files.length);
+
+    if (event.target.files.length == 0)
+    {
+        alert("No files selected.");
+        return;
+    }
+
+    //Need to have a list of promises per file, to call Promise.all, which process each file sequentially
+	let promiseArray = [];
+	
+    //Loop thru each file and process file/blobs data encoded as a data URL, base64 encoding
+    for (let i= 0; i < event.target.files.length; i++)
+    {
+        promiseArray.push( rsmFileReader(event.target.files[i]) );
+    }
+
+    //Need to process using Promise.all, because FileReader is asynchronous
+    //Wait for all files to be read into the filesToSend, before calling the "callRSMWebservice"
+    Promise.all(promiseArray).then(values => {
+      console.log("All file(s) have been read.");
+      callRSMWebservice(map, filesToSend);
+    })
+    .catch((err)=> {
+         alert("Unable to load the files, please try again. Error: " + err);
+    });
+
+}
+
+/*
+2019/04, MF: Added to call the read each RSM file into a base64 content.
+*/
+function rsmFileReader(file){
+    //Need to create a promise per each file processed.
+    return new Promise ((resolve, reject) => {
+        let reader = new FileReader();
+
+        //Define the onload of the FileReader, which is asynchronous
+        reader.onload = function (theFile) {
+           return function(e){
+
+                if (e.target.result != null
+                    && e.target.result != undefined
+                    && e.target.result != "data:" //meaning empty file(s)
+                    )
+                {
+                  //Create an object with specific properties
+                  let fileObject = {};
+                  fileObject.filename = theFile.name;
+                  fileObject.text = e.target.result.substr(e.target.result.indexOf(",")+1,e.target.result.length);
+
+                  //Append each fileObject to the List
+                  filesToSend.push(fileObject);
+                  console.log ("fileObject.filename: " + fileObject.filename);
+                }
+                resolve(); //end promise with a success
+           };
+
+        }(file);//end onload
+
+        reader.onerror = function (err){
+            console.error("reader.error: " + err);
+            reject(err);
+        };
+        //Read each file as a data URL as base64
+        reader.readAsDataURL(file); //calls the reader.onLoad() defined above
+    });
+}
+
+/*
+2019/04, MF: Added to call the webservice to convert the RSM files (base64 content) to KML
+*/
+function callRSMWebservice(map, filesToSend){
+   if ( filesToSend == null ||
+        filesToSend == undefined ||
+	   filesToSend.length == 0){
+        alert("Empty file(s), please try again.");
+	   	return;
+   }
+
+	let webappRoot = window.location.pathname.split('/')[1];
+   	$.ajax({
+       url: "/" + webappRoot + "/builder/messages/rsm_converter",
+       type: "POST",
+       contentType: "text/plain",
+       data: JSON.stringify({'files': filesToSend}),
+       success: function (result){
+           console.log ("result.successful:" + result.successful);
+           console.log ("result.errorMessage:" + result.errorMessage);
+           /*
+            //Keep for DEBUGGING: Add "<div id = "results"> <div id = "inputText">" to index.html
+            $("#inputText").empty();
+            $("#results").empty();
+            $("#inputText").append(JSON.stringify({'files': filesToSend}));
+            $("#results").append(result.successful  + "<br/>" + result.errorMessage+ "<br/>" + result.kmlDocument);
+           */
+
+            if (result.successful){
+                addKmltoMap(map, result.kmlDocument);
+            }
+            else{
+                alert(result.errorMessage);
+            }
+       },
+       error: function (XMLHttpRequest, textStatus, errorThrown) {
+            if (errorThrown=="Bad Request") {
+                alert(JSON.parse(XMLHttpRequest.responseText).errorMessage);
+            }
+            else{
+                alert(errorThrown + " . Please try again or contact the System Administrator.");
+            }
+            //Keep for DEBUGGING:
+            console.error("Webservice Error: " + textStatus + "; " +  errorThrown +  "; "  + XMLHttpRequest.responseText );
+            //$("#results").append(XMLHttpRequest.responseText + "; " + textStatus + "; " + errorThrown).append("<br/>");
+       }
+   })
+};
+
+function addKmltoMap(map, kmlDocument)
+{
+	let kmlParser = new ol.format.KML({
+		extractStyles: false,
+		extractAttributes: true,
+		projection: 'EPSG:3857'
+	});
+
+	let featureList = kmlParser.readFeatures(kmlDocument, {
+		featureProjection: 'EPSG:3857'
+	});
+
+    //Add KML to map
+	trace = new ol.layer.Vector({
+		source: new ol.source.Vector(),
+		title: 'Trace Layer',
+		style: new ol.style.Style({ 
+			fill: new ol.style.Fill({
+			  color: 'rgba(241, 146, 12, 0.83)' 
+			}),
+			stroke: new ol.style.Stroke({
+			  color:  'rgba(242, 127, 26, 0.83)',
+			  width: 2
+			})
+		  })
+	});
+	trace.getSource().addFeatures(featureList);
+	map.addLayer(trace);
+    $('#open_file_modal').modal('hide');
+
+    //Center on new layer and with current zoom
+    let ft = trace.getSource().getFeatures()[0];
+	let extent = ft.getGeometry().getExtent();
+	map.getView().fit(extent, { duration: 1000 });
+}
+
+
+function onTraceReaderLoad(map, event){
+	let data = event.target.result;
+	addKmltoMap(map, data);
+}
+
+
+/**
+ * Purpose: misc functions that may not be used?
+ * to be @deprecate?
+ */
+
+function changeLatLonName(name){
+	if (name < 0){
+		name = 0xFFFFFFFF + name + 1
+	}
+
+	name = name.toString(16).toUpperCase();
+	name = parseInt(name, 16).toString(2);
+	name = name.substr(name.length -20);
+	name = name.substr(0, 13);
+
+	return name;
+}
+
+function changeElevName(name){
+	if (name < 0){
+		name = 0xFFFFFFFF + name + 1
+	}
+
+	name = name.toString(16).toUpperCase();
+
+	if (name.length == 1 || name.length == 3){
+		name = "0" + name
+	}
+
+	name = parseInt(name, 16).toString(2);
+	name = name.substr(name.length -7);
+	name = name.substr(0, 6);
+
+	return name;
+}
+
 
 export {
     loadFile,
@@ -425,5 +634,6 @@ export {
 	revisionNum,
 	loadKMLTrace,
 	loadRSMTrace,
-	loadUpdateFile
+	loadUpdateFile,
+	deleteTrace
 }

@@ -1,4 +1,5 @@
-import { populateAttributeWindow, populateRefWindow, referencePointWindow, hideRGAFields, toggleLaneTypeAttributes, updateDisplayedLaneAttributes, rebuildConnections, rebuildSpeedForm, removeSpeedForm, addSpeedForm } from "./utils.js";
+import { barHighlightedStyle } from "./style.js";
+import { populateAttributeWindow, populateRefWindow, referencePointWindow, hideRGAFields, toggleLaneTypeAttributes, updateDisplayedLaneAttributes, rebuildConnections, rebuildSpeedForm, removeSpeedForm, addSpeedForm, resetLaneAttributes } from "./utils.js";
 
 function laneSelectInteractionCallback(evt, overlayLayersGroup, lanes, laneWidths, deleteMode, selected){
     if (evt.selected?.length > 0) {
@@ -295,9 +296,8 @@ function laneMarkersInteractionCallback(evt, overlayLayersGroup, lanes, laneConn
               let smallerYLen = ylen * ratio;
               let smallerX = startPoint.x + smallerXLen;
               let smallerY = startPoint.y + smallerYLen;
-
-              laneConnections.getSource().addFeature([new ol.geom.Feature(new ol.geom.LineString([startPoint, endPoint]))]);
-              laneConnections.getSource().addFeature([new ol.geom.Feature(new ol.geom.Point(smallerX, smallerY), {angle: angleDeg})]);
+              laneConnections.getSource().addFeature(new ol.Feature(new ol.geom.LineString([startPoint, endPoint])));
+              laneConnections.getSource().addFeature(new ol.Feature(new ol.geom.Point(smallerX, smallerY), {angle: angleDeg}));
             }
         }
     }
@@ -349,7 +349,7 @@ function laneMarkersInteractionCallback(evt, overlayLayersGroup, lanes, laneConn
   } else if (evt.deselected?.length > 0) {
     console.log('Lane marker feature deselected:', evt.deselected[0]);
     $("#attributes").hide();
-    // resetLaneAttributes();
+    resetLaneAttributes();
     laneConnections.getSource().clear();
     return null;
   } else {
@@ -407,6 +407,7 @@ function boxSelectInteractionCallback(evt, overlayLayersGroup, lanes, deleteMode
   if (evt.selected?.length > 0) {
     console.log('box/stopBar feature selected:', evt.selected[0]);
     let selectedBox = evt.selected[0];
+    selectedBox.setStyle(barHighlightedStyle);
     const boxLayer = overlayLayersGroup.getLayers().getArray().find(layer=>{
       return selectedBox && layer instanceof ol.layer.Vector && layer.getSource().hasFeature(selectedBox)
     })
@@ -486,7 +487,8 @@ function boxSelectInteractionCallback(evt, overlayLayersGroup, lanes, deleteMode
       $('#approach_name .dropdown-toggle').html(selectedBox.get("approachID") + " <span class='caret'></span>");
     }
     return selectedBox;
-  }else if (evt.deselected?.length >0 ){
+  } else if (evt.deselected?.length > 0) {
+    evt.deselected[0].setStyle(null);
     console.log('box/stopBar feature deselected:', evt.deselected[0]);
     $("#attributes").hide();
     return null;
@@ -503,16 +505,17 @@ function boxSelectInteractionCallback(evt, overlayLayersGroup, lanes, deleteMode
  * @event changes the location on the map by redrawing
  */
 function updateFeatureLocation( feature, selected, rgaEnabled, speedForm) {
-	referencePointWindow(feature, selected, rgaEnabled, speedForm);
-  feature.set("LonLat", new ol.proj.toLonLat(feature.getGeometry().getCoordinates()));
-	$('#long').val(feature.get("LonLat")[0]);
-  $('#lat').val(feature.get("LonLat")[1]);
-	populateRefWindow(feature, feature.get("LonLat")[1], feature.get("LonLat")[0]);
+  referencePointWindow(feature, selected, rgaEnabled, speedForm);
+  let lonLatCoordinates = new ol.proj.toLonLat(feature.getGeometry().getCoordinates());
+  feature.set("LonLat", {lon: lonLatCoordinates[0], lat: lonLatCoordinates[1]});
+	$('#long').val(feature.get("LonLat").lon);
+  $('#lat').val(feature.get("LonLat").lat);
+	populateRefWindow(feature, feature.get("LonLat").lat, feature.get("LonLat").lon);
   let intersectionID  = feature.get("intersectionID");
   if (feature.get("marker").name == "Reference Point Marker") {
       if (!feature.get("intersectionID") && !feature.get("intersectionIdEdit")) {
-          let tempLat = ((Math.abs(feature.get("LonLat")[1]) % 1).toString().substr(3,3));
-          let tempLon = ((Math.abs(feature.get("LonLat")[0]) % 1).toString().substr(3,3));
+          let tempLat = ((Math.abs(feature.get("LonLat").lat) % 1).toString().substr(3,3));
+          let tempLon = ((Math.abs(feature.get("LonLat").lon) % 1).toString().substr(3,3));
           intersectionID = (((tempLat & 0xff) << 8) | (tempLon & 0xff)) >>> 0;
           $("#intersection").val(intersectionID);
       } else {
@@ -531,8 +534,9 @@ function updateFeatureLocation( feature, selected, rgaEnabled, speedForm) {
 }
 
 
-function updateLaneFeatureLocation( feature ) {
-  feature.set("LonLat", ol.proj.toLonLat(feature.getGeometry().getCoordinates()));
+function updateLaneFeatureLocation(feature) {
+  let lonLatCoordinates = new ol.proj.toLonLat(feature.getGeometry().getCoordinates());
+  feature.set("LonLat", {lon: lonLatCoordinates[0], lat: lonLatCoordinates[1]});
 	$('#long').val(feature.get("LatLon").lon);
 	$('#lat').val(feature.get("LatLon").lat);
 	populateRefWindow(feature, feature.get("LatLon").lat, feature.get("LatLon").lon);
