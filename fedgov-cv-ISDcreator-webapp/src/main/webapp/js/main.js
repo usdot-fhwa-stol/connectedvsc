@@ -369,8 +369,8 @@ function addLaneAttributeToContainer( container, attribute ) {
     var lane_attr = lane_attributes[attr_id];
 
     // if attribute already exists in the lane attributes, skip, do not add
-    if (selectedMarker.attributes['lane_attributes'] &&
-        selectedMarker.attributes['lane_attributes'][attr_id]) {
+    if (selected_marker.attributes['lane_attributes'] &&
+        selected_marker.attributes['lane_attributes'][attr_id]) {
         return;
     }
 
@@ -389,12 +389,12 @@ function setLaneAttributes() {
         // no attributes to add
         return;
     }
-    if( !selectedMarker.attributes['lane_attributes'] ) {
-        selectedMarker.attributes['lane_attributes'] = {};
+    if( !selected_marker.attributes['lane_attributes'] ) {
+        selected_marker.attributes['lane_attributes'] = {};
     }
 
     for( var attribute in tmp_lane_attributes ) {
-        selectedMarker.attributes['lane_attributes'][attribute] = tmp_lane_attributes[attribute]
+        selected_marker.attributes['lane_attributes'][attribute] = tmp_lane_attributes[attribute]
     }
 
     resetLaneAttributes()
@@ -411,9 +411,9 @@ function removeLaneAttributes( attribute ) {
         delete tmp_lane_attributes[attr_id];
         return
     }
-    if( selectedMarker.attributes['lane_attributes'] )
-        if( selectedMarker.attributes['lane_attributes'][attr_id] )
-            delete selectedMarker.attributes['lane_attributes'][attr_id];
+    if( selected_marker.attributes['lane_attributes'] )
+        if( selected_marker.attributes['lane_attributes'][attr_id] )
+            delete selected_marker.attributes['lane_attributes'][attr_id];
 }
 
 function updateDisplayedLaneAttributes( feature ){
@@ -575,7 +575,7 @@ function saveConnections() {
         nodeObject.push({
             connectionId: $('#connectionId' + i + ' .dropdown-toggle').text().replace('\u200b', ""),
             remoteID: $('input[name="remoteID' + i + '"]').val(),
-            fromLane: selectedMarker.attributes.laneNumber,
+            fromLane: selected_marker.attributes.laneNumber,
             toLane: $('input[name="toLane' + i + '"]').val(),
             signal_id: $('input[name="signal_id' + i + '"]').val(),
             maneuvers: maneuvers
