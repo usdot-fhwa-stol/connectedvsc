@@ -221,7 +221,7 @@ function referencePointWindow(feature, selected, rgaEnabled, speedForm){
      removeSpeedForm(speedForm);
      addSpeedForm(speedForm);
   } else {
-     rebuildSpeedForm(feature.get("speedLimitType"));
+     rebuildSpeedForm(speedForm, feature.get("speedLimitType"));
   }
 
   $("#attributes").show();
@@ -524,10 +524,10 @@ function addLaneAttributeToContainer(container, attribute ) {
   let lane_attr = lane_attributes[attr_id];
 
   // if attribute already exists in the lane attributes, skip, do not add
-  if (selectedMarker.get('lane_attributes') &&
-      selectedMarker.get('lane_attributes')[attr_id]) {
-      return;
-  }
+  // if (selectedMarker.get('lane_attributes') &&
+  //     selectedMarker.get('lane_attributes')[attr_id]) {
+  //     return;
+  // }
 
   // skip adding the attribute if it's already in the temp attributes, otherwise add it
   if(!tmpLaneAttributes[attr_id] ) {
