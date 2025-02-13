@@ -365,7 +365,7 @@ function vectorSelectInteractionCallback(evt, overlayLayersGroup, lanes, deleteM
 
     //Use the marker properties to update the marker icon
     let iconAddress = selectedVector.get("marker").img_src;
-    let IconInfo = { src: iconAddress, height: 50, width: 50 };
+    let IconInfo = { src: iconAddress, height: 50, width: 50 ,anchor: [0.5,1]};
     selectedVector.setStyle(new ol.style.Style({
       image: new ol.style.Icon(IconInfo)
     }));
