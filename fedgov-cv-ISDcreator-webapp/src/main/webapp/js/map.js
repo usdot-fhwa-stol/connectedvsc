@@ -7,7 +7,7 @@ import {populateAutocompleteSearchPlacesDropdown } from "./api.js";
 import {buildComputedFeature, onFeatureAdded } from "./features.js";
 import {onMoveEnd, onPointerMove, onZoomIn, onZoomOut } from "./map-event.js";
 
-const tilesetURL = "http://localhost:8080/azuremap/api/proxy/tileset/";
+const tilesetURL = "/msp/azuremap/api/proxy/tileset/";
 let nodeObject = [];
 const aerialTilesetId = "microsoft.imagery";
 const roadTilesetId = "microsoft.base.road";

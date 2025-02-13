@@ -1,7 +1,7 @@
 
-const google_elevation_url = 'http://localhost:8080/googlemap/api/elevation';
-const google_places_autocomplete_url = 'http://localhost:8080/googlemap/api/places/autocomplete';
-const google_places_searchText_url = 'http://localhost:8080/googlemap/api/places/searchText'; 
+const google_elevation_url = "/msp/googlemap/api/elevation";
+const google_places_autocomplete_url = "/msp/googlemap/api/places/autocomplete";
+const google_places_searchText_url = "/msp/googlemap/api/places/searchText"; 
 const intersection_url = "/api.geonames.org/findNearestIntersectionJSON"
 async function getElevation(dot, latlon, i, j, callback){
     try {
