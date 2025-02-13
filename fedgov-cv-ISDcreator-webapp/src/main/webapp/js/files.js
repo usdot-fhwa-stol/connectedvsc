@@ -125,7 +125,7 @@ function loadMap( data, map ,lanes, vectors, laneMarkers, box, laneWidths, selec
 		let feat = vectors.getSource().getFeatures();   
 		for (let a = 0; a < feat.length; a++) {
 			let iconAddress = feat[a].getProperties().marker.img_src;
-			let IconInfo = {src: iconAddress, height: 50, width: 50};
+			let IconInfo = {src: iconAddress, height: 50, width: 50, anchor: [0.5,1]};
 			feat[a].setStyle(new ol.style.Style({
 				image: new ol.style.Icon(IconInfo)
 			}));

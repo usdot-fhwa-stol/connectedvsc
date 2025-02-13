@@ -1,31 +1,11 @@
-import {  addRow, deleteRow, getCookie, makeDroppable, onMappedGeomIdChangeCallback, onRegionIdChangeCallback, onRoadAuthorityIdChangeCallback, rebuildConnections, removeSpeedForm, resetRGAStatus, resetSpeedDropdowns, saveConnections, saveSpeedForm, setLaneAttributes, setRGAStatus, toggle, toggleBars, toggleLanes, toggleLaneTypeAttributes, togglePoints, toggleWidthArray, unselectFeature, updateSharedWith, updateTypeAttributes } from "./utils.js";
-import {newChildMap, newParentMap, openChildMap, openParentMap, selected, updateChildParent}  from "./parent-child.js"
-import {
-  deleteTrace,
-  loadKMLTrace,
-  loadRSMTrace,
-  revisionNum,
-  saveMap,
-  toggleControlsOn,
-} from "./files.js";
-import {
-  barStyle,
-  connectionsStyle,
-  errorMarkerStyle,
-  laneStyle,
-  vectorStyle,
-  widthStyle,
-} from "./style.js";
-import {
-  boxSelectInteractionCallback,
-  laneMarkersInteractionCallback,
-  laneSelectInteractionCallback,
-  vectorAddInteractionCallback,
-  vectorSelectInteractionCallback,
-} from "./interactions.js";
-import { populateAutocompleteSearchPlacesDropdown } from "./api.js";
-import { buildComputedFeature, onFeatureAdded } from "./features.js";
-import { onMoveEnd, onPointerMove, onZoomIn, onZoomOut } from "./map-event.js";
+import {addRow, deleteRow, getCookie, makeDroppable, onMappedGeomIdChangeCallback, onRegionIdChangeCallback, onRoadAuthorityIdChangeCallback, rebuildConnections, removeSpeedForm, resetRGAStatus, resetSpeedDropdowns, saveConnections, saveSpeedForm, setLaneAttributes, setRGAStatus, toggle, toggleBars, toggleLanes, toggleLaneTypeAttributes, togglePoints, toggleWidthArray, unselectFeature, updateSharedWith, updateTypeAttributes } from "./utils.js";
+import {newChildMap, newParentMap, openChildMap, openParentMap, selected, updateChildParent}  from "./parent-child-latest.js"
+import {deleteTrace, loadKMLTrace, loadRSMTrace, revisionNum, saveMap, toggleControlsOn,} from "./files.js";
+import {barStyle, connectionsStyle, errorMarkerStyle, laneStyle, vectorStyle, widthStyle} from "./style.js";
+import {boxSelectInteractionCallback, laneMarkersInteractionCallback, laneSelectInteractionCallback, vectorAddInteractionCallback, vectorSelectInteractionCallback} from "./interactions.js";
+import {populateAutocompleteSearchPlacesDropdown } from "./api.js";
+import {buildComputedFeature, onFeatureAdded } from "./features.js";
+import {onMoveEnd, onPointerMove, onZoomIn, onZoomOut } from "./map-event.js";
 
 const tilesetURL = "http://localhost:8080/azuremap/api/proxy/tileset/";
 let nodeObject = [];
@@ -39,32 +19,17 @@ let viewCenter = ol.proj.fromLonLat(viewLonLat);
 let viewZoom = 19;
 let map;
 let selectedLayer, selectedMarker;
-let vectors,
-  lanes,
-  laneMarkers,
-  box,
-  laneConnections,
-  errors,
-  laneWidths;
+let vectors, lanes, laneMarkers, box, laneConnections, errors, laneWidths;
 let overlayLayersGroup, baseLayersGroup;
 let computingLane = false;
 let computedLaneSource;
 let dropdownCheck = false;
-let sharedWith_object,
-  typeAttribute_object,
-  typeAttributeName,
-  laneTypeOptions = [];
+let sharedWith_object, typeAttribute_object, typeAttributeName, laneTypeOptions = [];
 let typeAttributeNameSaved = "";
 let sharedWith = [];
 let typeAttribute = [];
 let nodeLaneWidth = [];
-let signalPhase,
-  stateConfidence,
-  laneNum,
-  laneType,
-  approachType,
-  intersectionID,
-  approachID;
+let signalPhase, stateConfidence, laneNum, laneType, approachType, intersectionID, approachID;
 let hiddenDrag, intersectionSidebar, deleteMode, currentControl;
 let $imgs;
 let rowHtml;
@@ -242,7 +207,6 @@ function registerMapEvents() {
   map.on("pointermove", (event) => {
     onPointerMove(event, map);
   });
-
   document.getElementById('customZoomOut').addEventListener('click', (event) => {
     onZoomOut(event, map);
   });
