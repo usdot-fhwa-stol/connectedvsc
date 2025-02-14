@@ -22,7 +22,7 @@
 
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIEnv *env, jobject cls, jobject baseLayer, jobject geometryContainers)
 {
-	printf("\n ***Inside the rga_wrapper.c file **** \n");
+	printf("\n ***Inside the rga_wrapper.c file Satish **** \n");
 	uint8_t buffer[2302];
 	size_t buffer_size = sizeof(buffer);
 	asn_enc_rval_t ec;
