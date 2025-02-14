@@ -356,6 +356,11 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, laneConstructorTypeObj, &(indvMtrVehLaneGeometryInfo->laneConstructorType));
 
+						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvMtrVehLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvMtrVehLaneGeometryInfoObj, getTimeRestrictionsMethod);
+
+						populateLaneConstructorType(env, timeRestrictionsObj, &(indvMtrVehLaneGeometryInfo->timeRestrictions));
+
 						ASN_SEQUENCE_ADD(&motorVehicleLaneGeometryLayer->laneGeomLaneSet.list, indvMtrVehLaneGeometryInfo);
 					}
 
@@ -401,6 +406,11 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, bikeLaneConstructorTypeObj, &(indvBikeLaneGeometryInfo->laneConstructorType));
 
+						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getTimeRestrictionsMethod);
+
+						populateLaneConstructorType(env, timeRestrictionsObj, &(indvBikeLaneGeometryInfo->timeRestrictions));
+
 						ASN_SEQUENCE_ADD(&bicycleLaneGeometryLayer->laneGeomLaneSet.list, indvBikeLaneGeometryInfo);
 					}
 					geometryLayer->geometryContainer_Value.choice.BicycleLaneGeometryLayer = *bicycleLaneGeometryLayer;
@@ -445,6 +455,11 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 						jobject crosswalkLaneConstructorTypeObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrosswalkLaneConstructorTypeMethod);
 
 						populateLaneConstructorType(env, crosswalkLaneConstructorTypeObj, &indvCrosswalkLaneGeometryInfo->laneConstructorType);
+
+						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getTimeRestrictionsMethod);
+
+						populateLaneConstructorType(env, timeRestrictionsObj, &(indvCrosswalkLaneGeometryInfo->timeRestrictions));
 
 						ASN_SEQUENCE_ADD(&crosswalkLaneGeometryLayer->laneGeomLaneSet.list, indvCrosswalkLaneGeometryInfo);
 					}
@@ -530,6 +545,9 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		jmethodID getPhysicalXYZNodeInfoMethod = (*env)->GetMethodID(env, laneConstructorTypeClass, "getPhysicalXYZNodeInfo", "()Lgov/usdot/cv/rgaencoder/PhysicalXYZNodeInfo;");
 		jobject physicalXYZNodeInfoObj = (*env)->CallObjectMethod(env, laneConstructorTypeObj, getPhysicalXYZNodeInfoMethod);
 		jclass physicalXYZNodeInfoClass = (*env)->GetObjectClass(env, physicalXYZNodeInfoObj);
+
+		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, referencePointInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
+		jobject referencePointInfoObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getReferencePointInfoMethod);
 
 		jmethodID getNodeXYZGeometryNodeSetMethod = (*env)->GetMethodID(env, physicalXYZNodeInfoClass, "getNodeXYZGeometryNodeSet", "()Ljava/util/List;");
 		jobject nodeXYZGeometryNodeSetList = (*env)->CallObjectMethod(env, physicalXYZNodeInfoObj, getNodeXYZGeometryNodeSetMethod);
