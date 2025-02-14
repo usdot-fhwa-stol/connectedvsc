@@ -24,11 +24,11 @@
         <sonar.language>java</sonar.language>	
 	</properties>	
 	<dependencies>
-		<!-- <dependency>
+		<dependency>
 			<groupId>gov.usdot</groupId>
 			<artifactId>fedgov-cv-message-builder</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
-		</dependency> -->
+		</dependency>
 		<dependency>
 			<groupId>org.jasig.cas</groupId>
 			<artifactId>cas-client-core</artifactId>
