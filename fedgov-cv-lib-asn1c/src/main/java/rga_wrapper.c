@@ -588,11 +588,21 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			jobject nodeZOffsetValueObj = (*env)->CallObjectMethod(env, nodeXYZOffsetInfoObj, getNodeZOffsetMethod);
 			populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &nodeXYZOffset->nodeZOffsetValue);
 
+			// Populate WayPlanarGeometryInfo
+			jmethodID getNodeLocPlanarGeometryInfo = (*env)->GetMethodID(env, WayPlanarGeometryInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectmethod(env, WayPlanarGeometryInfoObj, getNodeLocPlanarGeomInfoMethod);
+			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, WayPlanarGeometryInfoClass);
+			
 			ASN_SEQUENCE_ADD(&physicalXYZNodeInfo->nodeXYZGeometryNodeSet.list, nodeXYZOffset);
 		}
 
 		laneConstructorType->present = LaneConstructorType_PR_physicalXYZNodeInfo;
 		laneConstructorType->choice.physicalXYZNodeInfo = *physicalXYZNodeInfo;
+
+		// Populate ReferencePointInfo
+		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, referencePointInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;")
+		jobject referencePointInfoObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getReferencePointInfoMethod);
+		jclass referencePointInfoClass = (*env)->GetObjectClass(env, referencePointInfoObj);
 	}
 	else if (laneConstructorTypeChoice == COMPUTED_NODE)
 	{
@@ -629,6 +639,7 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		jobject nodeZOffsetValueObj = (*env)->CallObjectMethod(env, laneCenterLineXYZOffsetObj, getNodeZOffsetMethod);
 		populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &computedXYZNodeInfo->laneCenterLineXYZOffset.nodeZOffsetValue);
 
+		// Populate WayPlanarGeometryInfo 
 		WayPlanarGeometryInfo_t *wayPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
 		wayPlanarGeometryInfo->wayWidth = NULL;
 		computedXYZNodeInfo->lanePlanarGeomInfo = *wayPlanarGeometryInfo;
