@@ -17,129 +17,37 @@
 package gov.usdot.cv.rgaencoder;
 
 public class DaysOfTheWeek {
-    private int allDays;
-    private int monday;
-    private int tuesday;
-    private int wednesday;
-    private int thursday;
-    private int friday;
-    private int saturday;
-    private int sunday;
+    private short daysOfTheWeek;
 
     // Constants for choice field
-    public static final int ALLDAYS = 0;
-    public static final int MONDAY = 1;
-    public static final int TUESDAY = 2;
-    public static final int WEDNESDAY = 3;
-    public static final int THURSDAY = 4;
-    public static final int FRIDAY = 5;
-    public static final int SATURDAY = 6;
-    public static final int SUNDAY = 7;
+    public static final short ALLDAYS = 0;
+    public static final short MONDAY = 1;
+    public static final short TUESDAY = 2;
+    public static final short WEDNESDAY = 3;
+    public static final short THURSDAY = 4;
+    public static final short FRIDAY = 5;
+    public static final short SATURDAY = 6;
+    public static final short SUNDAY = 7;
 
     public DaysOfTheWeek() {
-        this.allDays = 0;
-        this.monday = 0;
-        this.tuesday = 0;
-        this.wednesday = 0;
-        this.thursday = 0;
-        this.friday = 0;
-        this.saturday = 0;
-        this.sunday = 0;
     }
 
-    public DaysOfTheWeek(int allDays,
-            int monday,
-            int tuesday,
-            int wednesday,
-            int thursday,
-            int friday,
-            int saturday,
-            int sunday) {
-        this.allDays = allDays;
-        this.monday = monday;
-        this.tuesday = tuesday;
-        this.wednesday = wednesday;
-        this.thursday = thursday;
-        this.friday = friday;
-        this.saturday = saturday;
-        this.sunday = sunday;
+    public DaysOfTheWeek(short daysOfTheWeek) {
+            this.daysOfTheWeek = daysOfTheWeek;
+        }
+
+    public short getDaysofTheWeek() {
+        return daysOfTheWeek;
     }
 
-    public int getAllDays() {
-        return allDays;
-    }
-
-    public void setAllDays(int allDays) {
-        this.allDays = allDays;
-    }
-
-    public int getMonday() {
-        return monday;
-    }
-
-    public void setMonday(int monday) {
-        this.monday = monday;
-    }
-
-    public int getTuesday() {
-        return tuesday;
-    }
-
-    public void setTuesday(int tuesday) {
-        this.tuesday = tuesday;
-    }
-
-    public int getWednesday() {
-        return wednesday;
-    }
-
-    public void setWednesday(int wednesday) {
-        this.wednesday = wednesday;
-    }
-
-    public int getThursday() {
-        return thursday;
-    }
-
-    public void setThursday(int thursday) {
-        this.thursday = thursday;
-    }
-
-    public int getFriday() {
-        return friday;
-    }
-
-    public void setFriday(int friday) {
-        this.friday = friday;
-    }
-
-    public int getSaturday() {
-        return saturday;
-    }
-
-    public void setSaturday(int saturday) {
-        this.saturday = saturday;
-    }
-
-    public int getSunday() {
-        return sunday;
-    }
-
-    public void setSunday(int sunday) {
-        this.sunday = sunday;
+    public void setDaysOfTheWeek(short daysOfTheWeek) {
+        this.daysOfTheWeek = daysOfTheWeek;
     }
 
     @Override
     public String toString() {
         return "DaysOfTheWeek{" +
-                "allDays=" + allDays +
-                ", monday=" + monday +
-                ", tuesday=" + tuesday +
-                ", wednesday=" + wednesday +
-                ", thursday=" + thursday +
-                ", friday=" + friday +
-                ", saturday=" + saturday +
-                ", sunday=" + sunday +
+                "daysOfTheWeek=" + daysOfTheWeek +
                 '}';
     }
 }
