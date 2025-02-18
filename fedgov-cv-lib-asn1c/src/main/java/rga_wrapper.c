@@ -546,9 +546,6 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		jobject physicalXYZNodeInfoObj = (*env)->CallObjectMethod(env, laneConstructorTypeObj, getPhysicalXYZNodeInfoMethod);
 		jclass physicalXYZNodeInfoClass = (*env)->GetObjectClass(env, physicalXYZNodeInfoObj);
 
-		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, referencePointInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
-		jobject referencePointInfoObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getReferencePointInfoMethod);
-
 		jmethodID getNodeXYZGeometryNodeSetMethod = (*env)->GetMethodID(env, physicalXYZNodeInfoClass, "getNodeXYZGeometryNodeSet", "()Ljava/util/List;");
 		jobject nodeXYZGeometryNodeSetList = (*env)->CallObjectMethod(env, physicalXYZNodeInfoObj, getNodeXYZGeometryNodeSetMethod);
 
@@ -589,10 +586,10 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &nodeXYZOffset->nodeZOffsetValue);
 
 			// Populate WayPlanarGeometryInfo
-			jmethodID getNodeLocPlanarGeometryInfo = (*env)->GetMethodID(env, WayPlanarGeometryInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
-			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectmethod(env, WayPlanarGeometryInfoObj, getNodeLocPlanarGeomInfoMethod);
+			jmethodID getNodeLocPlanarGeometryInfo = (*env)->GetMethodID(env, WayPlanarGeometryInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;"); //ERROR
+			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, WayPlanarGeometryInfoObj, getNodeLocPlanarGeomInfoMethod); //ERROR
 			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, WayPlanarGeometryInfoClass);
-			
+
 			ASN_SEQUENCE_ADD(&physicalXYZNodeInfo->nodeXYZGeometryNodeSet.list, nodeXYZOffset);
 		}
 
@@ -600,7 +597,7 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		laneConstructorType->choice.physicalXYZNodeInfo = *physicalXYZNodeInfo;
 
 		// Populate ReferencePointInfo
-		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, referencePointInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;")
+		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, referencePointInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;"); 
 		jobject referencePointInfoObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getReferencePointInfoMethod);
 		jclass referencePointInfoClass = (*env)->GetObjectClass(env, referencePointInfoObj);
 	}
