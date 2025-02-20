@@ -770,19 +770,6 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, TimeRest
 
     }
 
-    jmethodID getPhysicalXYZNodeInfoMethod = (*env)->GetMethodID(env, laneConstructorTypeClass, "getPhysicalXYZNodeInfo", "()Lgov/usdot/cv/rgaencoder/PhysicalXYZNodeInfo;");
-	jobject physicalXYZNodeInfoObj = (*env)->CallObjectMethod(env, laneConstructorTypeObj, getPhysicalXYZNodeInfoMethod);
-	jclass physicalXYZNodeInfoClass = (*env)->GetObjectClass(env, physicalXYZNodeInfoObj);
-
-		jmethodID getNodeXYZGeometryNodeSetMethod = (*env)->GetMethodID(env, physicalXYZNodeInfoClass, "getNodeXYZGeometryNodeSet", "()Ljava/util/List;");
-		jobject nodeXYZGeometryNodeSetList = (*env)->CallObjectMethod(env, physicalXYZNodeInfoObj, getNodeXYZGeometryNodeSetMethod);
-
-		jclass nodeXYZGeometryNodeSetClass = (*env)->GetObjectClass(env, nodeXYZGeometryNodeSetList);
-		jmethodID nodeXYZGeometryNodeSetSizeMethod = (*env)->GetMethodID(env, nodeXYZGeometryNodeSetClass, "size", "()I");
-		jmethodID nodeXYZGeometryNodeSetGetMethod = (*env)->GetMethodID(env, nodeXYZGeometryNodeSetClass, "get", "(I)Ljava/lang/Object;");
-
-		jint nodeXYZGeometryNodeSetSize = (*env)->CallIntMethod(env, nodeXYZGeometryNodeSetList, nodeXYZGeometryNodeSetSizeMethod);
-
 
     for (jint nIndex = 0; nIndex < timeWindowItemControlSizeMethod; nIndex++) {
         jobject timeWindowItemControlObj = (*env)->CallObjectMethod(env, timeRestrictionsObj, getTimeWindowItemControlInfoMethod);
