@@ -84,6 +84,10 @@ public class RGAEncodeTest {
     NodeXYZOffsetValue mockNodeXYZOffsetValue4;
     NodeXYZOffsetValue mockNodeXYZOffsetValue5;
     NodeXYZOffsetValue mockNodeXYZOffsetValue6;
+    ReferencePointInfo mockReferencePointInfo1;
+    Position3D mockLocation1;
+    DDate mockTimeOfCalculation1;
+
 
     GeometryContainer mockGeometryContainer6;
     BicycleLaneGeometryLayer mockBicycleLaneGeometryLayer1;
@@ -116,6 +120,9 @@ public class RGAEncodeTest {
     NodeXYZOffsetValue mockNodeXYZOffsetValue10;
     NodeXYZOffsetValue mockNodeXYZOffsetValue11;
     NodeXYZOffsetValue mockNodeXYZOffsetValue12;
+    ReferencePointInfo mockReferencePointInfo2;
+    Position3D mockLocation2;
+    DDate mockTimeOfCalculation2;
 
     GeometryContainer mockGeometryContainer9;
     CrosswalkLaneGeometryLayer mockCrosswalkLaneGeometryLayer1;
@@ -139,7 +146,7 @@ public class RGAEncodeTest {
     GeometryContainer mockGeometryContainer11;
     CrosswalkLaneGeometryLayer mockCrosswalkLaneGeometryLayer3;
     IndvCrosswalkLaneGeometryInfo mockIndvCrosswalkLaneGeometryInfo3;
-    List<IndvCrosswalkLaneGeometryInfo> mockIndvCrosswalkLaneGeometryInfoList3;
+    List<IndvCrosswalkLaneGeometryInfo> mockIndvCrosswalkLaneGeometryIPhysicalnfoList3;
     LaneConstructorType mockLaneConstructorType9;
     PhysicalXYZNodeInfo mockPhysicalXYZNodeInfo3;
     IndividualXYZNodeGeometryInfo mockIndividualXYZNodeGeometryInfo3;
@@ -148,6 +155,9 @@ public class RGAEncodeTest {
     NodeXYZOffsetValue mockNodeXYZOffsetValue16;
     NodeXYZOffsetValue mockNodeXYZOffsetValue17;
     NodeXYZOffsetValue mockNodeXYZOffsetValue18;
+    ReferencePointInfo mockReferencePointInfo3;
+    Position3D mockLocation3;
+    DDate mockTimeOfCalculation3;
 
     @Before
     public void setup() {
@@ -193,6 +203,9 @@ public class RGAEncodeTest {
         mockNodeXYZOffsetValue4 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue5 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue6 = mock(NodeXYZOffsetValue.class);
+        mockReferencePointInfo1 = mock(ReferencePointInfo.class);
+        mockLocation1 = mock(Position3D.class);
+        mockTimeOfCalculation1 = mock(DDate.class);
 
         mockGeometryContainer6 = mock(GeometryContainer.class);
         mockBicycleLaneGeometryLayer1= mock(BicycleLaneGeometryLayer.class);
@@ -221,6 +234,9 @@ public class RGAEncodeTest {
         mockNodeXYZOffsetValue10 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue11 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue12 = mock(NodeXYZOffsetValue.class);
+        mockReferencePointInfo2 = mock(ReferencePointInfo.class);
+        mockLocation2 = mock(Position3D.class);
+        mockTimeOfCalculation2 = mock(DDate.class);
 
         mockGeometryContainer9 = mock(GeometryContainer.class);
         mockCrosswalkLaneGeometryLayer1= mock(CrosswalkLaneGeometryLayer.class);
@@ -249,6 +265,9 @@ public class RGAEncodeTest {
         mockNodeXYZOffsetValue16 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue17 = mock(NodeXYZOffsetValue.class);
         mockNodeXYZOffsetValue18 = mock(NodeXYZOffsetValue.class);
+        mockReferencePointInfo3 = mock(ReferencePointInfo.class);
+        mockLocation3 = mock(Position3D.class);
+        mockTimeOfCalculation3 = mock(DDate.class);
 
         encoder = new Encoder();
 
@@ -343,6 +362,9 @@ public class RGAEncodeTest {
         when(mockPhysicalXYZNodeInfo1.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList1);
         when(mockLaneConstructorType3.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
         when(mockLaneConstructorType3.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo1);
+        when(mockPhysicalXYZNodeInfo1.getReferencePointInfo()).thenReturn(mockReferencePointInfo1);
+        when(mockReferencePointInfo1.getLocation()).thenReturn(mockLocation1);
+        when(mockReferencePointInfo1.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation1);
         when(mockIndvMtrVehLaneGeometryInfo3.getLaneID()).thenReturn(13);
         when(mockIndvMtrVehLaneGeometryInfo3.getLaneConstructorType()).thenReturn(mockLaneConstructorType3);
         mockIndvMtrVehLaneGeometryInfoList3 = Arrays.asList(mockIndvMtrVehLaneGeometryInfo3);
@@ -395,6 +417,10 @@ public class RGAEncodeTest {
         when(mockPhysicalXYZNodeInfo2.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList2);
         when(mockLaneConstructorType6.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
         when(mockLaneConstructorType6.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo2);
+        when(mockPhysicalXYZNodeInfo2.getReferencePointInfo()).thenReturn(mockReferencePointInfo2);
+        when(mockReferencePointInfo2.getLocation()).thenReturn(mockLocation2);
+        when(mockReferencePointInfo2.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation2);
+
         when(mockIndvBikeLaneGeometryInfo3.getLaneID()).thenReturn(16);
         when(mockIndvBikeLaneGeometryInfo3.getLaneConstructorType()).thenReturn(mockLaneConstructorType6);
         mockIndvBikeLaneGeometryInfoList3 = Arrays.asList(mockIndvBikeLaneGeometryInfo3);
@@ -445,6 +471,9 @@ public class RGAEncodeTest {
         when(mockIndividualXYZNodeGeometryInfo3.getNodeXYZOffsetInfo()).thenReturn(mockNodeXYZOffsetInfo6);
         mockIndividualXYZNodeGeometryInfoList3 = Arrays.asList(mockIndividualXYZNodeGeometryInfo3);
         when(mockPhysicalXYZNodeInfo3.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList3);
+        when(mockPhysicalXYZNodeInfo3.getReferencePointInfo()).thenReturn(mockReferencePointInfo3);
+        when(mockReferencePointInfo3.getLocation()).thenReturn(mockLocation3);
+        when(mockReferencePointInfo3.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation3);
         when(mockLaneConstructorType9.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
         when(mockLaneConstructorType9.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo3);
         when(mockIndvCrosswalkLaneGeometryInfo3.getLaneID()).thenReturn(19);
