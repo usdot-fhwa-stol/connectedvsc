@@ -596,6 +596,11 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, WayPlanarGeometryInfoObj, getNodeLocPlanarGeomInfoMethod); //ERROR
 			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, WayPlanarGeometryInfoClass);
 
+			// Populate wayWidth 
+			WayPlanarGeometryInfo_t *wayPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
+			wayPlanarGeometryInfo->wayWidth = NULL;
+			computedXYZNodeInfo->lanePlanarGeomInfo = *wayPlanarGeometryInfo;
+
 			ASN_SEQUENCE_ADD(&physicalXYZNodeInfo->nodeXYZGeometryNodeSet.list, nodeXYZOffset);
 		}
 
@@ -737,8 +742,64 @@ void populateReferencePoint(JNIEnv *env, jobject referencePointObj, ReferencePoi
     jobject referencePointInfoObj = (*env)->CallObjectMethod(env, referencePointObj, getReferencePointMethod);
 
     jmethodID getLocation = (*env)->GetMethodID(env, referencePointInfoObj, "getLocation", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
+    jobject locationObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getLocation);
+	jclass locationClass = (*env)->GetObjectClass(env, locationObj);
+
     jmethodID getTimeOfCalculation = (*env)->getMethodID(env, referencePointInfoObj, "getTimeOfCalculation", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
-    
+    jobject timeOfCalculationObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getTimeOfCalculation);
+	jclass timeOfCalculationClass = (*env)->GetObjectClass(env, timeOfCalculationObj);
+
+	// ================== Reference Point Info (Reference Point) ==================
+
+	Position3D_t location;
+
+	jmethodID getLatitude = (*env)->GetMethodID(env, locationClass, "getLatitude", "()D");
+	jmethodID getLongitude = (*env)->GetMethodID(env, locationClass, "getLongitude", "()D");
+
+	jdouble latitude = (*env)->CallDoubleMethod(env, locationObj, getLatitude);
+	jdouble longitude = (*env)->CallDoubleMethod(env, locationObj, getLongitude);
+
+	location.lat = (Common_Latitude_t)((long)latitude);
+	location.Long = (Common_Longitude_t)((long)longitude);
+
+	// Check if elevation exists
+	jmethodID isElevationExists = (*env)->GetMethodID(env, locationClass, "isElevationExists", "()Z");
+	jboolean elevationExists = (*env)->CallBooleanMethod(env, locationObj, isElevationExists);
+
+	if (elevationExists)
+	{
+		jmethodID getElevation = (*env)->GetMethodID(env, locationClass, "getElevation", "()F");
+		jfloat elevation = (*env)->CallFloatMethod(env, locationObj, getElevation);
+
+		Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
+		*dsrcElevation = (long)elevation;
+		location.elevation = dsrcElevation;
+	}
+	else
+	{
+		location.elevation = NULL;
+	}
+	location.regional = NULL;
+	
+	&referencePoint->location = location;
+
+	// ================== Reference Point Info (Time Of Calculation) ==================
+	DDate_t timeOfCalculation;
+
+	jmethodID getYear = (*env)->GetMethodID(env, timeOfCalculationClass, "getYear", "()I");
+	jmethodID getMonth = (*env)->GetMethodID(env, timeOfCalculationClass, "getMonth", "()I");
+	jmethodID getDay = (*env)->GetMethodID(env, timeOfCalculationClass, "getDay", "()I");
+
+	jint year = (*env)->CallIntMethod(env, timeOfCalcObj, getYear);
+	jint month = (*env)->CallIntMethod(env, timeOfCalcObj, getMonth);
+	jint day = (*env)->CallIntMethod(env, timeOfCalcObj, getDay);
+
+	timeOfCalculation.year = (long)year;
+	timeOfCalculation.month = (long)month;
+	timeOfCalculation.day = (long)day;
+
+	&referencePoint.timeofCalculation = timeOfCalculation;    
+
 
 }
 
