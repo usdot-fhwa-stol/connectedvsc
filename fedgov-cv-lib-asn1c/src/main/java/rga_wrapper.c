@@ -781,7 +781,7 @@ void populateReferencePoint(JNIEnv *env, jobject referencePointObj, ReferencePoi
 	}
 	location.regional = NULL;
 	
-	&referencePoint->location = location;
+	referencePoint->location = location;
 
 	// ================== Reference Point Info (Time Of Calculation) ==================
 	DDate_t timeOfCalculation;
@@ -798,7 +798,7 @@ void populateReferencePoint(JNIEnv *env, jobject referencePointObj, ReferencePoi
 	timeOfCalculation.month = (long)month;
 	timeOfCalculation.day = (long)day;
 
-	&referencePoint.timeofCalculation = timeOfCalculation;    
+	referencePoint.timeofCalculation = timeOfCalculation;    
 
 
 }
@@ -835,6 +835,7 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, TimeRest
         jobject daysOfTheWeekObj = (*env)->CallObjectMethod(env, timeWindowItemControlObj, getDaysOfTheWeekMethod);
         jclass daysOfTheWeekClass = (*env)->GetObjectClass(env, daysOfTheWeekObj);
 
+
         timeRestrictions->FixedTimeWindowCtrl.timeWindowSet.daysOfTheWeek = daysOfTheWeek;
 
         //StartPeriod
@@ -852,7 +853,9 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, TimeRest
 
         startPeriod.year = (long)startYear;
         startPeriod.month = (long)startMonth;
-        startPeriod.day = (long)startDay;   
+        startPeriod.day = (long)startDay;  
+
+		timeRestrictions->FixedTimeWindowCtrl.timeWindowSet.startPeriod = startPeriod; 
 
         //EndPeriod
         jmethodID getEndPeriodMethod = (*env)->GetMethodID(env, timeWindowInformationClass, "getEndPeriod", "()Lgov/usdot/cv/rgaencoder/DDate;");
@@ -871,10 +874,14 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, TimeRest
         endPeriod.month = (long)endMonth;
         endPeriod.day = (long)endDay;  
 
+		timeRestrictions->FixedTimeWindowCtrl.timeWindowSet.endPeriod = endPeriod;
+
         //GeneralPeriod
         jmethodID getGeneralPeriodMethod = (*env)->GetMethodID(env, timeWindowInformationClass, "getGeneralPeriod", "()Lgov/usdot/cv/rgaencoder/GeneralPeriod;");
         jobject generalPeriodObj = (*env)->CallObjectMethod(env, timeWindowItemControlObj, getGeneralPeriodMethod);
         jclass generalPeriodClass = (*env)->GetObjectClass(env, generalPeriodObj);
+
+		timeRestrictions->
 
 
     }
