@@ -834,8 +834,13 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, TimeRest
     }
 
     jmethodID getOtherDataSetItemCtrl = (*env)->GetMethodID(env, timeRestrictionsClass, "getOtherDataSetItemCtrl", "()Lgov/usdot/cv/rgaencoder/TimeRestrictions;");
+    jobject otherDataSetItemCtrlObj = (*env)->CallObjectMethod(env, timeRestrictionsObj, getOtherDataSetItemCtrl);
+    jclass otherDataSetItemCtrlClass = (*env)->GetObjectClass(env, otherDataSetItemCtrlObj);
 
+    jmethodID getMessageID = (*env)->GetMethodID(env, otherDataSetItemCtrlClass, "getMessageID", "()J");
+    jlong messageID = (*env)->CallLongMethod(env, otherDataSetItemCtrlObj, getMessageID);
 
-
+    jmethodID getEnaAttributeID = (*env)->GetMethodID(env, otherDataSetItemCtrlClass, "getEnaAttributeID", "()J");
+    jlong enaAttributeID = (*env)->CallIntMethod(env, otherDataSetItemCtrlObj, getEnaAttributeID);
 
 }
