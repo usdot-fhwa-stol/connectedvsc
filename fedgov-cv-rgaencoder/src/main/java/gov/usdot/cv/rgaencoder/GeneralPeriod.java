@@ -17,45 +17,31 @@
 package gov.usdot.cv.rgaencoder;
 
 public class GeneralPeriod {
-    private int day;
-    private int night;
+    private short generalPeriod;
 
     // Constants for choice field
     public static final int DAY = 0;
     public static final int NIGHT = 1;
 
     public GeneralPeriod() {
-        this.day = 0;
-        this.night = 0;
     }
 
-    public GeneralPeriod(int day,
-            int night) {
-        this.day = day;
-        this.night = night;
+    public GeneralPeriod(short generalPeriod) {
+        this.generalPeriod = generalPeriod;
     }
 
-    public int getDay() {
-        return day;
+    public int getGeneralPeriod() {
+        return generalPeriod;
     }
 
-    public void setDay(int day) {
-        this.day = day;
-    }
-
-    public int getNight() {
-        return night;
-    }
-
-    public void setNight(int night) {
-        this.night = night;
+    public void setGeneralPeriod(short generalPeriod) {
+        this.generalPeriod = generalPeriod;
     }
 
     @Override
     public String toString() {
         return "GeneralPeriod{" +
-                "day=" + day +
-                ", night=" + night +
+                "generalPeriod=" + generalPeriod +
                 '}';
     }
 }
