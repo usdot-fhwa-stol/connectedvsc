@@ -401,10 +401,10 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, bikeLaneConstructorTypeObj, &(indvBikeLaneGeometryInfo->laneConstructorType));
 
-						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
-						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getTimeRestrictionsMethod);
+						// jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						// jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getTimeRestrictionsMethod);
 
-						populateTimeRestrictions(env, timeRestrictionsObj, &(indvBikeLaneGeometryInfo->timeRestrictions));
+						// populateTimeRestrictions(env, timeRestrictionsObj, &(indvBikeLaneGeometryInfo->timeRestrictions));
 
 						ASN_SEQUENCE_ADD(&bicycleLaneGeometryLayer->laneGeomLaneSet.list, indvBikeLaneGeometryInfo);
 					}
@@ -451,10 +451,10 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, crosswalkLaneConstructorTypeObj, &indvCrosswalkLaneGeometryInfo->laneConstructorType);
 
-						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
-						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getTimeRestrictionsMethod);
+						// jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						// jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getTimeRestrictionsMethod);
 
-						populateTimeRestrictions(env, timeRestrictionsObj, &(indvCrosswalkLaneGeometryInfo->timeRestrictions));
+						// populateTimeRestrictions(env, timeRestrictionsObj, &(indvCrosswalkLaneGeometryInfo->timeRestrictions));
 
 						ASN_SEQUENCE_ADD(&crosswalkLaneGeometryLayer->laneGeomLaneSet.list, indvCrosswalkLaneGeometryInfo);
 					}
@@ -598,6 +598,8 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
 			jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
 
+			printf("Getting waywidth, physical");
+
 			WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
 
 			switch (choice) {
@@ -614,16 +616,18 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 					break;
 			}
 
+			printf("Got waywidth, physical");
+
 			ASN_SEQUENCE_ADD(&physicalXYZNodeInfo->nodeXYZGeometryNodeSet.list, nodeXYZOffset);
 		}
 
 		laneConstructorType->present = LaneConstructorType_PR_physicalXYZNodeInfo;
 		laneConstructorType->choice.physicalXYZNodeInfo = *physicalXYZNodeInfo;
 
-		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, physicalXYZNodeInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
-		jobject referencePointInfoObj = (*env)->CallObjectMethod(env, physicalXYZNodeInfoObj, getReferencePointInfoMethod);\
-		jclass referencePointInfoClass = (*env)->GetObjectClass(env, referencePointInfoObj);
-		populateReferencePointInfo(env, referencePointInfoObj, referencePointInfoClass);
+		// jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, physicalXYZNodeInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
+		// jobject referencePointInfoObj = (*env)->CallObjectMethod(env, physicalXYZNodeInfoObj, getReferencePointInfoMethod);
+		// jclass referencePointInfoClass = (*env)->GetObjectClass(env, referencePointInfoObj);
+		// populateReferencePointInfo(env, referencePointInfoObj, referencePointInfoClass);
 		
 	}
 	else if (laneConstructorTypeChoice == COMPUTED_NODE)
@@ -661,10 +665,44 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		jobject nodeZOffsetValueObj = (*env)->CallObjectMethod(env, laneCenterLineXYZOffsetObj, getNodeZOffsetMethod);
 		populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &computedXYZNodeInfo->laneCenterLineXYZOffset.nodeZOffsetValue);
 
-		// Populate WayPlanarGeometryInfo 
-		WayPlanarGeometryInfo_t *wayPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
-		wayPlanarGeometryInfo->wayWidth = NULL;
-		computedXYZNodeInfo->lanePlanarGeomInfo = *wayPlanarGeometryInfo;
+			// Populate WayPlanarGeometryInfo
+			jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, computedXYZNodeInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, computedXYZNodeInfoObj, getNodeLocPlanarGeometryInfoMethod);
+			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
+
+			// Populate wayWidth 
+			jmethodID getWayWidthMethod = (*env)->GetMethodID(env, nodeLocPlanarGeometryInfoClass, "getWayWidth", "()D");
+			jobject wayWidthObj = (*env)->CallObjectMethod(env, nodeLocPlanarGeometryInfoObj, getWayWidthMethod);
+			jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+
+			jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
+			jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
+			jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
+
+			jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+			jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
+			jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
+
+			printf("Getting waywidth, physical");
+
+			WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
+
+			switch (choice) {
+				case 0: // FULL_WIDTH in Java
+					wayWidth->present = WayWidth_PR_fullWidth;
+					wayWidth->choice.fullWidth = (long)fullWidth; // Cast jint to long
+					break;
+				case 1: // DELTA_WIDTH in Java
+					wayWidth->present = WayWidth_PR_deltaWidth;
+					wayWidth->choice.deltaWidth = (long)deltaWidth; // Cast jint to long
+					break;
+				default: // Uninitialized or invalid choice (-1 or other)
+					wayWidth->present = WayWidth_PR_NOTHING;
+					break;
+			}
+
+			printf("Got waywidth, physical");
+
 
 		laneConstructorType->present = LaneConstructorType_PR_computedXYZNodeInfo;
 		laneConstructorType->choice.computedXYZNodeInfo = *computedXYZNodeInfo;

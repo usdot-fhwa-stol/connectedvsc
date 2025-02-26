@@ -359,6 +359,12 @@ public class RGAEncodeTest {
         when(mockNodeXYZOffsetInfo1.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue3);
         when(mockComputedXYZNodeInfo1.getRefLaneID()).thenReturn(24);
         when(mockComputedXYZNodeInfo1.getLaneCenterLineXYZOffset()).thenReturn(mockNodeXYZOffsetInfo1);
+        when(mockWayWidth1.getChoice()).thenReturn((byte)0); // FULL_WIDTH
+        when(mockWayWidth1.getFullWidth()).thenReturn(500);
+        when(mockWayWidth2.getChoice()).thenReturn((byte)1); // DELTA_WIDTH
+        when(mockWayWidth2.getDeltaWidth()).thenReturn(300);
+        when(mockWayPlanarGeometryInfo1.getWayWidth()).thenReturn(mockWayWidth1);
+        when(mockWayPlanarGeometryInfo4.getWayWidth()).thenReturn(mockWayWidth2);
         when(mockComputedXYZNodeInfo1.getLanePlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo1);
         when(mockLaneConstructorType2.getChoice()).thenReturn(COMPUTED_NODE);
         when(mockLaneConstructorType2.getComputedXYZNodeInfo()).thenReturn(mockComputedXYZNodeInfo1);
@@ -509,12 +515,6 @@ public class RGAEncodeTest {
         when(mockGeometryContainer11.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer3);
 
         // New setup for WayWidth and TimeRestrictions
-        when(mockWayWidth1.getChoice()).thenReturn((byte)0); // FULL_WIDTH
-        when(mockWayWidth1.getFullWidth()).thenReturn(500);
-        when(mockWayWidth2.getChoice()).thenReturn((byte)1); // DELTA_WIDTH
-        when(mockWayWidth2.getDeltaWidth()).thenReturn(300);
-        when(mockWayPlanarGeometryInfo1.getWayWidth()).thenReturn(mockWayWidth1);
-        when(mockWayPlanarGeometryInfo4.getWayWidth()).thenReturn(mockWayWidth2);
         when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo4);
         when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo4);
         when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo4);
