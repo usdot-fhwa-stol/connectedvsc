@@ -22,7 +22,7 @@
 
 JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIEnv *env, jobject cls, jobject baseLayer, jobject geometryContainers)
 {
-	printf("\n ***Inside the rga_wrapper.c file **** \n");
+	printf("\n ***Inside the rga_wrapper.c file Satish **** \n");
 	uint8_t buffer[2302];
 	size_t buffer_size = sizeof(buffer);
 	asn_enc_rval_t ec;
@@ -401,6 +401,17 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, bikeLaneConstructorTypeObj, &(indvBikeLaneGeometryInfo->laneConstructorType));
 
+						// check if timeRestrictions exists 
+						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getTimeRestrictionsMethod);
+
+						if (timeRestrictionsObj == NULL) {
+							indvBikeLaneGeometryInfo->timeRestrictions = NULL;
+						}
+						else { 
+							populateTimeRestrictions(env, timeRestrictionsObj, &(indvBikeLaneGeometryInfo->timeRestrictions));
+						}
+
 						ASN_SEQUENCE_ADD(&bicycleLaneGeometryLayer->laneGeomLaneSet.list, indvBikeLaneGeometryInfo);
 					}
 					geometryLayer->geometryContainer_Value.choice.BicycleLaneGeometryLayer = *bicycleLaneGeometryLayer;
@@ -445,6 +456,17 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 						jobject crosswalkLaneConstructorTypeObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrosswalkLaneConstructorTypeMethod);
 
 						populateLaneConstructorType(env, crosswalkLaneConstructorTypeObj, &indvCrosswalkLaneGeometryInfo->laneConstructorType);
+
+						// Check if time restrictions exist
+						jmethodID getTimeRestrictionsMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
+						jobject timeRestrictionsObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getTimeRestrictionsMethod);
+
+						if (timeRestrictionsObj == NULL) {
+							indvCrosswalkLaneGeometryInfo->timeRestrictions = NULL;
+						}
+						else { 
+							populateTimeRestrictions(env, timeRestrictionsObj, &(indvCrosswalkLaneGeometryInfo->timeRestrictions));
+						}
 
 						ASN_SEQUENCE_ADD(&crosswalkLaneGeometryLayer->laneGeomLaneSet.list, indvCrosswalkLaneGeometryInfo);
 					}
@@ -538,7 +560,7 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		jmethodID nodeXYZGeometryNodeSetSizeMethod = (*env)->GetMethodID(env, nodeXYZGeometryNodeSetClass, "size", "()I");
 		jmethodID nodeXYZGeometryNodeSetGetMethod = (*env)->GetMethodID(env, nodeXYZGeometryNodeSetClass, "get", "(I)Ljava/lang/Object;");
 
-		jint nodeXYZGeometryNodeSetSize = (*env)->CallIntMethod(env, nodeXYZGeometryNodeSetList, nodeXYZGeometryNodeSetSizeMethod);
+		jint nodeXYZGeometryNodeSetSize = (*env)->CallIntMethod(env, nodeXYZGeometryNodeSetList, nodeXYZGeometryNodeSetSizeMethod);		
 
 		PhysicalXYZNodeInfo_t *physicalXYZNodeInfo = calloc(1, sizeof(PhysicalXYZNodeInfo_t));
 
@@ -570,11 +592,68 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			jobject nodeZOffsetValueObj = (*env)->CallObjectMethod(env, nodeXYZOffsetInfoObj, getNodeZOffsetMethod);
 			populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &nodeXYZOffset->nodeZOffsetValue);
 
+			// First check to see if NodeLocPlanarGeometryInfo is set
+			// Populate WayPlanarGeometryInfo
+			jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, individualXYZNodeGeometryInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, individualXYZNodeGeometryInfoObj, getNodeLocPlanarGeometryInfoMethod);
+			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
+
+			WayPlanarGeometryInfo_t *nodeLocPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
+
+			if(nodeLocPlanarGeometryInfoObj == NULL) // STILL NEED TO FIX
+			{
+				nodeLocPlanarGeometryInfo->wayWidth = -1;
+
+			} else {
+				// Populate wayWidth 
+				jmethodID getWayWidthMethod = (*env)->GetMethodID(env, nodeLocPlanarGeometryInfoClass, "getWayWidth", "()Lgov/usdot/cv/rgaencoder/WayWidth;");
+				jobject wayWidthObj = (*env)->CallObjectMethod(env, nodeLocPlanarGeometryInfoObj, getWayWidthMethod);
+				jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+
+				jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
+				jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+
+				printf("Getting waywidth, physical");
+
+				WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
+
+				switch (choice) {
+					case 0:
+						jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
+						jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
+						wayWidth->present = WayWidth_PR_fullWidth;
+						wayWidth->choice.fullWidth = (long)fullWidth;
+						break;
+					case 1:
+						jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
+						jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
+						wayWidth->present = WayWidth_PR_deltaWidth;
+						wayWidth->choice.deltaWidth = (long)deltaWidth;
+						break;
+					default: 
+						wayWidth->present = WayWidth_PR_NOTHING;
+						break;
+			}
+
+			printf("Got waywidth, physical");
+			}
 			ASN_SEQUENCE_ADD(&physicalXYZNodeInfo->nodeXYZGeometryNodeSet.list, nodeXYZOffset);
 		}
 
 		laneConstructorType->present = LaneConstructorType_PR_physicalXYZNodeInfo;
 		laneConstructorType->choice.physicalXYZNodeInfo = *physicalXYZNodeInfo;
+
+		jmethodID getReferencePointInfoMethod = (*env)->GetMethodID(env, physicalXYZNodeInfoClass, "getReferencePointInfo", "()Lgov/usdot/cv/rgaencoder/ReferencePointInfo;");
+		jobject referencePointInfoObj = (*env)->CallObjectMethod(env, physicalXYZNodeInfoObj, getReferencePointInfoMethod);
+		jclass referencePointInfoClass = (*env)->GetObjectClass(env, referencePointInfoObj);
+
+		if (referencePointInfoObj == !NULL)
+		{
+			populateReferencePointInfo(env, referencePointInfoObj, referencePointInfoClass);
+			
+		} else {
+			physicalXYZNodeInfo->referencePointInfo = NULL;
+		}
 	}
 	else if (laneConstructorTypeChoice == COMPUTED_NODE)
 	{
@@ -611,10 +690,49 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		jobject nodeZOffsetValueObj = (*env)->CallObjectMethod(env, laneCenterLineXYZOffsetObj, getNodeZOffsetMethod);
 		populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &computedXYZNodeInfo->laneCenterLineXYZOffset.nodeZOffsetValue);
 
-		WayPlanarGeometryInfo_t *wayPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
-		wayPlanarGeometryInfo->wayWidth = NULL;
-		computedXYZNodeInfo->lanePlanarGeomInfo = *wayPlanarGeometryInfo;
+		// Populate WayPlanarGeometryInfo
+		jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, computedXYZNodeInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+		jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, computedXYZNodeInfoObj, getNodeLocPlanarGeometryInfoMethod);
+		jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
 
+		WayPlanarGeometryInfo_t *nodeLocPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
+
+		if(nodeLocPlanarGeometryInfoObj == NULL) //STILL NEED TO FIX
+		{
+			nodeLocPlanarGeometryInfo->wayWidth = -1;
+		} else {
+			// Populate wayWidth 
+			jmethodID getWayWidthMethod = (*env)->GetMethodID(env, nodeLocPlanarGeometryInfoClass, "getWayWidth",  "()Lgov/usdot/cv/rgaencoder/WayWidth;");
+			jobject wayWidthObj = (*env)->CallObjectMethod(env, nodeLocPlanarGeometryInfoObj, getWayWidthMethod);
+			jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+
+			jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
+			jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+
+			printf("Getting waywidth, physical");
+
+			WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
+
+			switch (choice) {
+				case 0: // FULL_WIDTH
+					jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
+					jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
+					wayWidth->present = WayWidth_PR_fullWidth;
+					wayWidth->choice.fullWidth = (long)fullWidth; // Cast jint to long
+					break;
+				case 1: // DELTA_WIDTH
+					jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
+					jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
+					wayWidth->present = WayWidth_PR_deltaWidth;
+					wayWidth->choice.deltaWidth = (long)deltaWidth; // Cast jint to long
+					break;
+				default: // Uninitialized or invalid choice (-1 or other)
+					wayWidth->present = WayWidth_PR_NOTHING;
+					break;
+			}
+
+			printf("Got waywidth, physical");
+		}
 		laneConstructorType->present = LaneConstructorType_PR_computedXYZNodeInfo;
 		laneConstructorType->choice.computedXYZNodeInfo = *computedXYZNodeInfo;
 	}
@@ -697,4 +815,212 @@ void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffs
 	{
 		offsetValue->present = NodeXYZOffsetValue_PR_NOTHING;
 	}
+}
+
+void populateReferencePoint(JNIEnv *env, jobject referencePointObj, ReferencePointInfo_t *referencePoint) {
+    jclass referencePointClass = (*env)->GetObjectClass(env, referencePointObj);
+
+    jmethodID getLocation = (*env)->GetMethodID(env, referencePointInfoObj, "getLocation", "()Lgov/usdot/cv/rgaencoder/Position3D;");
+    jobject locationObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getLocation);
+	jclass locationClass = (*env)->GetObjectClass(env, locationObj);
+
+    jmethodID getTimeOfCalculation = (*env)->GetMethodID(env, referencePointInfoObj, "getTimeOfCalculation", "()Lgov/usdot/cv/rgaencoder/DDate;");
+    jobject timeOfCalculationObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getTimeOfCalculation);
+	jclass timeOfCalculationClass = (*env)->GetObjectClass(env, timeOfCalculationObj);
+
+	// ================== Reference Point Info (Reference Point) ==================
+
+	Position3D_t location;
+
+	jmethodID getLatitude = (*env)->GetMethodID(env, locationClass, "getLatitude", "()D");
+	jmethodID getLongitude = (*env)->GetMethodID(env, locationClass, "getLongitude", "()D");
+
+	jdouble latitude = (*env)->CallDoubleMethod(env, locationObj, getLatitude);
+	jdouble longitude = (*env)->CallDoubleMethod(env, locationObj, getLongitude);
+
+	location.lat = (Common_Latitude_t)((long)latitude);
+	location.Long = (Common_Longitude_t)((long)longitude);
+
+	// Check if elevation exists
+	jmethodID isElevationExists = (*env)->GetMethodID(env, locationClass, "isElevationExists", "()Z");
+	jboolean elevationExists = (*env)->CallBooleanMethod(env, locationObj, isElevationExists);
+
+	if (elevationExists)
+	{
+		jmethodID getElevation = (*env)->GetMethodID(env, locationClass, "getElevation", "()F");
+		jfloat elevation = (*env)->CallFloatMethod(env, locationObj, getElevation);
+
+		Common_Elevation_t *dsrcElevation = calloc(1, sizeof(Common_Elevation_t));
+		*dsrcElevation = (long)elevation;
+		location.elevation = dsrcElevation;
+	}
+	else
+	{
+		location.elevation = NULL;
+	}
+	location.regional = NULL;
+	
+	referencePoint->location = location;
+
+	// ================== Reference Point Info (Time Of Calculation) ==================
+	DDate_t timeOfCalculation;
+
+	jmethodID getYear = (*env)->GetMethodID(env, timeOfCalculationClass, "getYear", "()I");
+	jmethodID getMonth = (*env)->GetMethodID(env, timeOfCalculationClass, "getMonth", "()I");
+	jmethodID getDay = (*env)->GetMethodID(env, timeOfCalculationClass, "getDay", "()I");
+
+	jint year = (*env)->CallIntMethod(env, timeOfCalculationObj, getYear);
+	jint month = (*env)->CallIntMethod(env, timeOfCalculationObj, getMonth);
+	jint day = (*env)->CallIntMethod(env, timeOfCalculationObj, getDay);
+
+	timeOfCalculation.year = (long)year;
+	timeOfCalculation.month = (long)month;
+	timeOfCalculation.day = (long)day;
+
+	referencePoint->timeOfCalculation = timeOfCalculation;    
+
+
+}
+
+void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, RGATimeRestrictions_t *timeRestrictions) {
+    jclass timeRestrictionsClass = (*env)->GetObjectClass(env, timeRestrictionsObj);
+	jmethodID getTimeRestrictionsTypeChoiceMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getChoice", "()I");
+	jint timeRestrictionsTypeChoice = (*env)->CallIntMethod(env, timeRestrictionsObj, getTimeRestrictionsTypeChoiceMethod);
+
+	if (timeRestrictionsTypeChoice == FIXED_TIME_WINDOW) {
+
+		jmethodID getTimeWindowItemControlInfoMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getFixedTimeWindowCtrl", "()Lgov/usdot/cv/rgaencoder/TimeWindowItemControlInfo;");
+		jmethodID timeWindowItemControlSizeMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "size", "()I");
+
+		jobject timeWindowItemControlObj = (*env)->CallObjectMethod(env, timeRestrictionsObj, getTimeWindowItemControlInfoMethod);
+		jclass timeWindowItemControlClass = (*env)->GetObjectClass(env, timeWindowItemControlObj);
+
+		jmethodID getTimeWindowSetMethod = (*env)->GetMethodID(env, timeWindowItemControlClass, "getTimeWindowSet", "()Ljava/util/List;");
+		jobject timeWindowSetList = (*env)->CallObjectMethod(env, timeWindowItemControlObj, getTimeWindowSetMethod);
+
+		jclass timeWindowSetClass = (*env)->GetObjectClass(env, timeWindowSetList);
+		jmethodID timeWindowSetSizeMethod = (*env)->GetMethodID(env, timeWindowSetClass, "size", "()I");
+		jmethodID timeWindowSetGetMethod = (*env)->GetMethodID(env, timeWindowSetClass, "get", "(I)Ljava/lang/Object;");
+
+		jint timeWindowSetSize = (*env)->CallIntMethod(env, timeWindowSetList, timeWindowSetSizeMethod);
+
+		TimeWindowItemControlInfo_t *fixedTimeWindowItemCtrl = calloc(1, sizeof(TimeWindowItemControlInfo_t));
+
+		for (jint nIndex = 0; nIndex < timeWindowItemControlSizeMethod; nIndex++) {
+
+			jobject timeWindowInformationObj = (*env)->CallObjectMethod(env, timeWindowSetList, timeWindowSetGetMethod, nIndex);
+			jclass timeWindowInformationClass = (*env)->GetObjectClass(env, timeWindowInformationObj);
+
+			TimeWindowInformation_t *timeWindowInformation = calloc(1, sizeof(TimeWindowInformation_t));
+
+			DaysOfTheWeek_t daysOfTheWeek;
+			DDate_t startPeriod;
+			DDate_t endPeriod;
+			GeneralPeriod_t generalPeriod;
+
+			//DaysOfTheWeek
+			jmethodID getDaysOfTheWeekMethod = (*env)->GetMethodID(env, timeWindowInformationClass, "getDaysOfTheWeek", "()S");
+			jobject daysOfTheWeekObj = (*env)->CallObjectMethod(env, timeWindowInformationObj, getDaysOfTheWeekMethod);
+			jclass daysOfTheWeekClass = (*env)->GetObjectClass(env, daysOfTheWeekObj);
+
+			if (daysofTheWeekObj == NULL) {
+				timeWindowInformation->daysOfTheWeek = NULL;
+			} else {
+				jshort daysOfTheWeekShort = (*env)->CallShortMethod(env, daysOfTheWeekObj, getDaysOfTheWeekMethod);
+
+				timeWindowInformation->daysOfTheWeek = calloc(1, sizeof(DaysOfTheWeek_t));
+
+				uint8_t daysOfTheWeekValue = (uint8_t)daysOfTheWeekShort;
+				timeWindowInformation->daysOfTheWeek->buf = calloc(1, sizeof(uint8_t));
+				timeWindowInformation->daysOfTheWeek->buf[0] = daysOfTheWeekValue;
+				timeWindowInformation->daysOfTheWeek->size = 1;
+				timeWindowInformation->daysOfTheWeek->bits_unused = 0;
+
+			}
+
+			//StartPeriod
+			jmethodID getStartPeriodMethod = (*env)->GetMethodID(env, timeWindowInformationClass, "getStartPeriod", "()Lgov/usdot/cv/rgaencoder/DDate;");
+			jobject startPeriodObj = (*env)->CallObjectMethod(env, timeWindowInformationObj, getStartPeriodMethod);
+			jclass startPeriodClass = (*env)->GetObjectClass(env, startPeriodObj);
+
+			if (startPeriodObj == NULL)
+			{
+				timeWindowInformation->startPeriod = NULL;
+			} else {
+				jmethodID getStartYear = (*env)->GetMethodID(env, startPeriodClass, "getYear", "()I");
+				jmethodID getStartMonth = (*env)->GetMethodID(env, startPeriodClass, "getMonth", "()I");
+				jmethodID getStartDay = (*env)->GetMethodID(env, startPeriodClass, "getDay", "()I");
+
+				jint startYear = (*env)->CallIntMethod(env, startPeriodObj, getStartYear);
+				jint startMonth = (*env)->CallIntMethod(env, startPeriodObj, getStartMonth);
+				jint startDay = (*env)->CallIntMethod(env, startPeriodObj, getStartDay);
+
+				timeWindowInformation->startPeriod = calloc(1, sizeof(DDate_t));
+
+				timeWindowInformation->startPeriod->year = (long)startYear;
+				timeWindowInformation->startPeriod->month = (long)startMonth;
+				timeWindowInformation->startPeriod->day = (long)startDay;  
+			}
+
+			//EndPeriod
+			jmethodID getEndPeriodMethod = (*env)->GetMethodID(env, timeWindowInformationClass, "getEndPeriod", "()Lgov/usdot/cv/rgaencoder/DDate;");
+			jobject endPeriodObj = (*env)->CallObjectMethod(env, timeWindowInformationObj, getEndPeriodMethod);
+			jclass endPeriodClass = (*env)->GetObjectClass(env, endPeriodObj);
+
+			if (endPeriodObj == NULL)
+			{
+				timeWindowInformation->endPeriod = NULL;
+			} else {
+				jmethodID getEndYear = (*env)->GetMethodID(env, endPeriodClass, "getYear", "()I");
+				jmethodID getEndMonth = (*env)->GetMethodID(env, endPeriodClass, "getMonth", "()I");
+				jmethodID getEndDay = (*env)->GetMethodID(env, endPeriodClass, "getDay", "()I");
+
+				jint endYear = (*env)->CallIntMethod(env, endPeriodObj, getEndYear);
+				jint endMonth = (*env)->CallIntMethod(env, endPeriodObj, getEndMonth);
+				jint endDay = (*env)->CallIntMethod(env, endPeriodObj, getEndDay);
+
+				timeWindowInformation->endPeriod = calloc(1, sizeof(DDate_t));
+
+				timeWindowInformation->endPeriod->year = (long)endYear;
+				timeWindowInformation->endPeriod->month = (long)endMonth;
+				timeWindowInformation->endPeriod->day = (long)endDay;  
+			}
+
+			//GeneralPeriod
+			jmethodID getGeneralPeriodMethod = (*env)->GetMethodID(env, timeWindowInformationClass, "getGeneralPeriod", "()Lgov/usdot/cv/rgaencoder/GeneralPeriod;");
+			jobject generalPeriodObj = (*env)->CallObjectMethod(env, timeWindowInformationObj, getGeneralPeriodMethod);
+			jclass generalPeriodClass = (*env)->GetObjectClass(env, generalPeriodObj);
+
+			if (generalPeriodObj == NULL)
+			{
+				timeWindowInformation->generalPeriod = NULL;
+			} else {
+				jmethodID getGeneralPeriodmethod = (*env)->GetMethodID(env, generalPeriodClass, "getGeneralPeriod", "()I");
+
+				jshort generalPeriodShort = (*env)->CallShortMethod(env, generalPeriodObj, getGeneralPeriodMethod);
+
+				timeWindowInformation->generalPeriod = calloc(1, sizeof(GeneralPeriod_t));
+				timeWindowInformation->generalPeriod = (long)generalPeriodShort;
+			}
+
+			// Adding to timeRestrictions
+			ASN_SEQUENCE_ADD(&fixedTimeWindowItemCtrl->timeWindowSet.list, timeWindowInformation);
+		}
+	} else if (timeRestrictionsTypeChoice == OTHER_DATA_SET) {
+		jmethodID getOtherDataSetItemCtrlMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getOtherDataSetItemCtrl", "()Lgov/usdot/cv/rgaencoder/OtherDSItemControlInfo;");
+		jobject otherDataSetItemCtrlObj = (*env)->CallObjectMethod(env, timeRestrictionsObj, getOtherDataSetItemCtrlMethod);
+		jclass otherDataSetItemCtrlClass = (*env)->GetObjectClass(env, otherDataSetItemCtrlObj);
+
+		OtherDSItemControlInfo_t *otherDataSetItemCtrl = calloc(1, sizeof(OtherDSItemControlInfo_t));
+
+		jmethodID getMessageID = (*env)->GetMethodID(env, otherDataSetItemCtrlClass, "getMessageID", "()J");
+		jlong messageID = (*env)->CallLongMethod(env, otherDataSetItemCtrlObj, getMessageID);
+
+		jmethodID getEnaAttributeID = (*env)->GetMethodID(env, otherDataSetItemCtrlClass, "getEnaAttributeID", "()J");
+		jlong enaAttributeID = (*env)->CallIntMethod(env, otherDataSetItemCtrlObj, getEnaAttributeID);
+
+		otherDataSetItemCtrl->messageID = (long)messageID;
+		otherDataSetItemCtrl->enaAttributeID = (long)enaAttributeID;
+	}
+
 }
