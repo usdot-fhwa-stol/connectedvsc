@@ -17,17 +17,32 @@
 package gov.usdot.cv.rgaencoder;
 
 public class RGATimeRestrictions {
+    private int choice;
     private TimeWindowItemControlInfo fixedTimeWindowItemCtrl;
     private OtherDSItemControlInfo otherDataSetItemCtrl;
 
+    // Constants to represent the choices
+    public static final int TIME_WINDOW_ITEM_CONTROL = 1;
+    public static final int OTHER_DATA_SET_ITEM_CONTROL = 2;
+
     public RGATimeRestrictions() {
+        this.choice = -1;
         this.fixedTimeWindowItemCtrl = null;
         this.otherDataSetItemCtrl = null;
     }
 
-    public RGATimeRestrictions(TimeWindowItemControlInfo fixedTimeWindowItemCtrl, OtherDSItemControlInfo otherDataSetItemCtrl) {
+    public RGATimeRestrictions(int choice, TimeWindowItemControlInfo fixedTimeWindowItemCtrl, OtherDSItemControlInfo otherDataSetItemCtrl) {
+        this.choice = choice;
         this.fixedTimeWindowItemCtrl = fixedTimeWindowItemCtrl;
         this.otherDataSetItemCtrl = otherDataSetItemCtrl;
+    }
+
+    public int getChoice() {
+        return choice;
+    }
+    
+    public void setChoice(int choice) {
+        this.choice = choice;
     }
 
     public TimeWindowItemControlInfo getFixedTimeWindowCtrl() {
