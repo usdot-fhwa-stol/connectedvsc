@@ -162,13 +162,6 @@ public class RGAEncodeTest {
     GeometryContainer mockGeometryContainer10;
     CrosswalkLaneGeometryLayer mockCrosswalkLaneGeometryLayer2;
     IndvCrosswalkLaneGeometryInfo mockIndvCrosswalkLaneGeometryInfo2;
-    RGATimeRestrictions mockTimeRestrictions4;
-    TimeWindowItemControlInfo mockFixedTimeWindowCtrl4;
-    List<TimeWindowInformation> mockTimeWindowSet4;
-    DaysOfTheWeek mockDaysOfTheWeek4;
-    DDateTime mockStartPeriod4;
-    DDateTime mockEndPeriod4;
-    GeneralPeriod mockGeneralPeriod4;
     List<IndvCrosswalkLaneGeometryInfo> mockIndvCrosswalkLaneGeometryInfoList2;
     LaneConstructorType mockLaneConstructorType8;
     ComputedXYZNodeInfo mockComputedXYZNodeInfo3;
@@ -302,13 +295,13 @@ public class RGAEncodeTest {
         mockGeometryContainer10 = mock(GeometryContainer.class);
         mockCrosswalkLaneGeometryLayer2 = mock(CrosswalkLaneGeometryLayer.class);
         mockIndvCrosswalkLaneGeometryInfo2 = mock(IndvCrosswalkLaneGeometryInfo.class);
-        mockTimeRestrictions4 = mock(RGATimeRestrictions.class);
-        mockFixedTimeWindowCtrl4 = mock(TimeWindowItemControlInfo.class);
-        mockTimeWindowSet4 = mock(List.class);
-        mockDaysOfTheWeek4 = mock(DaysOfTheWeek.class);
-        mockStartPeriod4 = mock(DDateTime.class);
-        mockEndPeriod4 = mock(DDateTime.class);
-        mockGeneralPeriod4 = mock(GeneralPeriod.class);
+        mockTimeRestrictions3 = mock(RGATimeRestrictions.class);
+        mockFixedTimeWindowCtrl3 = mock(TimeWindowItemControlInfo.class);
+        mockTimeWindowSet3 = mock(List.class);
+        mockDaysOfTheWeek3 = mock(DaysOfTheWeek.class);
+        mockStartPeriod3 = mock(DDateTime.class);
+        mockEndPeriod3 = mock(DDateTime.class);
+        mockGeneralPeriod3 = mock(GeneralPeriod.class);
         mockLaneConstructorType8 = mock(LaneConstructorType.class);
         mockComputedXYZNodeInfo3 = mock(ComputedXYZNodeInfo.class);
         mockNodeXYZOffsetInfo5 = mock(NodeXYZOffsetInfo.class);
@@ -578,7 +571,6 @@ public class RGAEncodeTest {
         when(mockGeometryContainer9.getGeometryContainerID()).thenReturn(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
         when(mockGeometryContainer9.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer1);
 
-        //timerestrictions3
         when(mockDaysOfTheWeek3.getDaysofTheWeek()).thenReturn((short)1);
         when(mockStartPeriod3.getYear()).thenReturn(2024);
         when(mockStartPeriod3.getMonth()).thenReturn(8);
