@@ -652,7 +652,7 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			populateReferencePointInfo(env, referencePointInfoObj, referencePointInfoClass);
 			
 		} else {
-			physicalXYZNodeInfo->referencePointInfo = NULL;
+			&physicalXYZNodeInfo->referencePointInfo = NULL;
 		}
 	}
 	else if (laneConstructorTypeChoice == COMPUTED_NODE)
@@ -820,12 +820,12 @@ void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffs
 void populateReferencePoint(JNIEnv *env, jobject referencePointObj, ReferencePointInfo_t *referencePoint) {
     jclass referencePointClass = (*env)->GetObjectClass(env, referencePointObj);
 
-    jmethodID getLocation = (*env)->GetMethodID(env, referencePointInfoObj, "getLocation", "()Lgov/usdot/cv/rgaencoder/Position3D;");
-    jobject locationObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getLocation);
+    jmethodID getLocation = (*env)->GetMethodID(env, referencePointObj, "getLocation", "()Lgov/usdot/cv/rgaencoder/Position3D;");
+    jobject locationObj = (*env)->CallObjectMethod(env, referencePointObj, getLocation);
 	jclass locationClass = (*env)->GetObjectClass(env, locationObj);
 
-    jmethodID getTimeOfCalculation = (*env)->GetMethodID(env, referencePointInfoObj, "getTimeOfCalculation", "()Lgov/usdot/cv/rgaencoder/DDate;");
-    jobject timeOfCalculationObj = (*env)->CallObjectMethod(env, referencePointInfoObj, getTimeOfCalculation);
+    jmethodID getTimeOfCalculation = (*env)->GetMethodID(env, referencePointObj, "getTimeOfCalculation", "()Lgov/usdot/cv/rgaencoder/DDate;");
+    jobject timeOfCalculationObj = (*env)->CallObjectMethod(env, referencePointObj, getTimeOfCalculation);
 	jclass timeOfCalculationClass = (*env)->GetObjectClass(env, timeOfCalculationObj);
 
 	// ================== Reference Point Info (Reference Point) ==================
@@ -887,7 +887,7 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, RGATimeR
 	jmethodID getTimeRestrictionsTypeChoiceMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getChoice", "()I");
 	jint timeRestrictionsTypeChoice = (*env)->CallIntMethod(env, timeRestrictionsObj, getTimeRestrictionsTypeChoiceMethod);
 
-	if (timeRestrictionsTypeChoice == FIXED_TIME_WINDOW) {
+	if (timeRestrictionsTypeChoice == RGATimeRestrictions_PR_fixedTimeWindowItemCtrl) {
 
 		jmethodID getTimeWindowItemControlInfoMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getFixedTimeWindowCtrl", "()Lgov/usdot/cv/rgaencoder/TimeWindowItemControlInfo;");
 		jmethodID timeWindowItemControlSizeMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "size", "()I");
@@ -923,7 +923,7 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, RGATimeR
 			jobject daysOfTheWeekObj = (*env)->CallObjectMethod(env, timeWindowInformationObj, getDaysOfTheWeekMethod);
 			jclass daysOfTheWeekClass = (*env)->GetObjectClass(env, daysOfTheWeekObj);
 
-			if (daysofTheWeekObj == NULL) {
+			if (daysOfTheWeekObj == NULL) {
 				timeWindowInformation->daysOfTheWeek = NULL;
 			} else {
 				jshort daysOfTheWeekShort = (*env)->CallShortMethod(env, daysOfTheWeekObj, getDaysOfTheWeekMethod);
@@ -1006,7 +1006,7 @@ void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, RGATimeR
 			// Adding to timeRestrictions
 			ASN_SEQUENCE_ADD(&fixedTimeWindowItemCtrl->timeWindowSet.list, timeWindowInformation);
 		}
-	} else if (timeRestrictionsTypeChoice == OTHER_DATA_SET) {
+	} else if (timeRestrictionsTypeChoice == RGATimeRestrictions_PR_otherDataSetItemCtrl) {
 		jmethodID getOtherDataSetItemCtrlMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getOtherDataSetItemCtrl", "()Lgov/usdot/cv/rgaencoder/OtherDSItemControlInfo;");
 		jobject otherDataSetItemCtrlObj = (*env)->CallObjectMethod(env, timeRestrictionsObj, getOtherDataSetItemCtrlMethod);
 		jclass otherDataSetItemCtrlClass = (*env)->GetObjectClass(env, otherDataSetItemCtrlObj);
