@@ -594,13 +594,13 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 
 			// First check to see if NodeLocPlanarGeometryInfo is set
 			// Populate WayPlanarGeometryInfo
-			jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, individualXYZNodeGeometryInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+			jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, getNodeLocPlanarGeomInfo, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
 			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, individualXYZNodeGeometryInfoObj, getNodeLocPlanarGeometryInfoMethod);
 			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
 
 			WayPlanarGeometryInfo_t *nodeLocPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
 
-			if(nodeLocPlanarGeometryInfoObj == NULL) // STILL NEED TO FIX
+			if(nodeLocPlanarGeometryInfoObj == NULL)
 			{
 				nodeLocPlanarGeometryInfo->wayWidth = -1;
 
@@ -691,7 +691,7 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &computedXYZNodeInfo->laneCenterLineXYZOffset.nodeZOffsetValue);
 
 		// Populate WayPlanarGeometryInfo
-		jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, computedXYZNodeInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+		jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, computedXYZNodeInfoClass, "getLanePlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
 		jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, computedXYZNodeInfoObj, getNodeLocPlanarGeometryInfoMethod);
 		jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
 
