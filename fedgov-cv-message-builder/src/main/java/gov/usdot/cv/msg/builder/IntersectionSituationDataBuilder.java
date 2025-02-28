@@ -60,10 +60,17 @@ import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingSize;
 import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
 import gov.usdot.cv.rgaencoder.ApproachGeometryLayer;
 import gov.usdot.cv.rgaencoder.BaseLayer;
+import gov.usdot.cv.rgaencoder.BicycleLaneGeometryLayer;
+import gov.usdot.cv.rgaencoder.CrosswalkLaneGeometryLayer;
 import gov.usdot.cv.rgaencoder.DDate;
 import gov.usdot.cv.rgaencoder.DDateTime;
 import gov.usdot.cv.rgaencoder.GeometryContainer;
 import gov.usdot.cv.rgaencoder.IndividualApproachGeometryInfo;
+import gov.usdot.cv.rgaencoder.IndvBikeLaneGeometryInfo;
+import gov.usdot.cv.rgaencoder.IndvCrosswalkLaneGeometryInfo;
+import gov.usdot.cv.rgaencoder.IndvMtrVehLaneGeometryInfo;
+import gov.usdot.cv.rgaencoder.LaneConstructorType;
+import gov.usdot.cv.rgaencoder.MotorVehicleLaneGeometryLayer;
 import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
@@ -154,8 +161,7 @@ public class IntersectionSituationDataBuilder {
 					IntersectionInputData.class);
 			generateType = isdInputData.getGenerateType();
 			logger.debug("generateType: " + generateType);
-			
-			
+
 			// TODO: temporarily commented out
 			// sr = buildSpatRecord(isdInputData);
 			// isd = buildISD(isdInputData, md, sr);
@@ -181,16 +187,18 @@ public class IntersectionSituationDataBuilder {
 				case Map:
 					isdInputData.validate();
 					md = buildMapData(isdInputData);
-					logger.debug("in MAP: " );
-					// Removing the first 8 characters from the MessageFrame provides the MAP message
-					// This was tested manually by removing the characters from MessageFrame and testing using the decoder
+					logger.debug("in MAP: ");
+					// Removing the first 8 characters from the MessageFrame provides the MAP
+					// message
+					// This was tested manually by removing the characters from MessageFrame and
+					// testing using the decoder
 					hexString = (J2735Helper.getHexString(md)).substring(8);
 					readableString = md.toString();
 					break;
-				case RGA: 
+				case RGA:
 					isdInputData.validatePoints();
 					rd = buildRGAData(isdInputData);
-				 	logger.debug("in RGA: " );
+					logger.debug("in RGA: ");
 					hexString = J2945Helper.getHexString(rd).substring(8);
 					readableString = rd.toString();
 					break;
@@ -206,14 +214,14 @@ public class IntersectionSituationDataBuilder {
 				case FramePlusRGA:
 					isdInputData.validatePoints();
 					rd = buildRGAData(isdInputData);
-					logger.debug("in RGA: " );
+					logger.debug("in RGA: ");
 					hexString = J2945Helper.getHexString(rd);
 					readableString = rd.toString();
 					break;
-				case FramePlusSPaT :
+				case FramePlusSPaT:
 					break;
 				case SpatRecord:
-					break; 
+					break;
 			}
 			im.setHexString(hexString);
 			im.setReadableString(readableString);
@@ -243,12 +251,11 @@ public class IntersectionSituationDataBuilder {
 		return mapData;
 	}
 
-	
 	private RGAData buildRGAData(IntersectionInputData isdInputData) {
 		RGAData rgaData = new RGAData();
 		rgaData.setBaseLayer(buildBaseLayer(isdInputData));
 		List<GeometryContainer> geometryContainers = buildGeometryContainers(isdInputData);
-		if(geometryContainers.size() > 0) {
+		if (geometryContainers.size() > 0) {
 			System.out.println("geometryContainers");
 			rgaData.setGeometryContainers(geometryContainers);
 		}
@@ -261,11 +268,11 @@ public class IntersectionSituationDataBuilder {
 		TimeOfCalculation timeOfCalculation = isdInputData.mapData.timeOfCalculation;
 		ContentDateTime contentDateTime = isdInputData.mapData.contentDateTime;
 
-		//DataSetFormatVersionInfo
+		// DataSetFormatVersionInfo
 		baseLayer.setMajorVer(isdInputData.mapData.majorVersion);
 		baseLayer.setMinorVer(isdInputData.mapData.minorVersion);
 
-		//ReferencePointInfo
+		// ReferencePointInfo
 		Position3D position3d = new Position3D();
 		position3d.setLongitude(J2735Helper.convertGeoCoordinateToInt(referencePoint.referenceLon));
 		position3d.setLatitude(J2735Helper.convertGeoCoordinateToInt(referencePoint.referenceLat));
@@ -283,15 +290,15 @@ public class IntersectionSituationDataBuilder {
 		dDate.setYear(timeOfCalculation.year);
 		baseLayer.setTimeOfCalculation(dDate);
 
-		//RoadGeometryRefIDInfo
+		// RoadGeometryRefIDInfo
 		baseLayer.setRelativeToRdAuthID(referencePoint.mappedGeomID);
 
-		if(referencePoint.roadAuthorityIdType != null) {
-			if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("full")) {
+		if (referencePoint.roadAuthorityIdType != null) {
+			if (referencePoint.roadAuthorityIdType.replaceAll("\\s", "").toLowerCase().equals("full")) {
 				baseLayer.setRelRdAuthIDExists(false);
 				baseLayer.setFullRdAuthIDExists(true);
 				baseLayer.setFullRdAuthID(referencePoint.roadAuthorityId);
-			} else if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("relative")) {
+			} else if (referencePoint.roadAuthorityIdType.replaceAll("\\s", "").toLowerCase().equals("relative")) {
 				baseLayer.setFullRdAuthIDExists(false);
 				baseLayer.setRelRdAuthIDExists(true);
 				baseLayer.setRelRdAuthID(referencePoint.roadAuthorityId);
@@ -299,9 +306,9 @@ public class IntersectionSituationDataBuilder {
 				baseLayer.setFullRdAuthIDExists(false);
 				baseLayer.setRelRdAuthIDExists(false);
 			}
-		}	
+		}
 
-		//DataSetContentIdentification
+		// DataSetContentIdentification
 		baseLayer.setContentVer(isdInputData.mapData.contentVersion);
 
 		DDateTime dDateTime = new DDateTime();
@@ -312,7 +319,7 @@ public class IntersectionSituationDataBuilder {
 		dDateTime.setMonth(timeOfCalculation.month);
 		dDateTime.setYear(timeOfCalculation.year);
 		baseLayer.setContentDateTime(dDateTime);
-		
+
 		return baseLayer;
 	}
 
@@ -322,35 +329,125 @@ public class IntersectionSituationDataBuilder {
 	public List<GeometryContainer> buildGeometryContainers(IntersectionInputData isdInputData) {
 		List<GeometryContainer> geometryContainers = new ArrayList<>();
 
-		// Checking if approaches are null 
-		if (isdInputData.mapData.intersectionGeometry.laneList.approach == null) {
+		// Checking if approaches are null
+		if (isdInputData.mapData.intersectionGeometry.laneList == null
+				|| isdInputData.mapData.intersectionGeometry.laneList.approach == null) {
 			return geometryContainers;
 		}
 
 		Approach[] approaches = isdInputData.mapData.intersectionGeometry.laneList.approach;
-		GeometryContainer geometryContainer = new GeometryContainer();
+
+		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
+		OffsetEncoding offsetEncoding = new OffsetEncoding(isdInputData.nodeOffsets);
+
+		GeometryContainer approachGeometryContainer = new GeometryContainer();
 		ApproachGeometryLayer approachGeometryLayer = new ApproachGeometryLayer();
+
+		GeometryContainer motorVehicleGeometryContainer = new GeometryContainer();
+		MotorVehicleLaneGeometryLayer motorVehicleLaneGeometryLayer = new MotorVehicleLaneGeometryLayer();
+
+		GeometryContainer bicycleGeometryContainer = new GeometryContainer();
+		BicycleLaneGeometryLayer bicycleLaneGeometryLayer = new BicycleLaneGeometryLayer();
+
+		GeometryContainer crosswalkGeometryContainer = new GeometryContainer();
+		CrosswalkLaneGeometryLayer crosswalkLaneGeometryLayer = new CrosswalkLaneGeometryLayer();
 
 		for (int approachIndex = 0; approachIndex < approaches.length; approachIndex++) {
 			Approach approach = approaches[approachIndex];
 
-			// Excluding crosswalk lanes as currently crosswalks do not have an approach id and it is default to -1 
+			// Excluding crosswalk lanes as currently crosswalks do not have an approach id
+			// and it is default to -1
 			if (approach.approachID != IntersectionInputData.CrosswalkLane.CROSSWALK_APPROACH_ID) {
 				IndividualApproachGeometryInfo individualApproachGeometryInfo = new IndividualApproachGeometryInfo();
-				
+
 				// Setting approach ID
 				individualApproachGeometryInfo.setApproachID(approach.approachID);
 				approachGeometryLayer.addIndividualApproachGeometryInfo(individualApproachGeometryInfo);
+
+				// Loop through the driving lanes
+				for (int drivingLaneIndex = 0; drivingLaneIndex < approach.drivingLanes.length; drivingLaneIndex++) {
+					DrivingLane drivingLane = approach.drivingLanes[drivingLaneIndex];
+
+					if ((drivingLane.laneType.toLowerCase()).equals("vehicle")) {
+						// Setting the MotorVehicleLaneGeometryLayer
+						motorVehicleLaneGeometryLayer
+								.addIndvMtrVehLaneGeometryInfo(
+										buildIndvMtrVehLaneGeometryInfo(drivingLane, referencePoint, offsetEncoding));
+					} else if ((drivingLane.laneType.toLowerCase()).equals("bike")) {
+						// Setting the BicycleLaneGeometryLayer
+						bicycleLaneGeometryLayer
+								.addIndvBikeLaneGeometryInfo(
+										buildIndvBikeLaneGeometryInfo(drivingLane, referencePoint, offsetEncoding));
+					}
+				}
+			} else {
+				// Loop through the crosswalk lanes
+				for (int crosswalkLaneIndex = 0; crosswalkLaneIndex < approach.crosswalkLanes.length; crosswalkLaneIndex++) {
+					CrosswalkLane crosswalkLane = approach.crosswalkLanes[crosswalkLaneIndex];
+					if ((crosswalkLane.laneType.toLowerCase()).equals("crosswalk")) {
+						// Setting the CrosswalkLaneGeometryLayer
+						crosswalkLaneGeometryLayer
+								.addIndvCrosswalkLaneGeometryInfo(buildIndvCrosswalkLaneGeometryInfo(crosswalkLane,
+										referencePoint, offsetEncoding));
+					}
+				}
 			}
 		}
 
 		// Setting the Approach Geometry Layer
-		geometryContainer.setGeometryContainerID(1);
-		geometryContainer.setApproachGeometryLayer(approachGeometryLayer);
+		approachGeometryContainer.setGeometryContainerID(GeometryContainer.APPROACH_GEOMETRY_LAYER_ID);
+		approachGeometryContainer.setApproachGeometryLayer(approachGeometryLayer);
 
-		// Adding to the list of containers
-		geometryContainers.add(geometryContainer);
+		// Adding approachGeometryContainer to the list of containers
+		geometryContainers.add(approachGeometryContainer);
+
+		// Setting the Motor Vehicle Lane Geometry Layer
+		motorVehicleGeometryContainer.setGeometryContainerID(GeometryContainer.MOTOR_VEHICLE_LANE_GEOMETRY_LAYER_ID);
+		motorVehicleGeometryContainer.setMotorVehicleLaneGeometryLayer(motorVehicleLaneGeometryLayer);
+
+		// Adding motorVehicleGeometryContainer to the list of containers
+		geometryContainers.add(motorVehicleGeometryContainer);
+
+		// Setting the Bicycle Lane Geometry Layer
+		bicycleGeometryContainer.setGeometryContainerID(GeometryContainer.BICYCLE_LANE_GEOMETRY_LAYER_ID);
+		bicycleGeometryContainer.setBicycleLaneGeometryLayer(bicycleLaneGeometryLayer);
+
+		// Adding bicycleGeometryContainer to the list of containers
+		geometryContainers.add(bicycleGeometryContainer);
+
+		// Setting the Crosswalk Lane Geometry Layer
+		crosswalkGeometryContainer.setGeometryContainerID(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
+		crosswalkGeometryContainer.setCrosswalkLaneGeometryLayer(crosswalkLaneGeometryLayer);
+
+		// Adding crosswalkGeometryContainer to the list of containers
+		geometryContainers.add(crosswalkGeometryContainer);
+
 		return geometryContainers;
+	}
+
+	public IndvMtrVehLaneGeometryInfo buildIndvMtrVehLaneGeometryInfo(DrivingLane drivingLane,
+			ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
+		IndvMtrVehLaneGeometryInfo indvMtrVehLaneGeometryInfo = new IndvMtrVehLaneGeometryInfo();
+		indvMtrVehLaneGeometryInfo.setLaneID(Integer.valueOf(drivingLane.laneID));
+		return indvMtrVehLaneGeometryInfo;
+	}
+
+	public IndvBikeLaneGeometryInfo buildIndvBikeLaneGeometryInfo(DrivingLane drivingLane,
+			ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
+		IndvBikeLaneGeometryInfo indvBikeLaneGeometryInfo = new IndvBikeLaneGeometryInfo();
+		indvBikeLaneGeometryInfo.setLaneID(Integer.valueOf(drivingLane.laneID));
+		return indvBikeLaneGeometryInfo;
+	}
+
+	public IndvCrosswalkLaneGeometryInfo buildIndvCrosswalkLaneGeometryInfo(CrosswalkLane crosswalkLane,
+			ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
+		IndvCrosswalkLaneGeometryInfo indvCrosswalkLaneGeometryInfo = new IndvCrosswalkLaneGeometryInfo();
+		indvCrosswalkLaneGeometryInfo.setLaneID(Integer.valueOf(crosswalkLane.laneID));
+		return indvCrosswalkLaneGeometryInfo;
+	}
+
+	public LaneConstructorType buildLaneConstructorType() {
+
 	}
 
 	public IntersectionGeometry[] buildIntersections(IntersectionInputData isdInputData) {
@@ -364,28 +461,28 @@ public class IntersectionSituationDataBuilder {
 		IntersectionGeometry intersection = new IntersectionGeometry();
 		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
 		ReferencePointChild referencePointChild = isdInputData.mapData.intersectionGeometry.referencePointChild;
-		
+
 		// Set Intersection Name
 		intersection.setName(referencePoint.descriptiveIntersctionName);
-		
+
 		// Set Intersection ID
 		IntersectionReferenceID intersectionReferenceID = new IntersectionReferenceID();
-		intersectionReferenceID.setId(referencePoint.intersectionID);	
+		intersectionReferenceID.setId(referencePoint.intersectionID);
 		if (referencePoint.regionID != 0) {
 			intersectionReferenceID.setRegionExists(true);
 			intersectionReferenceID.setRegion(referencePoint.regionID);
 		} else {
 			intersectionReferenceID.setRegionExists(false);
 		}
-	
+
 		intersection.setId(intersectionReferenceID);
 
-		if(referencePoint.roadAuthorityIdType != null) {
-			if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("full")) {
+		if (referencePoint.roadAuthorityIdType != null) {
+			if (referencePoint.roadAuthorityIdType.replaceAll("\\s", "").toLowerCase().equals("full")) {
 				intersection.setRelRdAuthIDExists(false);
 				intersection.setFullRdAuthIDExists(true);
 				intersection.setFullRdAuthID(referencePoint.roadAuthorityId);
-			} else if (referencePoint.roadAuthorityIdType.replaceAll("\\s","").toLowerCase().equals("relative")) {
+			} else if (referencePoint.roadAuthorityIdType.replaceAll("\\s", "").toLowerCase().equals("relative")) {
 				intersection.setFullRdAuthIDExists(false);
 				intersection.setRelRdAuthIDExists(true);
 				intersection.setRelRdAuthID(referencePoint.roadAuthorityId);
@@ -393,8 +490,8 @@ public class IntersectionSituationDataBuilder {
 				intersection.setFullRdAuthIDExists(false);
 				intersection.setRelRdAuthIDExists(false);
 			}
-		}	
-		
+		}
+
 		// Set Intersection Revision
 		intersection.setRevision(referencePoint.msgCount);
 
@@ -415,14 +512,16 @@ public class IntersectionSituationDataBuilder {
 		intersection.setLaneWidth(referencePoint.masterLaneWidth);
 
 		// Set Speed Limits
-		if(referencePointChild != null && referencePointChild.speedLimitType != null && referencePointChild.speedLimitType.length > 0) {
+		if (referencePointChild != null && referencePointChild.speedLimitType != null
+				&& referencePointChild.speedLimitType.length > 0) {
 			SpeedLimitList speedLimitList = new SpeedLimitList();
 			int speedLimitListLength = referencePointChild.speedLimitType.length;
 			RegulatorySpeedLimit[] regulatorySpeedLimits = new RegulatorySpeedLimit[speedLimitListLength];
-			for(int regIndex = 0; regIndex < speedLimitListLength; regIndex++) {
+			for (int regIndex = 0; regIndex < speedLimitListLength; regIndex++) {
 				RegulatorySpeedLimit regulatorySpeedLimit = new RegulatorySpeedLimit();
 				short currentVelocity = referencePointChild.speedLimitType[regIndex].getVelocity();
-				regulatorySpeedLimit.setType(getSpeedLimitType(referencePointChild.speedLimitType[regIndex].speedLimitType));
+				regulatorySpeedLimit
+						.setType(getSpeedLimitType(referencePointChild.speedLimitType[regIndex].speedLimitType));
 				regulatorySpeedLimit.setSpeed(currentVelocity);
 				regulatorySpeedLimits[regIndex] = regulatorySpeedLimit;
 			}
@@ -443,13 +542,14 @@ public class IntersectionSituationDataBuilder {
 	}
 
 	// This function builds and returns the LaneList required for the LaneSet
-	private LaneList buildLaneList(IntersectionInputData isdInputData, Approach[] approaches, ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
+	private LaneList buildLaneList(IntersectionInputData isdInputData, Approach[] approaches,
+			ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
 		LaneList lanes = new LaneList();
 
-		if(offsetEncoding.type != OffsetEncodingType.Tight) {
+		if (offsetEncoding.type != OffsetEncodingType.Tight) {
 			offsetEncoding.size = getOffsetEncodingSize(offsetEncoding.type, approaches, referencePoint);
 		}
-		
+
 		int laneCount = 0;
 		int laneCounter = 0;
 
@@ -466,13 +566,15 @@ public class IntersectionSituationDataBuilder {
 		}
 
 		GenericLane[] genericLanes = new GenericLane[laneCount];
-		
+
 		// Loop through all approaches
 		for (int i = 0; i < approaches.length; i++) {
 			Approach approach = approaches[i];
 
-			// Check if an approach is not a crosswalk and there exists at least one driving lane
-			if (approach.approachID != IntersectionInputData.CrosswalkLane.CROSSWALK_APPROACH_ID && approach.drivingLanes != null && approach.drivingLanes.length > 0) {
+			// Check if an approach is not a crosswalk and there exists at least one driving
+			// lane
+			if (approach.approachID != IntersectionInputData.CrosswalkLane.CROSSWALK_APPROACH_ID
+					&& approach.drivingLanes != null && approach.drivingLanes.length > 0) {
 				// Loop through all the driving lanes for each approach
 				for (int j = 0; j < approach.drivingLanes.length; j++) {
 					DrivingLane drivingLane = approach.drivingLanes[j];
@@ -483,7 +585,7 @@ public class IntersectionSituationDataBuilder {
 					lane.setLaneID(Integer.valueOf(drivingLane.laneID));
 
 					// Set Lane Name
-					if(drivingLane.descriptiveName != null && !drivingLane.descriptiveName.isEmpty()) {
+					if (drivingLane.descriptiveName != null && !drivingLane.descriptiveName.isEmpty()) {
 						lane.setNameExists(true);
 						lane.setName(drivingLane.descriptiveName);
 					}
@@ -522,7 +624,7 @@ public class IntersectionSituationDataBuilder {
 					lane.setLaneAttributes(buildLaneAttributes(drivingLane, laneDirectionBitString));
 
 					// Set Maneuvers
-					if(drivingLane.laneManeuvers != null && drivingLane.laneManeuvers.length > 0) {
+					if (drivingLane.laneManeuvers != null && drivingLane.laneManeuvers.length > 0) {
 						lane.setManeuversExists(true);
 						lane.setManeuvers(buildAllowedManeuvers(drivingLane.laneManeuvers));
 					}
@@ -531,9 +633,9 @@ public class IntersectionSituationDataBuilder {
 					lane.setNodeList(buildNodeList(isdInputData, drivingLane, referencePoint, offsetEncoding));
 
 					// Set Connections
- 					if(drivingLane.connections != null && drivingLane.connections.length > 0) {
+					if (drivingLane.connections != null && drivingLane.connections.length > 0) {
 						Connection[] allConnections = buildConnectsTo(drivingLane.connections);
-						if(allConnections != null) {
+						if (allConnections != null) {
 							lane.setConnectsToExists(true);
 							lane.setConnections(allConnections);
 						}
@@ -552,7 +654,7 @@ public class IntersectionSituationDataBuilder {
 					lane.setLaneID(Integer.valueOf(crosswalkLane.laneID));
 
 					// Set Crosswalk Lane Name
-					if(crosswalkLane.descriptiveName != null && !crosswalkLane.descriptiveName.isEmpty()) {
+					if (crosswalkLane.descriptiveName != null && !crosswalkLane.descriptiveName.isEmpty()) {
 						lane.setNameExists(true);
 						lane.setName(crosswalkLane.descriptiveName);
 					}
@@ -566,12 +668,12 @@ public class IntersectionSituationDataBuilder {
 					lane.setNodeList(buildNodeList(isdInputData, crosswalkLane, referencePoint, offsetEncoding));
 
 					// Set Connections
-					if(crosswalkLane.connections != null && crosswalkLane.connections.length > 0) {
+					if (crosswalkLane.connections != null && crosswalkLane.connections.length > 0) {
 						Connection[] allConnections = buildConnectsTo(crosswalkLane.connections);
-						if(allConnections != null) {
+						if (allConnections != null) {
 							lane.setConnectsToExists(true);
 							lane.setConnections(allConnections);
-						}	
+						}
 					}
 
 					// Assign lane to jth Generic Lane
@@ -613,7 +715,8 @@ public class IntersectionSituationDataBuilder {
 		LaneSharing laneSharing = new LaneSharing();
 		int laneSharingBitString = LONG_BIT_STRING;
 		if (drivingLane.sharedWith != null && drivingLane.sharedWith.length > 0) {
-			laneSharingBitString = BitStringHelper.getBitString(laneSharingBitString, LONG_BIT_STRING_LENGTH, drivingLane.sharedWith);
+			laneSharingBitString = BitStringHelper.getBitString(laneSharingBitString, LONG_BIT_STRING_LENGTH,
+					drivingLane.sharedWith);
 		}
 		laneSharing.setLaneSharing((short) laneSharingBitString);
 
@@ -636,13 +739,15 @@ public class IntersectionSituationDataBuilder {
 		type = type.toLowerCase();
 		if (type.equals("vehicle")) {
 			LaneAttributesVehicle laneAttributesVehicle = new LaneAttributesVehicle();
-			int vehicleBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH, typeAttributes);
+			int vehicleBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH,
+					typeAttributes);
 			laneAttributesVehicle.setLaneAttributesVehicle((byte) vehicleBitString);
 			laneTypeAttributes.setChoice((byte) LaneTypeAttributes.VEHICLE);
 			laneTypeAttributes.setVehicle(laneAttributesVehicle);
 		} else if (type.equals("crosswalk")) {
 			LaneAttributesCrosswalk laneAttributesCrosswalk = new LaneAttributesCrosswalk();
-			int crosswalkBitString = BitStringHelper.getBitString(LONG_BIT_STRING, LONG_BIT_STRING_LENGTH, typeAttributes);
+			int crosswalkBitString = BitStringHelper.getBitString(LONG_BIT_STRING, LONG_BIT_STRING_LENGTH,
+					typeAttributes);
 			laneAttributesCrosswalk.setLaneAttributesCrosswalk((short) crosswalkBitString);
 			laneTypeAttributes.setChoice((byte) LaneTypeAttributes.CROSSWALK);
 			laneTypeAttributes.setCrosswalk(laneAttributesCrosswalk);
@@ -654,7 +759,8 @@ public class IntersectionSituationDataBuilder {
 			laneTypeAttributes.setBikeLane(laneAttributesBike);
 		} else if (type.equals("sidewalk")) {
 			LaneAttributesSidewalk laneAttributesSidewalk = new LaneAttributesSidewalk();
-			int sidewalkBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH, typeAttributes);
+			int sidewalkBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH,
+					typeAttributes);
 			laneAttributesSidewalk.setLaneAttributesSidewalk((short) sidewalkBitString);
 			laneTypeAttributes.setChoice((byte) LaneTypeAttributes.SIDEWALK);
 			laneTypeAttributes.setSidewalk(laneAttributesSidewalk);
@@ -666,19 +772,22 @@ public class IntersectionSituationDataBuilder {
 			laneTypeAttributes.setMedian(laneAttributesBarrier);
 		} else if (type.equals("striping")) {
 			LaneAttributesStriping laneAttributesStriping = new LaneAttributesStriping();
-			int stripingBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH, typeAttributes);
+			int stripingBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH,
+					typeAttributes);
 			laneAttributesStriping.setLaneAttributesStriping((short) stripingBitString);
 			laneTypeAttributes.setChoice((byte) LaneTypeAttributes.STRIPING);
 			laneTypeAttributes.setStriping(laneAttributesStriping);
 		} else if (type.equals("trackedVehicle")) {
 			LaneAttributesTrackedVehicle laneAttributesTrackedVehicle = new LaneAttributesTrackedVehicle();
-			int trackedVehicleBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH, typeAttributes);
+			int trackedVehicleBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH,
+					typeAttributes);
 			laneAttributesTrackedVehicle.setLaneAttributesTrackedVehicle((short) trackedVehicleBitString);
 			laneTypeAttributes.setChoice((byte) LaneTypeAttributes.TRACKED_VEHICLE);
 			laneTypeAttributes.setTrackedVehicle(laneAttributesTrackedVehicle);
 		} else if (type.equals("parking")) {
 			LaneAttributesParking laneAttributesParking = new LaneAttributesParking();
-			int parkingBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH, typeAttributes);
+			int parkingBitString = BitStringHelper.getBitString(SMALL_BIT_STRING, SMALL_BIT_STRING_LENGTH,
+					typeAttributes);
 			laneAttributesParking.setLaneAttributesParking((short) parkingBitString);
 			laneTypeAttributes.setChoice((byte) LaneTypeAttributes.PARKING);
 			laneTypeAttributes.setParking(laneAttributesParking);
@@ -686,7 +795,8 @@ public class IntersectionSituationDataBuilder {
 		return laneTypeAttributes;
 	}
 
-	// This function builds maneuvers bit string, then sets and returns AllowedManeuvers
+	// This function builds maneuvers bit string, then sets and returns
+	// AllowedManeuvers
 	private AllowedManeuvers buildAllowedManeuvers(int[] attributes) {
 		AllowedManeuvers maneuvers = new AllowedManeuvers();
 		int maneuversBitString = BitStringHelper.getBitString(LONG_BIT_STRING, LONG_BIT_STRING_LENGTH, attributes);
@@ -708,7 +818,6 @@ public class IntersectionSituationDataBuilder {
 			// Intializing a NodeXY array to store the lane nodes data
 			NodeXY[] nodeXyArray = new NodeXY[lane.laneNodes.length];
 			int nodeIndex = 0;
-
 
 			// Loop through the lane nodes
 			for (LaneNode laneNode : lane.laneNodes) {
@@ -756,7 +865,8 @@ public class IntersectionSituationDataBuilder {
 					for (int regIndex = 0; regIndex < speedLimitListLength; regIndex++) {
 						RegulatorySpeedLimit regulatorySpeedLimit = new RegulatorySpeedLimit();
 						short currentVelocity = laneNode.speedLimitType[regIndex].getVelocity();
-						regulatorySpeedLimit.setType(getSpeedLimitType(laneNode.speedLimitType[regIndex].speedLimitType));
+						regulatorySpeedLimit
+								.setType(getSpeedLimitType(laneNode.speedLimitType[regIndex].speedLimitType));
 						regulatorySpeedLimit.setSpeed(currentVelocity);
 						regulatorySpeedLimits[regIndex] = regulatorySpeedLimit;
 					}
@@ -794,7 +904,7 @@ public class IntersectionSituationDataBuilder {
 			OffsetYaxis offsetYaxis = new OffsetYaxis();
 
 			offsetXaxis.setChoice(OffsetXaxis.SMALL);
-			offsetXaxis.setSmall((short)lane.computedLane.offsetX);
+			offsetXaxis.setSmall((short) lane.computedLane.offsetX);
 
 			offsetYaxis.setChoice(OffsetYaxis.SMALL);
 			offsetYaxis.setSmall((short) lane.computedLane.offsetY);
@@ -842,14 +952,14 @@ public class IntersectionSituationDataBuilder {
 			if (currentLaneConnection.signal_id > 0) {
 				connection.setSignalGroupExists(true);
 				connection.setSignalGroup(currentLaneConnection.signal_id);
-			} 
+			}
 
 			// Set Connection ID
-			if(currentLaneConnection.connectionId > 0) {
+			if (currentLaneConnection.connectionId > 0) {
 				connection.setConnectionIDExists(true);
 				connection.setConnectionID(currentLaneConnection.connectionId);
 			}
-			
+
 			connectionsList.add(connection);
 		}
 
@@ -931,7 +1041,7 @@ public class IntersectionSituationDataBuilder {
 		return byteSpeedLimitType;
 	}
 
-	// This function computes and returns the offset encoding size 
+	// This function computes and returns the offset encoding size
 	private OffsetEncodingSize getOffsetEncodingSize(OffsetEncodingType offsetEncodingType, Approach[] approaches,
 			ReferencePoint referencePoint) {
 		OffsetEncodingSize offsetEncodingSize;
