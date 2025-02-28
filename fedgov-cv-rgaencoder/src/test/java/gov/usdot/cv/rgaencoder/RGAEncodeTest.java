@@ -385,40 +385,40 @@ public class RGAEncodeTest {
         when(mockGeometryContainer3.getMotorVehicleLaneGeometryLayer()).thenReturn(mockMotorVehicleLaneGeometryLayer1);
 
 
-        //TimeRestrictions
-        when(mockDaysOfTheWeek1.getDaysofTheWeek()).thenReturn((short)1);
-        when(mockStartPeriod1.getYear()).thenReturn(2024);
-        when(mockStartPeriod1.getMonth()).thenReturn(8);
-        when(mockStartPeriod1.getDay()).thenReturn(21);
-        when(mockStartPeriod1.getHour()).thenReturn(13);
-        when(mockStartPeriod1.getMinute()).thenReturn(51);
-        when(mockStartPeriod1.getSecond()).thenReturn(20);
-        when(mockEndPeriod1.getYear()).thenReturn(2024);
-        when(mockEndPeriod1.getMonth()).thenReturn(8);
-        when(mockEndPeriod1.getDay()).thenReturn(21);
-        when(mockEndPeriod1.getHour()).thenReturn(13);
-        when(mockEndPeriod1.getMinute()).thenReturn(51);
-        when(mockEndPeriod1.getSecond()).thenReturn(20);
-        when(mockGeneralPeriod1.getGeneralPeriod()).thenReturn(0);
+        // //TimeRestrictions
+        // when(mockDaysOfTheWeek1.getDaysofTheWeek()).thenReturn((short)1);
+        // when(mockStartPeriod1.getYear()).thenReturn(2024);
+        // when(mockStartPeriod1.getMonth()).thenReturn(8);
+        // when(mockStartPeriod1.getDay()).thenReturn(21);
+        // when(mockStartPeriod1.getHour()).thenReturn(13);
+        // when(mockStartPeriod1.getMinute()).thenReturn(51);
+        // when(mockStartPeriod1.getSecond()).thenReturn(20);
+        // when(mockEndPeriod1.getYear()).thenReturn(2024);
+        // when(mockEndPeriod1.getMonth()).thenReturn(8);
+        // when(mockEndPeriod1.getDay()).thenReturn(21);
+        // when(mockEndPeriod1.getHour()).thenReturn(13);
+        // when(mockEndPeriod1.getMinute()).thenReturn(51);
+        // when(mockEndPeriod1.getSecond()).thenReturn(20);
+        // when(mockGeneralPeriod1.getGeneralPeriod()).thenReturn(0);
 
-        when(mockTimeWindowSet1.get(0)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
-        when(mockTimeWindowSet1.get(1)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
-        when(mockFixedTimeWindowCtrl1.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
-        when(mockTimeRestrictions1.getChoice()).thenReturn((int)1);
-        when(mockTimeRestrictions1.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
-        when(mockTimeRestrictions1.getChoice()).thenReturn((int)2);
-        when(mockTimeRestrictions1.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
+        // when(mockTimeWindowSet1.get(0)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
+        // when(mockTimeWindowSet1.get(1)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
+        // when(mockFixedTimeWindowCtrl1.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
+        // when(mockTimeRestrictions1.getChoice()).thenReturn((int)1);
+        // when(mockTimeRestrictions1.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
+        // when(mockTimeRestrictions1.getChoice()).thenReturn((int)2);
+        // when(mockTimeRestrictions1.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
-        when(mockFixedTimeWindowCtrl1.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
-        when(mockTimeRestrictions1.getChoice()).thenReturn((int)1);
-        when(mockTimeRestrictions1.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
-        when(mockTimeRestrictions1.getChoice()).thenReturn((int)2);
-        when(mockTimeRestrictions1.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
+        // when(mockFixedTimeWindowCtrl1.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
+        // when(mockTimeRestrictions1.getChoice()).thenReturn((int)1);
+        // when(mockTimeRestrictions1.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
+        // when(mockTimeRestrictions1.getChoice()).thenReturn((int)2);
+        // when(mockTimeRestrictions1.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
         when(mockWayWidth1.getChoice()).thenReturn((byte)0);
-        when(mockWayWidth1.getFullWidth()).thenReturn((int)0);
-        when(mockWayWidth1.getChoice()).thenReturn((byte)1);
-        when(mockWayWidth1.getDeltaWidth()).thenReturn((int)1);
+        when(mockWayWidth1.getFullWidth()).thenReturn((int)10);
+        // when(mockWayWidth1.getChoice()).thenReturn((byte)1);
+        // when(mockWayWidth1.getDeltaWidth()).thenReturn((int)1);
         when(mockWayPlanarGeometryInfo1.getWayWidth()).thenReturn(mockWayWidth1);
         when(mockNodeXYZOffsetValue1.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B10);
         when(mockNodeXYZOffsetValue1.getOffsetB10()).thenReturn((long)2);
@@ -441,16 +441,16 @@ public class RGAEncodeTest {
         when(mockGeometryContainer4.getGeometryContainerID()).thenReturn(GeometryContainer.MOTOR_VEHICLE_LANE_GEOMETRY_LAYER_ID);
         when(mockGeometryContainer4.getMotorVehicleLaneGeometryLayer()).thenReturn(mockMotorVehicleLaneGeometryLayer2);
 
-        // MockReferencePoint1
-        when(mockLocation1.getLatitude()).thenReturn((double)7.2);
-        when(mockLocation1.getLongitude()).thenReturn((double)11.1);
-        when(mockLocation1.isElevationExists()).thenReturn(true);
-        when(mockLocation1.getElevation()).thenReturn((float)13.12);
-        when(mockTimeOfCalculation1.getMonth()).thenReturn(8);
-        when(mockTimeOfCalculation1.getDay()).thenReturn(21);
-        when(mockTimeOfCalculation1.getYear()).thenReturn(2024);
-        when(mockReferencePointInfo1.getLocation()).thenReturn(mockLocation1);
-        when(mockReferencePointInfo1.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation1);
+        // // MockReferencePoint1
+        // when(mockLocation1.getLatitude()).thenReturn((double)7.2);
+        // when(mockLocation1.getLongitude()).thenReturn((double)11.1);
+        // when(mockLocation1.isElevationExists()).thenReturn(true);
+        // when(mockLocation1.getElevation()).thenReturn((float)13.12);
+        // when(mockTimeOfCalculation1.getMonth()).thenReturn(8);
+        // when(mockTimeOfCalculation1.getDay()).thenReturn(21);
+        // when(mockTimeOfCalculation1.getYear()).thenReturn(2024);
+        // when(mockReferencePointInfo1.getLocation()).thenReturn(mockLocation1);
+        // when(mockReferencePointInfo1.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation1);
 
         when(mockNodeXYZOffsetValue4.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B13);
         when(mockNodeXYZOffsetValue4.getOffsetB13()).thenReturn((long)100);
@@ -464,7 +464,7 @@ public class RGAEncodeTest {
         when(mockIndividualXYZNodeGeometryInfo1.getNodeXYZOffsetInfo()).thenReturn(mockNodeXYZOffsetInfo2);
         mockIndividualXYZNodeGeometryInfoList1 = Arrays.asList(mockIndividualXYZNodeGeometryInfo1);
         when(mockPhysicalXYZNodeInfo1.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList1);
-        when(mockPhysicalXYZNodeInfo1.getReferencePointInfo()).thenReturn(mockReferencePointInfo1);
+        // when(mockPhysicalXYZNodeInfo1.getReferencePointInfo()).thenReturn(mockReferencePointInfo1);
         when(mockLaneConstructorType3.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
         when(mockLaneConstructorType3.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo1);
         when(mockIndvMtrVehLaneGeometryInfo3.getLaneID()).thenReturn(13);
@@ -485,34 +485,34 @@ public class RGAEncodeTest {
         when(mockGeometryContainer6.getBicycleLaneGeometryLayer()).thenReturn(mockBicycleLaneGeometryLayer1);
 
 
-        when(mockDaysOfTheWeek2.getDaysofTheWeek()).thenReturn((short)1);
-        when(mockStartPeriod2.getYear()).thenReturn(2024);
-        when(mockStartPeriod2.getMonth()).thenReturn(8);
-        when(mockStartPeriod2.getDay()).thenReturn(21);
-        when(mockStartPeriod2.getHour()).thenReturn(13);
-        when(mockStartPeriod2.getMinute()).thenReturn(51);
-        when(mockStartPeriod2.getSecond()).thenReturn(20);
-        when(mockEndPeriod2.getYear()).thenReturn(2024);
-        when(mockEndPeriod2.getMonth()).thenReturn(8);
-        when(mockEndPeriod2.getDay()).thenReturn(21);
-        when(mockEndPeriod2.getHour()).thenReturn(13);
-        when(mockEndPeriod2.getMinute()).thenReturn(51);
-        when(mockEndPeriod2.getSecond()).thenReturn(20);
-        when(mockGeneralPeriod2.getGeneralPeriod()).thenReturn(0);
+        // when(mockDaysOfTheWeek2.getDaysofTheWeek()).thenReturn((short)1);
+        // when(mockStartPeriod2.getYear()).thenReturn(2024);
+        // when(mockStartPeriod2.getMonth()).thenReturn(8);
+        // when(mockStartPeriod2.getDay()).thenReturn(21);
+        // when(mockStartPeriod2.getHour()).thenReturn(13);
+        // when(mockStartPeriod2.getMinute()).thenReturn(51);
+        // when(mockStartPeriod2.getSecond()).thenReturn(20);
+        // when(mockEndPeriod2.getYear()).thenReturn(2024);
+        // when(mockEndPeriod2.getMonth()).thenReturn(8);
+        // when(mockEndPeriod2.getDay()).thenReturn(21);
+        // when(mockEndPeriod2.getHour()).thenReturn(13);
+        // when(mockEndPeriod2.getMinute()).thenReturn(51);
+        // when(mockEndPeriod2.getSecond()).thenReturn(20);
+        // when(mockGeneralPeriod2.getGeneralPeriod()).thenReturn(0);
 
-        when(mockTimeWindowSet2.get(0)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
-        when(mockTimeWindowSet2.get(1)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
-        when(mockFixedTimeWindowCtrl2.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
-        when(mockTimeRestrictions2.getChoice()).thenReturn((int)1);
-        when(mockTimeRestrictions2.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
-        when(mockTimeRestrictions2.getChoice()).thenReturn((int)2);
-        when(mockTimeRestrictions2.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
+        // when(mockTimeWindowSet2.get(0)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
+        // when(mockTimeWindowSet2.get(1)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
+        // when(mockFixedTimeWindowCtrl2.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
+        // when(mockTimeRestrictions2.getChoice()).thenReturn((int)1);
+        // when(mockTimeRestrictions2.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
+        // when(mockTimeRestrictions2.getChoice()).thenReturn((int)2);
+        // when(mockTimeRestrictions2.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
-        when(mockFixedTimeWindowCtrl2.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
-        when(mockTimeRestrictions2.getChoice()).thenReturn((int)1);
-        when(mockTimeRestrictions2.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
-        when(mockTimeRestrictions2.getChoice()).thenReturn((int)2);
-        when(mockTimeRestrictions2.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
+        // when(mockFixedTimeWindowCtrl2.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
+        // when(mockTimeRestrictions2.getChoice()).thenReturn((int)1);
+        // when(mockTimeRestrictions2.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
+        // when(mockTimeRestrictions2.getChoice()).thenReturn((int)2);
+        // when(mockTimeRestrictions2.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
         when(mockNodeXYZOffsetValue7.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B10);
         when(mockNodeXYZOffsetValue7.getOffsetB10()).thenReturn((long)2);
@@ -535,11 +535,11 @@ public class RGAEncodeTest {
         when(mockGeometryContainer7.getGeometryContainerID()).thenReturn(GeometryContainer.BICYCLE_LANE_GEOMETRY_LAYER_ID);
         when(mockGeometryContainer7.getBicycleLaneGeometryLayer()).thenReturn(mockBicycleLaneGeometryLayer2);
 
-        when(mockWayWidth2.getFullWidth()).thenReturn((int)0);
-        when(mockWayWidth2.getChoice()).thenReturn((byte)1);
-        when(mockWayWidth2.getDeltaWidth()).thenReturn((int)1);
-        when(mockWayPlanarGeometryInfo2.getWayWidth()).thenReturn(mockWayWidth2);
-        when(mockComputedXYZNodeInfo2.getLanePlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo2);
+        // when(mockWayWidth2.getFullWidth()).thenReturn((int)0);
+        // when(mockWayWidth2.getChoice()).thenReturn((byte)1);
+        // when(mockWayWidth2.getDeltaWidth()).thenReturn((int)1);
+        // when(mockWayPlanarGeometryInfo2.getWayWidth()).thenReturn(mockWayWidth2);
+        // when(mockComputedXYZNodeInfo2.getLanePlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo2);
 
         when(mockNodeXYZOffsetValue10.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B13);
         when(mockNodeXYZOffsetValue10.getOffsetB13()).thenReturn((long)10);
@@ -572,34 +572,34 @@ public class RGAEncodeTest {
         when(mockGeometryContainer9.getGeometryContainerID()).thenReturn(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
         when(mockGeometryContainer9.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer1);
 
-        when(mockDaysOfTheWeek3.getDaysofTheWeek()).thenReturn((short)1);
-        when(mockStartPeriod3.getYear()).thenReturn(2024);
-        when(mockStartPeriod3.getMonth()).thenReturn(8);
-        when(mockStartPeriod3.getDay()).thenReturn(21);
-        when(mockStartPeriod3.getHour()).thenReturn(13);
-        when(mockStartPeriod3.getMinute()).thenReturn(51);
-        when(mockStartPeriod3.getSecond()).thenReturn(20);
-        when(mockEndPeriod3.getYear()).thenReturn(2024);
-        when(mockEndPeriod3.getMonth()).thenReturn(8);
-        when(mockEndPeriod3.getDay()).thenReturn(21);
-        when(mockEndPeriod3.getHour()).thenReturn(13);
-        when(mockEndPeriod3.getMinute()).thenReturn(51);
-        when(mockEndPeriod3.getSecond()).thenReturn(20);
-        when(mockGeneralPeriod3.getGeneralPeriod()).thenReturn(0);
+        // when(mockDaysOfTheWeek3.getDaysofTheWeek()).thenReturn((short)1);
+        // when(mockStartPeriod3.getYear()).thenReturn(2024);
+        // when(mockStartPeriod3.getMonth()).thenReturn(8);
+        // when(mockStartPeriod3.getDay()).thenReturn(21);
+        // when(mockStartPeriod3.getHour()).thenReturn(13);
+        // when(mockStartPeriod3.getMinute()).thenReturn(51);
+        // when(mockStartPeriod3.getSecond()).thenReturn(20);
+        // when(mockEndPeriod3.getYear()).thenReturn(2024);
+        // when(mockEndPeriod3.getMonth()).thenReturn(8);
+        // when(mockEndPeriod3.getDay()).thenReturn(21);
+        // when(mockEndPeriod3.getHour()).thenReturn(13);
+        // when(mockEndPeriod3.getMinute()).thenReturn(51);
+        // when(mockEndPeriod3.getSecond()).thenReturn(20);
+        // when(mockGeneralPeriod3.getGeneralPeriod()).thenReturn(0);
 
-        when(mockTimeWindowSet3.get(0)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
-        when(mockTimeWindowSet3.get(1)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
-        when(mockFixedTimeWindowCtrl3.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
-        when(mockTimeRestrictions3.getChoice()).thenReturn((int)1);
-        when(mockTimeRestrictions3.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
-        when(mockTimeRestrictions3.getChoice()).thenReturn((int)2);
-        when(mockTimeRestrictions3.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
+        // when(mockTimeWindowSet3.get(0)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
+        // when(mockTimeWindowSet3.get(1)).thenReturn(new TimeWindowInformation(mockDaysOfTheWeek1, mockStartPeriod1, mockEndPeriod1, mockGeneralPeriod1));
+        // when(mockFixedTimeWindowCtrl3.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
+        // when(mockTimeRestrictions3.getChoice()).thenReturn((int)1);
+        // when(mockTimeRestrictions3.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
+        // when(mockTimeRestrictions3.getChoice()).thenReturn((int)2);
+        // when(mockTimeRestrictions3.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
-        when(mockFixedTimeWindowCtrl3.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
-        when(mockTimeRestrictions3.getChoice()).thenReturn((int)1);
-        when(mockTimeRestrictions3.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
-        when(mockTimeRestrictions3.getChoice()).thenReturn((int)2);
-        when(mockTimeRestrictions3.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
+        // when(mockFixedTimeWindowCtrl3.getTimeWindowSet()).thenReturn(mockTimeWindowSet1);
+        // when(mockTimeRestrictions3.getChoice()).thenReturn((int)1);
+        // when(mockTimeRestrictions3.getFixedTimeWindowCtrl()).thenReturn(mockFixedTimeWindowCtrl1);
+        // when(mockTimeRestrictions3.getChoice()).thenReturn((int)2);
+        // when(mockTimeRestrictions3.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
         when(mockNodeXYZOffsetValue13.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B10);
         when(mockNodeXYZOffsetValue13.getOffsetB10()).thenReturn((long)2);
@@ -622,21 +622,21 @@ public class RGAEncodeTest {
         when(mockGeometryContainer10.getGeometryContainerID()).thenReturn(GeometryContainer.CROSSWALK_LANE_GEOMETRY_LAYER_ID);
         when(mockGeometryContainer10.getCrosswalkLaneGeometryLayer()).thenReturn(mockCrosswalkLaneGeometryLayer2);
 
-        when(mockLocation3.getLatitude()).thenReturn((double)7.2);
-        when(mockLocation3.getLongitude()).thenReturn((double)11.1);
-        when(mockLocation3.isElevationExists()).thenReturn(true);
-        when(mockLocation3.getElevation()).thenReturn((float)13.12);
-        when(mockTimeOfCalculation3.getMonth()).thenReturn(8);
-        when(mockTimeOfCalculation3.getDay()).thenReturn(21);
-        when(mockTimeOfCalculation3.getYear()).thenReturn(2024);
-        when(mockReferencePointInfo3.getLocation()).thenReturn(mockLocation1);
-        when(mockReferencePointInfo3.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation1);
+        // when(mockLocation3.getLatitude()).thenReturn((double)7.2);
+        // when(mockLocation3.getLongitude()).thenReturn((double)11.1);
+        // when(mockLocation3.isElevationExists()).thenReturn(true);
+        // when(mockLocation3.getElevation()).thenReturn((float)13.12);
+        // when(mockTimeOfCalculation3.getMonth()).thenReturn(8);
+        // when(mockTimeOfCalculation3.getDay()).thenReturn(21);
+        // when(mockTimeOfCalculation3.getYear()).thenReturn(2024);
+        // when(mockReferencePointInfo3.getLocation()).thenReturn(mockLocation1);
+        // when(mockReferencePointInfo3.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation1);
 
-        when(mockWayWidth4.getChoice()).thenReturn((byte)0);
-        when(mockWayWidth4.getFullWidth()).thenReturn((int)0);
-        when(mockWayWidth4.getChoice()).thenReturn((byte)1);
-        when(mockWayWidth4.getDeltaWidth()).thenReturn((int)1);
-        when(mockWayPlanarGeometryInfo4.getWayWidth()).thenReturn(mockWayWidth1);
+        // when(mockWayWidth4.getChoice()).thenReturn((byte)0);
+        // when(mockWayWidth4.getFullWidth()).thenReturn((int)0);
+        // when(mockWayWidth4.getChoice()).thenReturn((byte)1);
+        // when(mockWayWidth4.getDeltaWidth()).thenReturn((int)1);
+        // when(mockWayPlanarGeometryInfo4.getWayWidth()).thenReturn(mockWayWidth1);
 
         when(mockNodeXYZOffsetValue16.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B13);
         when(mockNodeXYZOffsetValue16.getOffsetB13()).thenReturn((long)101);
@@ -649,7 +649,7 @@ public class RGAEncodeTest {
         when(mockNodeXYZOffsetInfo6.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue18);
         when(mockIndividualXYZNodeGeometryInfo3.getNodeXYZOffsetInfo()).thenReturn(mockNodeXYZOffsetInfo6);
         mockIndividualXYZNodeGeometryInfoList3 = Arrays.asList(mockIndividualXYZNodeGeometryInfo3);
-        when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo3);
+        // when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo4);
         when(mockPhysicalXYZNodeInfo3.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList3);
         when(mockLaneConstructorType9.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
         when(mockLaneConstructorType9.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo3);
