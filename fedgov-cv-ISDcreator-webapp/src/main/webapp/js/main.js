@@ -188,19 +188,77 @@ $(document).ready(function() {
         $(this).flatpickr(config);
     });
 
-    $.get("js/time-restrictions.html", function(data) {
+    $.get("js/time-restrictions.html", function (data) {
         time_restrictions = data;
-        $(".time_restrictions_div").html(time_restrictions);
-    });
+        let lane_info_time_restrictions = time_restrictions;
 
-    $(document).on('change', 'input[name="time_period"]', function() {
-        $('#range_fields').hide();
-        $('#general_fields').hide();
-        if ($(this).val() === 'range') {
-            $('#range_fields').show();
-        } else if ($(this).val() === 'general') {
-            $('#general_fields').show();
+        //Update time restrictions with lane info specific identifiers
+        let updated_time_restrictions = $(lane_info_time_restrictions).clone();
+        updated_time_restrictions.find('*').each(function() {
+            if (this.id) {
+                $(this).attr('id', "lane_info_" + this.id);
+            }
+            if (this.name) {
+                $(this).attr('name', "lane_info_" + this.name);
+            }
+        });
+        $(".lane_info_time_restrictions").html(updated_time_restrictions.html());
+
+        let startDatePicker = $('.start_date_picker');
+        let endDatePicker = $('.end_date_picker');
+        let dateConfig = {
+            dateFormat: "Y-m-d",
+            allowInput: true            
+        };
+        startDatePicker.flatpickr(dateConfig);
+        endDatePicker.flatpickr(dateConfig);
+        let startCalendarPickerTime = $('.start_time_picker');
+        let endCalendarPickerTime = $('.end_time_picker');
+        let timeConfig = {
+            enableTime: true,
+            enableSeconds: true,
+            noCalendar: true,
+            allowInput: true,
+            minuteIncrement: 1,
+            secondIncrement: 1,
+            dateFormat: "H:i:S"
         }
+        startCalendarPickerTime.flatpickr(timeConfig);
+        endCalendarPickerTime.flatpickr(timeConfig);
+
+        $(document).on('change', '.form-check-input.time_period', function () {
+            $('.time_period_range_fields').hide();
+            $('.time_period_general_fields').hide();
+            if ($(this).val() === 'range') {
+                $('.time_period_range_fields').show();
+            } else if ($(this).val() === 'general') {
+                $('.time_period_general_fields').show();
+            }
+        });
+        $('.day_selection_dropdown').multiselect({
+            onChange: function(option, checked){
+                updateSharedWith()
+            },
+            maxHeight: 200,
+            buttonText: function(options, select) {
+                if (options.length === 0) {
+                    return 'Select Day Of The Week'
+                } else if (options.length > 1) {
+                    return options.length + ' selected';
+                } else {
+                    var labels = [];
+                    options.each(function() {
+                        if ($(this).attr('label') !== undefined) {
+                            labels.push($(this).attr('label'));
+                        }
+                        else {
+                            labels.push($(this).html());
+                        }
+                    });
+                    return labels.join(', ') + '';
+                }
+            }
+        });
     });
 
 });

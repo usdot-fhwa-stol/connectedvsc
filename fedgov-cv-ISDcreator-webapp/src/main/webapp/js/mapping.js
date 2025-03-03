@@ -457,6 +457,7 @@ async function init() {
 		        	$(".selection-panel").text('Approach Configuration');
 		        	$("#lane_attributes").hide();
 		        	$(".lane_type_attributes").hide();
+					$(".lane_info_time_restrictions").hide();
 		        	$(".lane_number").hide();
 		        	$(".lat").hide();
 		        	$(".long").hide();
@@ -564,7 +565,7 @@ async function init() {
                 $('.btnDone').prop('disabled', false);
                 $(".lane_type_attributes").hide();
                 $(".lane_type_attributes btn-group").hide();
-                $("label[for='lane_type_attributes']").hide();
+				$("label[for='lane_type_attributes']").hide();
 	        	$(".verified_lat").hide();
 	        	$(".verified_long").hide();
 	        	$(".verified_elev").hide();
@@ -605,7 +606,8 @@ async function init() {
 					$('.intersection-info-tab').show();
 					$('.layer').hide();
 					$('.lane-speed-text').show();
-                    $(".shared_with").show();
+					$(".shared_with").show();
+					$(".lane_info_time_restrictions").show();
                     if(!selected_marker.attributes.computed) {
                 		// Only show the button if this lane is already defined with a lane number
                     	if(typeof selected_marker.attributes.laneNumber !== 'undefined') {
@@ -620,6 +622,7 @@ async function init() {
 		        	$(".descriptive_name").hide();
 		        	$(".lane_type").hide();
 		        	$(".lane_number").hide();
+					$(".lane_info_time_restrictions").hide();
         		}
         		
         		selected_layer = this;
@@ -1391,6 +1394,7 @@ function placeComputedLane(newDotFeature) {
 			$("#lane_attributes").show();
 			$(".descriptive_name").show();
 			$(".lane_type").show();
+			$(".lane_info_time_restrictions").show();
 			$(".lane_type_attributes").show();
 			$(".lane_type_attributes btn-group").show();
 			$("label[for='lane_type_attributes']").show();
@@ -1742,6 +1746,7 @@ function referencePointWindow(feature){
 	$(".lane_type_attributes").hide();
 	$(".lane_number").hide();
 	$(".lane_width").hide();
+	$(".lane_info_time_restrictions").hide();
 	$(".descriptive_name").hide();
 	$(".lane_type").hide();
 	$(".approach_type").hide();
