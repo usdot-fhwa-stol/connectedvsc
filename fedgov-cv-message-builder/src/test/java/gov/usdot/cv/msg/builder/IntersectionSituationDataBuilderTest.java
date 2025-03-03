@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2025 LEIDOS.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package gov.usdot.cv.msg.builder;
 
 import java.io.IOException;
@@ -170,7 +186,7 @@ public class IntersectionSituationDataBuilderTest {
     @Test
     public void rgaMessageFromUI() {
         String filePath = "src/test/resources/samplerga3.json"; 
-        String expectedHexString = "002b290000404a76dcde99cb343d50cb53f4571024aa19221bdc3404041406182c4203fdfa2b88280011a400";
+        String expectedHexString = "002b320200408a76dcde99cb343d50cb53f4571024aa19221bdc3404041406182c4203fdfa2b88280011a40001c70420c41461c800";
         runIntersectionSituationDataBuilderTests(filePath, expectedHexString);
     }
 
