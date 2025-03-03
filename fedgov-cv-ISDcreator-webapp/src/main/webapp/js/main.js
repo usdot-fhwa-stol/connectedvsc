@@ -13,7 +13,8 @@
     var numRows = -1;
     var rowHtml;
     var speedLimits = [];
-    var speedForm;
+var speedForm;
+let time_restrictions;
 
 /**
  * Define functions that must bind on load
@@ -181,6 +182,21 @@ $(document).ready(function() {
             format:'d/m/Y H:m:s'
             }
         );
+    });
+
+    $.get("js/time-restrictions.html", function(data) {
+        time_restrictions = data;
+        $(".time_restrictions_div").html(time_restrictions);
+    });
+
+    $(document).on('change', 'input[name="time_period"]', function() {
+        $('#range_fields').hide();
+        $('#general_fields').hide();
+        if ($(this).val() === 'range') {
+            $('#range_fields').show();
+        } else if ($(this).val() === 'general') {
+            $('#general_fields').show();
+        }
     });
 
 });

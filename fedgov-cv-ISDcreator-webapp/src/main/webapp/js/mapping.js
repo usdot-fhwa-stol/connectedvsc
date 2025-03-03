@@ -26,7 +26,7 @@
     var nodeObject = [];
     var revisionNum = 0;
     var cachedSessionKey = null;
-    let cachedApiKey='';
+    let cachedApiKey='AjicerIt5MpzLjpjIIeC9tPTfYspCXApgBxWIEWEZ4AtBYByxJ7BBiiefwAZtCBD';
     let cachedUsername = null;
 
     var bingResolutions = [156543.03390625, 78271.516953125, 39135.7584765625,
