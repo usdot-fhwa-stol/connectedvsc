@@ -596,47 +596,67 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 			// Populate WayPlanarGeometryInfo
 			jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, individualXYZNodeGeometryInfoClass, "getNodeLocPlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
 			jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, individualXYZNodeGeometryInfoObj, getNodeLocPlanarGeometryInfoMethod);
-			jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
 
 			WayPlanarGeometryInfo_t *nodeLocPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
 
+
 			if(nodeLocPlanarGeometryInfoObj == NULL)
 			{
-				nodeLocPlanarGeometryInfo->wayWidth = -1;
-
+				nodeLocPlanarGeometryInfo = NULL;
+				printf("nodeLocPlanarGeometryInfo is null, physical");
 			} else {
 				// Populate wayWidth 
+				printf("Got nodeLocPlanarGeometryInfo, physical lolol");
+				jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
+
+				
+				printf("Got nodeLocPlanarGeometryInfoClass, physical");
+
+
+				printf("Getting wayWidth, physical");
 				jmethodID getWayWidthMethod = (*env)->GetMethodID(env, nodeLocPlanarGeometryInfoClass, "getWayWidth", "()Lgov/usdot/cv/rgaencoder/WayWidth;");
 				jobject wayWidthObj = (*env)->CallObjectMethod(env, nodeLocPlanarGeometryInfoObj, getWayWidthMethod);
-				jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+				printf("Got wayWidth object, physical");
 
-				jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
-				jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+				if(wayWidthObj == NULL)
+				{
+					nodeLocPlanarGeometryInfo->wayWidth = NULL;
+					printf("wayWidth is null, physical");
 
-				printf("Getting waywidth, physical");
+				} else {
+					//nodeLocPlanarGeometryInfo->wayWidth = populateWayWidth(env, wayWidthObj);
+					WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
+						jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+					
+						jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
+						jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+					
+						switch (choice)
+						{
+							case 0:
+								wayWidth->present = WayWidth_PR_fullWidth;
+								jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
+								jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
+								wayWidth->choice.fullWidth = (long)fullWidth;
+								break;
+							case 1:
+								wayWidth->present = WayWidth_PR_deltaWidth;
+								jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
+								jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
+								wayWidth->choice.deltaWidth = (long)deltaWidth;
+								break;
+							default:
+								wayWidth->present = WayWidth_PR_NOTHING;
+								break;
+						}
 
-				WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
-
-				switch (choice) {
-					case 0:
-						jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
-						jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
-						wayWidth->present = WayWidth_PR_fullWidth;
-						wayWidth->choice.fullWidth = (long)fullWidth;
-						break;
-					case 1:
-						jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
-						jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
-						wayWidth->present = WayWidth_PR_deltaWidth;
-						wayWidth->choice.deltaWidth = (long)deltaWidth;
-						break;
-					default: 
-						wayWidth->present = WayWidth_PR_NOTHING;
-						break;
-			}
+						nodeLocPlanarGeometryInfo->wayWidth = wayWidth;
+					printf("Got waywidth, physical");
+				}
 
 			printf("Got waywidth, physical");
 			}
+			printf("Outside wayWidth, physical");
 			ASN_SEQUENCE_ADD(&physicalXYZNodeInfo->nodeXYZGeometryNodeSet.list, nodeXYZOffset);
 		}
 
@@ -691,54 +711,28 @@ void populateLaneConstructorType(JNIEnv *env, jobject laneConstructorTypeObj, La
 		populateNodeXYZOffsetValue(env, nodeZOffsetValueObj, &computedXYZNodeInfo->laneCenterLineXYZOffset.nodeZOffsetValue);
 
 		// Populate WayPlanarGeometryInfo
-		jmethodID getNodeLocPlanarGeometryInfoMethod = (*env)->GetMethodID(env, computedXYZNodeInfoClass, "getLanePlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
-		jobject nodeLocPlanarGeometryInfoObj = (*env)->CallObjectMethod(env, computedXYZNodeInfoObj, getNodeLocPlanarGeometryInfoMethod);
+		jmethodID getLanePlanarGeometryInfoMethod = (*env)->GetMethodID(env, computedXYZNodeInfoClass, "getLanePlanarGeomInfo", "()Lgov/usdot/cv/rgaencoder/WayPlanarGeometryInfo;");
+		jobject lanePlanarGeometryInfoObj = (*env)->CallObjectMethod(env, computedXYZNodeInfoObj, getLanePlanarGeometryInfoMethod);
 		printf("Getting to computedNode, nodeLocPlanarGeometryINfo");
-		jclass nodeLocPlanarGeometryInfoClass = (*env)->GetObjectClass(env, nodeLocPlanarGeometryInfoObj);
 
-		WayPlanarGeometryInfo_t *nodeLocPlanarGeometryInfo = calloc(1, sizeof(WayPlanarGeometryInfo_t));
+		WayPlanarGeometryInfo_t lanePlanarGeomInfo;
 
-		printf("Getting to computedNode, nodeLocPlanarGeometryINfo, before if statement");
-		if(nodeLocPlanarGeometryInfoObj == NULL)
-		{
-			nodeLocPlanarGeometryInfo->wayWidth = -1;
-			printf("Getting to computedNode, nodeLocPlanarGeometryINfo, inside if");
-		} else {
+		printf("Getting to computedNode, lanePlanarGeomInfo, before if statement");
 			// Populate wayWidth 
+			jclass lanePlanarGeometryInfoClass = (*env)->GetObjectClass(env, lanePlanarGeometryInfoObj);
+
 			printf("Getting to computedNode, nodeLocPlanarGeometryINfo, inside else");
-			jmethodID getWayWidthMethod = (*env)->GetMethodID(env, nodeLocPlanarGeometryInfoClass, "getWayWidth",  "()Lgov/usdot/cv/rgaencoder/WayWidth;");
-			jobject wayWidthObj = (*env)->CallObjectMethod(env, nodeLocPlanarGeometryInfoObj, getWayWidthMethod);
-			jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+			jmethodID getWayWidthMethod = (*env)->GetMethodID(env, lanePlanarGeometryInfoClass, "getWayWidth",  "()Lgov/usdot/cv/rgaencoder/WayWidth;");
+			jobject wayWidthObj = (*env)->CallObjectMethod(env, lanePlanarGeometryInfoObj, getWayWidthMethod);			
 
-			jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
-			jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+			if (wayWidthObj == NULL) {
 
-			printf("Getting waywidth, physical");
+				lanePlanarGeomInfo.wayWidth = NULL;
 
-			WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
+			} else {
+				//lanePlanarGeomInfo.wayWidth = populateWayWidth(env, wayWidthObj);
 
-			switch (choice) {
-				case 0: // FULL_WIDTH
-					jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
-					jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
-					printf("Inside switch case 0, fullWidth %d \n", fullWidth);
-					wayWidth->present = WayWidth_PR_fullWidth;
-					wayWidth->choice.fullWidth = (long)fullWidth; // Cast jint to long
-					break;
-				case 1: // DELTA_WIDTH
-					jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
-					jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
-					wayWidth->present = WayWidth_PR_deltaWidth;
-					wayWidth->choice.deltaWidth = (long)deltaWidth; // Cast jint to long
-					break;
-				default: // Uninitialized or invalid choice (-1 or other)
-					wayWidth->present = WayWidth_PR_NOTHING;
-					break;
-			}
-
-			// computedXYZNodeInfo->nodeLocPlanarGeometryInfo.wayWidth = wayWidth;
-
-			printf("Got waywidth, physical");
+				printf("Got waywidth, computed");
 		}
 		laneConstructorType->present = LaneConstructorType_PR_computedXYZNodeInfo;
 		laneConstructorType->choice.computedXYZNodeInfo = *computedXYZNodeInfo;
@@ -822,6 +816,35 @@ void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffs
 	{
 		offsetValue->present = NodeXYZOffsetValue_PR_NOTHING;
 	}
+}
+
+WayWidth_t *populateWayWidth(JNIEnv *env, jobject wayWidthObj)
+{
+    WayWidth_t *wayWidth = calloc(1, sizeof(WayWidth_t));
+    jclass wayWidthClass = (*env)->GetObjectClass(env, wayWidthObj);
+ 
+    jmethodID getChoice = (*env)->GetMethodID(env, wayWidthClass, "getChoice", "()B");
+    jbyte choice = (*env)->CallByteMethod(env, wayWidthObj, getChoice);
+ 
+    switch (choice)
+    {
+        case 0:
+            wayWidth->present = WayWidth_PR_fullWidth;
+            jmethodID getFullWidth = (*env)->GetMethodID(env, wayWidthClass, "getFullWidth", "()I");
+            jint fullWidth = (*env)->CallIntMethod(env, wayWidthObj, getFullWidth);
+            wayWidth->choice.fullWidth = (long)fullWidth;
+            break;
+        case 1:
+            wayWidth->present = WayWidth_PR_deltaWidth;
+            jmethodID getDeltaWidth = (*env)->GetMethodID(env, wayWidthClass, "getDeltaWidth", "()I");
+            jint deltaWidth = (*env)->CallIntMethod(env, wayWidthObj, getDeltaWidth);
+            wayWidth->choice.deltaWidth = (long)deltaWidth;
+            break;
+        default:
+            wayWidth->present = WayWidth_PR_NOTHING;
+            break;
+    }
+    return wayWidth;
 }
 
 void populateReferencePoint(JNIEnv *env, jobject referencePointObj, ReferencePointInfo_t *referencePoint) {

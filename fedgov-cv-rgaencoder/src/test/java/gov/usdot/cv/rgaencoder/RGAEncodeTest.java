@@ -415,11 +415,11 @@ public class RGAEncodeTest {
         // when(mockTimeRestrictions1.getChoice()).thenReturn((int)2);
         // when(mockTimeRestrictions1.getOtherDataSetItemCtrl()).thenReturn(mockOtherDataSetItemCtrl1);
 
-        when(mockWayWidth1.getChoice()).thenReturn((byte)0);
-        when(mockWayWidth1.getFullWidth()).thenReturn((int)10);
+        // when(mockWayWidth1.getChoice()).thenReturn((byte)0);
+        // when(mockWayWidth1.getFullWidth()).thenReturn((int)10);
         // when(mockWayWidth1.getChoice()).thenReturn((byte)1);
         // when(mockWayWidth1.getDeltaWidth()).thenReturn((int)1);
-        when(mockWayPlanarGeometryInfo1.getWayWidth()).thenReturn(mockWayWidth1);
+        //when(mockWayPlanarGeometryInfo1.getWayWidth()).thenReturn(mockWayWidth1);
         when(mockNodeXYZOffsetValue1.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B10);
         when(mockNodeXYZOffsetValue1.getOffsetB10()).thenReturn((long)2);
         when(mockNodeXYZOffsetValue2.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B11);
@@ -632,11 +632,11 @@ public class RGAEncodeTest {
         // when(mockReferencePointInfo3.getLocation()).thenReturn(mockLocation1);
         // when(mockReferencePointInfo3.getTimeOfCalculation()).thenReturn(mockTimeOfCalculation1);
 
-        // when(mockWayWidth4.getChoice()).thenReturn((byte)0);
-        // when(mockWayWidth4.getFullWidth()).thenReturn((int)0);
+        when(mockWayWidth4.getChoice()).thenReturn((byte)0);
+        when(mockWayWidth4.getFullWidth()).thenReturn((int)0);
         // when(mockWayWidth4.getChoice()).thenReturn((byte)1);
         // when(mockWayWidth4.getDeltaWidth()).thenReturn((int)1);
-        // when(mockWayPlanarGeometryInfo4.getWayWidth()).thenReturn(mockWayWidth1);
+        when(mockWayPlanarGeometryInfo4.getWayWidth()).thenReturn(mockWayWidth1);
 
         when(mockNodeXYZOffsetValue16.getChoice()).thenReturn(NodeXYZOffsetValue.OFFSET_B13);
         when(mockNodeXYZOffsetValue16.getOffsetB13()).thenReturn((long)101);
@@ -649,7 +649,7 @@ public class RGAEncodeTest {
         when(mockNodeXYZOffsetInfo6.getNodeZOffsetValue()).thenReturn(mockNodeXYZOffsetValue18);
         when(mockIndividualXYZNodeGeometryInfo3.getNodeXYZOffsetInfo()).thenReturn(mockNodeXYZOffsetInfo6);
         mockIndividualXYZNodeGeometryInfoList3 = Arrays.asList(mockIndividualXYZNodeGeometryInfo3);
-        // when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo4);
+        when(mockIndividualXYZNodeGeometryInfo3.getNodeLocPlanarGeomInfo()).thenReturn(mockWayPlanarGeometryInfo4);
         when(mockPhysicalXYZNodeInfo3.getNodeXYZGeometryNodeSet()).thenReturn(mockIndividualXYZNodeGeometryInfoList3);
         when(mockLaneConstructorType9.getChoice()).thenReturn(LaneConstructorType.PHYSICAL_NODE);
         when(mockLaneConstructorType9.getPhysicalXYZNodeInfo()).thenReturn(mockPhysicalXYZNodeInfo3);
