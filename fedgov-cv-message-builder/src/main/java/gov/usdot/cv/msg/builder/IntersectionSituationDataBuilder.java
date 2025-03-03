@@ -262,8 +262,8 @@ public class IntersectionSituationDataBuilder {
 		ContentDateTime contentDateTime = isdInputData.mapData.contentDateTime;
 
 		//DataSetFormatVersionInfo
-		baseLayer.setMajorVer(isdInputData.mapData.majorVersion);
-		baseLayer.setMinorVer(isdInputData.mapData.minorVersion);
+		baseLayer.setMajorVer(1); // TODO: Pull value from ASN1
+		baseLayer.setMinorVer(1); // TODO: Pull value from ASN1
 
 		//ReferencePointInfo
 		Position3D position3d = new Position3D();
