@@ -696,40 +696,9 @@ async function init() {
                 	$('#' + selected_marker.attributes.laneType + '_type_attributes').multiselect('select', selected_marker.attributes.typeAttribute);
                 	$('#' + selected_marker.attributes.laneType + '_type_attributes').multiselect("refresh");
 				}
-
-				$('#lane_info_day_selection').multiselect('deselectAll', false);
-            	$("#lane_info_day_selection").multiselect("refresh");
-				if (selected_marker.attributes.laneInfoDaySelection) {
-					$("#lane_info_day_selection").multiselect('select', selected_marker.attributes.laneInfoDaySelection);
-					$("#lane_info_day_selection").multiselect("refresh");
-				}
-
-				if (selected_marker.attributes.laneInfoTimePeriodType) {
-					$('input[name="lane_info_time_period"][value="' + selected_marker.attributes.laneInfoTimePeriodType + '"]').prop('checked', true);
-				}else{
-					$('input[name="lane_info_time_period"]').prop('checked', false);
-				}
-
-				if (selected_marker.attributes.laneInfoTimePeriodValue && selected_marker.attributes.laneInfoTimePeriodType == "range") {
-					$('.time_period_general_fields').css('display', 'none');
-					$('.time_period_range_fields').css('display', '');
-					$("#lane_info_time_period_start_datetime").val(selected_marker.attributes.laneInfoTimePeriodValue['start_datetime']);
-					$("#lane_info_time_period_end_datetime").val(selected_marker.attributes.laneInfoTimePeriodValue['end_datetime']);
-					$("#lane_info_time_period_start_offset").val(selected_marker.attributes.laneInfoTimePeriodValue['start_offset']);
-					$("#lane_info_time_period_end_offset").val(selected_marker.attributes.laneInfoTimePeriodValue['end_offset']);
-				} else if (selected_marker.attributes.laneInfoTimePeriodValue && selected_marker.attributes.laneInfoTimePeriodType == "general") {
-					$('.time_period_range_fields').css('display', 'none');
-					$('.time_period_general_fields').css('display', '');
-					$('input[name="lane_info_time_period_general"][value="' + selected_marker.attributes.laneInfoTimePeriodValue + '"]').prop('checked', true);
-				} else {
-					$("#lane_info_time_period_start_datetime").val("");
-					$("#lane_info_time_period_end_datetime").val("");
-					$("#lane_info_time_period_start_offset").val("");
-					$("#lane_info_time_period_end_offset").val("");
-					$('input[name="lane_info_time_period_general"]').prop('checked', false);
-					$('.time_period_general_fields').css('display', 'none');
-					$('.time_period_range_fields').css('display', 'none');
-				}
+				
+				updateLaneInfoDaySelection(selected_marker.attributes.laneInfoDaySelection)
+				updateLaneInfoTimePeriod(selected_marker.attributes.laneInfoTimePeriodType, selected_marker.attributes.laneInfoTimePeriodValue);
 
                 if (! selected_marker.attributes.spatRevision){
                 	$('#spat_revision').val(1);
@@ -2728,6 +2697,9 @@ function onMappedGeomIdChangeCallback(){
 
 function isOdd(num) { return (num % 2) == 1;}
 
+/***
+ * @brief Get selected days of the week from day selection field on the lane info dialog 
+ */
 function getLaneInfoDaySelection() {
 	let laneInfoDaySelection = []
 	let daySelectionOptions = $('#lane_info_day_selection option:selected')?.map(function (a, item) { return item.value; });
@@ -2739,6 +2711,22 @@ function getLaneInfoDaySelection() {
 	return laneInfoDaySelection;
 }
 
+/**
+ * @brief Populate lane info dialog with selected days of the week
+ */
+function updateLaneInfoDaySelection(laneInfoDaySelection){
+	$('#lane_info_day_selection').multiselect('deselectAll', false);
+	$("#lane_info_day_selection").multiselect("refresh");
+	if (laneInfoDaySelection) {
+		$("#lane_info_day_selection").multiselect('select', laneInfoDaySelection);
+		$("#lane_info_day_selection").multiselect("refresh");
+	}
+}
+
+
+/**
+ * @brief Get selected time period from time period selection field on the lane info dialog
+ */
 function getLaneInfoTimePeriod() {
 	let laneInfoTimePeriodType = $("input[name='lane_info_time_period']:checked")?.val();
 	laneInfoTimePeriodType = laneInfoTimePeriodType?.trim()?.toLowerCase()
@@ -2755,5 +2743,37 @@ function getLaneInfoTimePeriod() {
 	return {
 		type: laneInfoTimePeriodType,
 		value: laneInfoTimePeriodValue
+	}
+}
+
+/***
+ * @brief Populate lane info dialog with selected time period
+ */
+function updateLaneInfoTimePeriod(laneInfoTimePeriodType, laneInfoTimePeriodValue){
+	if (laneInfoTimePeriodType) {
+		$('input[name="lane_info_time_period"][value="' + laneInfoTimePeriodType + '"]').prop('checked', true);
+	}else{
+		$('input[name="lane_info_time_period"]').prop('checked', false);
+	}
+
+	if (laneInfoTimePeriodValue && laneInfoTimePeriodType == "range") {
+		$('.time_period_general_fields').css('display', 'none');
+		$('.time_period_range_fields').css('display', '');
+		$("#lane_info_time_period_start_datetime").val(laneInfoTimePeriodValue['start_datetime']);
+		$("#lane_info_time_period_end_datetime").val(laneInfoTimePeriodValue['end_datetime']);
+		$("#lane_info_time_period_start_offset").val(laneInfoTimePeriodValue['start_offset']);
+		$("#lane_info_time_period_end_offset").val(laneInfoTimePeriodValue['end_offset']);
+	} else if (laneInfoTimePeriodValue && laneInfoTimePeriodType == "general") {
+		$('.time_period_range_fields').css('display', 'none');
+		$('.time_period_general_fields').css('display', '');
+		$('input[name="lane_info_time_period_general"][value="' + laneInfoTimePeriodValue + '"]').prop('checked', true);
+	} else {
+		$("#lane_info_time_period_start_datetime").val("");
+		$("#lane_info_time_period_end_datetime").val("");
+		$("#lane_info_time_period_start_offset").val("");
+		$("#lane_info_time_period_end_offset").val("");
+		$('input[name="lane_info_time_period_general"]').prop('checked', false);
+		$('.time_period_general_fields').css('display', 'none');
+		$('.time_period_range_fields').css('display', 'none');
 	}
 }
