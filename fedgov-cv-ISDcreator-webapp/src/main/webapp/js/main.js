@@ -214,6 +214,7 @@ function addLaneInfoTimeRestrictions(time_restrictions) {
     });
     $(".lane_info_time_restrictions").html(lane_info_time_restrictions.html());
 }
+
 /**
  * @brief function to update the time restriction HTML.
  */
@@ -261,6 +262,17 @@ function updateTimeRestrictionsHTML(){
                 return labels.join(', ') + '';
             }
         }
+    });
+    
+    $('.fa-question-circle').click(function(){
+        var tag = $(this).attr('tag');
+        var obj = $.grep(help_notes, function(e){ return e.value === tag; });
+        $('#help_modal').modal('show');
+        $('#min').html(obj[0].min)
+        $('#max').html(obj[0].max)
+        $('#units').html(obj[0].units)
+        $('#description').html(obj[0].description)
+        $('#help_modal h4').html(obj[0].title)
     });
 }
 
