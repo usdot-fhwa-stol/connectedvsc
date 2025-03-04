@@ -13,7 +13,8 @@
     var numRows = -1;
     var rowHtml;
     var speedLimits = [];
-    var speedForm;
+var speedForm;
+let time_restrictions;
 
 /**
  * Define functions that must bind on load
@@ -187,7 +188,81 @@ $(document).ready(function() {
         $(this).flatpickr(config);
     });
 
+    $.get("js/time-restrictions.html", function (data) {
+        time_restrictions = data;
+        //Add lane info specific time restrictions HTML
+        addLaneInfoTimeRestrictions(time_restrictions);
+        //Update time restrictions HTML after add HTML to the main page
+        updateTimeRestrictionsHTML();        
+    });
+
 });
+
+/**
+ * @brief Add time restrictions HTML to the lane info popup on the main page.
+ */
+function addLaneInfoTimeRestrictions(time_restrictions) {
+    // Update time restrictions with lane info specific identifiers
+    let lane_info_time_restrictions = $(time_restrictions).clone();
+    lane_info_time_restrictions.find('*').each(function() {
+        if (this.id) {
+            $(this).attr('id', "lane_info_" + this.id);
+        }
+        if (this.name) {
+            $(this).attr('name', "lane_info_" + this.name);
+        }
+    });
+    $(".lane_info_time_restrictions").html(lane_info_time_restrictions.html());
+}
+/**
+ * @brief function to update the time restriction HTML.
+ */
+function updateTimeRestrictionsHTML(){
+    let startDateTimePicker = $('.start_datetime_picker');
+    let endDateTimePicker = $('.end_datetime_picker');
+    let dateConfig = {
+        dateFormat: "Y-m-d H:i:S",
+        allowInput: true,        
+        enableTime: true,
+        enableSeconds: true,
+        minuteIncrement: 1,
+        secondIncrement: 1,
+        time_24hr: true
+    };
+    startDateTimePicker.flatpickr(dateConfig);
+    endDateTimePicker.flatpickr(dateConfig);
+
+    $(document).on('change', '.form-check-input.time_period', function () {
+        $('.time_period_range_fields').hide();
+        $('.time_period_general_fields').hide();
+        if ($(this).val() === 'range') {
+            $('.time_period_range_fields').show();
+        } else if ($(this).val() === 'general') {
+            $('.time_period_general_fields').show();
+        }
+    });
+    $('.day_selection_dropdown').multiselect({
+        maxHeight: 200,
+        buttonText: function(options, select) {
+            if (options.length === 0) {
+                return 'Select Day Of The Week'
+            } else if (options.length > 1) {
+                return options.length + ' selected';
+            } else {
+                var labels = [];
+                options.each(function () {
+                    if ($(this).attr('label') !== undefined) {
+                        labels.push($(this).attr('label'));
+                    }
+                    else {
+                        labels.push($(this).html());
+                    }
+                });
+                return labels.join(', ') + '';
+            }
+        }
+    });
+}
 
 /***
  * Purpose: Display list of autocomplete places suggested by predictionPlaces returned by google places API.
