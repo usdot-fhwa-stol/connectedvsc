@@ -190,20 +190,8 @@ $(document).ready(function() {
 
     $.get("js/time-restrictions.html", function (data) {
         time_restrictions = data;
-        let lane_info_time_restrictions = time_restrictions;
-
-        // Update time restrictions with lane info specific identifiers
-        let updated_time_restrictions = $(lane_info_time_restrictions).clone();
-        updated_time_restrictions.find('*').each(function() {
-            if (this.id) {
-                $(this).attr('id', "lane_info_" + this.id);
-            }
-            if (this.name) {
-                $(this).attr('name', "lane_info_" + this.name);
-            }
-        });
-        $(".lane_info_time_restrictions").html(updated_time_restrictions.html());
-
+        //Add lane info specific time restrictions HTML
+        addLaneInfoTimeRestrictions(time_restrictions);
         //Update time restrictions HTML after add HTML to the main page
         updateTimeRestrictionsHTML();        
     });
@@ -211,30 +199,38 @@ $(document).ready(function() {
 });
 
 /**
+ * @brief Add time restrictions HTML to the lane info popup on the main page.
+ */
+function addLaneInfoTimeRestrictions(time_restrictions) {
+    // Update time restrictions with lane info specific identifiers
+    let lane_info_time_restrictions = $(time_restrictions).clone();
+    lane_info_time_restrictions.find('*').each(function() {
+        if (this.id) {
+            $(this).attr('id', "lane_info_" + this.id);
+        }
+        if (this.name) {
+            $(this).attr('name', "lane_info_" + this.name);
+        }
+    });
+    $(".lane_info_time_restrictions").html(lane_info_time_restrictions.html());
+}
+/**
  * @brief function to update the time restriction HTML.
  */
 function updateTimeRestrictionsHTML(){
-    let startDatePicker = $('.start_date_picker');
-    let endDatePicker = $('.end_date_picker');
+    let startDateTimePicker = $('.start_datetime_picker');
+    let endDateTimePicker = $('.end_datetime_picker');
     let dateConfig = {
-        dateFormat: "Y-m-d",
-        allowInput: true            
-    };
-    startDatePicker.flatpickr(dateConfig);
-    endDatePicker.flatpickr(dateConfig);
-    let startCalendarPickerTime = $('.start_time_picker');
-    let endCalendarPickerTime = $('.end_time_picker');
-    let timeConfig = {
+        dateFormat: "Y-m-d H:i:S",
+        allowInput: true,        
         enableTime: true,
         enableSeconds: true,
-        noCalendar: true,
-        allowInput: true,
         minuteIncrement: 1,
         secondIncrement: 1,
-        dateFormat: "H:i:S"
-    }
-    startCalendarPickerTime.flatpickr(timeConfig);
-    endCalendarPickerTime.flatpickr(timeConfig);
+        time_24hr: true
+    };
+    startDateTimePicker.flatpickr(dateConfig);
+    endDateTimePicker.flatpickr(dateConfig);
 
     $(document).on('change', '.form-check-input.time_period', function () {
         $('.time_period_range_fields').hide();
