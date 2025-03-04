@@ -250,7 +250,7 @@ function updateTimeRestrictionsHTML(){
             } else if (options.length > 1) {
                 return options.length + ' selected';
             } else {
-                var labels = [];
+                let labels = [];
                 options.each(function () {
                     if ($(this).attr('label') !== undefined) {
                         labels.push($(this).attr('label'));
@@ -265,8 +265,8 @@ function updateTimeRestrictionsHTML(){
     });
     
     $('.fa-question-circle').click(function(){
-        var tag = $(this).attr('tag');
-        var obj = $.grep(help_notes, function(e){ return e.value === tag; });
+        let tag = $(this).attr('tag');
+        let obj = $.grep(help_notes, function(e){ return e.value === tag; });
         $('#help_modal').modal('show');
         $('#min').html(obj[0].min)
         $('#max').html(obj[0].max)
