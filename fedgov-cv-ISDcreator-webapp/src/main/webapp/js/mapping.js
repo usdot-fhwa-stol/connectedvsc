@@ -2239,7 +2239,28 @@ $(".btnDone").click(function(){
 	        sharedWith = [];
 	        for(i = 0; i < sharedWith_object.length ; i++){
 	        	sharedWith[i] = sharedWith_object[i]
-	        }
+			}
+			let laneInfoDaySelection = []
+			let daySelectionDOMValues = $('#lane_info_day_selection option:selected')?.map(function (a, item) { return item.value; });
+			if (daySelectionDOMValues) {
+				for (let i = 0; i < daySelectionDOMValues.length; i++) {
+					laneInfoDaySelection.push(daySelectionDOMValues[i]);
+				}
+			}	
+		
+			let laneInfoTimePeriodType = $("input[name='lane_info_time_period']:checked")?.val();
+			laneInfoTimePeriodType = laneInfoTimePeriodType?.trim()?.toLowerCase()
+			let laneInfoTimePeriodValueObj = {}
+			if (laneInfoTimePeriodType === "range") {
+				laneInfoTimePeriodValueObj["start_date"] = $('#lane_info_time_period_start_date').val();
+				laneInfoTimePeriodValueObj["start_time"] = $('#lane_info_time_period_start_time').val();
+				laneInfoTimePeriodValueObj["start_offset"] = $('#lane_info_time_period_start_offset').val();
+				laneInfoTimePeriodValueObj["end_date"] = $('#lane_info_time_period_end_date').val();
+				laneInfoTimePeriodValueObj["end_time"] = $('#lane_info_time_period_end_time').val();
+				laneInfoTimePeriodValueObj["end_offset"] = $('#lane_info_time_period_end_offset').val();
+			} else if (laneInfoTimePeriodType === "general") {
+				laneInfoTimePeriodValueObj["value"] = $('input[name="lane_info_time_period_general"]:checked').val();
+			}
 	        
 	        typeAttributeNameSaved = typeAttributeName;
 	        typeAttribute = [];
@@ -2258,7 +2279,7 @@ $(".btnDone").click(function(){
 				vert.move(move.lon - vert.x, move.lat - vert.y);
 				selected_marker.move(move);
 				lanes.redraw();
-				if ( selected_marker.attributes.number == 0 ) {
+				if ( selected_marker.attributes.number == 0 ) {					
 					selected_marker.attributes.spatRevision = $('#spat_revision').val();
 					selected_marker.attributes.signalGroupID = $('#signal_group_id').val();
 					selected_marker.attributes.startTime = $('#start_time').val();
@@ -2268,6 +2289,9 @@ $(".btnDone").click(function(){
 					selected_marker.attributes.nextTime = $('#next_time').val();
 					selected_marker.attributes.sharedWith = sharedWith;
 					selected_marker.attributes.typeAttribute = typeAttribute;
+					selected_marker.attributes.laneInfoDaySelection = laneInfoDaySelection;
+					selected_marker.attributes.laneInfoTimePeriodType = laneInfoTimePeriodType;
+					selected_marker.attributes.laneInfoTimePeriodValueObj = laneInfoTimePeriodValueObj;
 
                         if (nodeObject != null) {
                             selected_marker.attributes.connections = nodeObject;

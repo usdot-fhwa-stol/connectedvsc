@@ -192,7 +192,7 @@ $(document).ready(function() {
         time_restrictions = data;
         let lane_info_time_restrictions = time_restrictions;
 
-        //Update time restrictions with lane info specific identifiers
+        // Update time restrictions with lane info specific identifiers
         let updated_time_restrictions = $(lane_info_time_restrictions).clone();
         updated_time_restrictions.find('*').each(function() {
             if (this.id) {
@@ -204,64 +204,69 @@ $(document).ready(function() {
         });
         $(".lane_info_time_restrictions").html(updated_time_restrictions.html());
 
-        let startDatePicker = $('.start_date_picker');
-        let endDatePicker = $('.end_date_picker');
-        let dateConfig = {
-            dateFormat: "Y-m-d",
-            allowInput: true            
-        };
-        startDatePicker.flatpickr(dateConfig);
-        endDatePicker.flatpickr(dateConfig);
-        let startCalendarPickerTime = $('.start_time_picker');
-        let endCalendarPickerTime = $('.end_time_picker');
-        let timeConfig = {
-            enableTime: true,
-            enableSeconds: true,
-            noCalendar: true,
-            allowInput: true,
-            minuteIncrement: 1,
-            secondIncrement: 1,
-            dateFormat: "H:i:S"
-        }
-        startCalendarPickerTime.flatpickr(timeConfig);
-        endCalendarPickerTime.flatpickr(timeConfig);
-
-        $(document).on('change', '.form-check-input.time_period', function () {
-            $('.time_period_range_fields').hide();
-            $('.time_period_general_fields').hide();
-            if ($(this).val() === 'range') {
-                $('.time_period_range_fields').show();
-            } else if ($(this).val() === 'general') {
-                $('.time_period_general_fields').show();
-            }
-        });
-        $('.day_selection_dropdown').multiselect({
-            onChange: function(option, checked){
-                updateSharedWith()
-            },
-            maxHeight: 200,
-            buttonText: function(options, select) {
-                if (options.length === 0) {
-                    return 'Select Day Of The Week'
-                } else if (options.length > 1) {
-                    return options.length + ' selected';
-                } else {
-                    var labels = [];
-                    options.each(function() {
-                        if ($(this).attr('label') !== undefined) {
-                            labels.push($(this).attr('label'));
-                        }
-                        else {
-                            labels.push($(this).html());
-                        }
-                    });
-                    return labels.join(', ') + '';
-                }
-            }
-        });
+        //Update time restrictions HTML after add HTML to the main page
+        updateTimeRestrictionsHTML();        
     });
 
 });
+
+/**
+ * @brief function to update the time restriction HTML.
+ */
+function updateTimeRestrictionsHTML(){
+    let startDatePicker = $('.start_date_picker');
+    let endDatePicker = $('.end_date_picker');
+    let dateConfig = {
+        dateFormat: "Y-m-d",
+        allowInput: true            
+    };
+    startDatePicker.flatpickr(dateConfig);
+    endDatePicker.flatpickr(dateConfig);
+    let startCalendarPickerTime = $('.start_time_picker');
+    let endCalendarPickerTime = $('.end_time_picker');
+    let timeConfig = {
+        enableTime: true,
+        enableSeconds: true,
+        noCalendar: true,
+        allowInput: true,
+        minuteIncrement: 1,
+        secondIncrement: 1,
+        dateFormat: "H:i:S"
+    }
+    startCalendarPickerTime.flatpickr(timeConfig);
+    endCalendarPickerTime.flatpickr(timeConfig);
+
+    $(document).on('change', '.form-check-input.time_period', function () {
+        $('.time_period_range_fields').hide();
+        $('.time_period_general_fields').hide();
+        if ($(this).val() === 'range') {
+            $('.time_period_range_fields').show();
+        } else if ($(this).val() === 'general') {
+            $('.time_period_general_fields').show();
+        }
+    });
+    $('.day_selection_dropdown').multiselect({
+        maxHeight: 200,
+        buttonText: function(options, select) {
+            if (options.length === 0) {
+                return 'Select Day Of The Week'
+            } else if (options.length > 1) {
+                return options.length + ' selected';
+            } else {
+                var labels = [];
+                options.each(function () {
+                    if ($(this).attr('label') !== undefined) {
+                        labels.push($(this).attr('label'));
+                    }
+                    else {
+                        labels.push($(this).html());
+                    }
+                });
+                return labels.join(', ') + '';
+            }
+        }
+    });
+}
 
 /***
  * Purpose: Display list of autocomplete places suggested by predictionPlaces returned by google places API.
