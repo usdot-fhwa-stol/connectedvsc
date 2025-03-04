@@ -580,7 +580,7 @@ async function init() {
 				$('.road_authority_id').hide();
 				$('.road_authority_id_type').hide();
                 $(".approach_name").hide();
-                $(".shared_with").hide();
+				$(".shared_with").hide();				
                 $(".btnClone").hide();
 				//-------------------------------------
 	        	$(".lat").show();
@@ -717,7 +717,7 @@ async function init() {
 					$("#lane_info_time_period_end_datetime").val(selected_marker.attributes.laneInfoTimePeriodValue['end_datetime']);
 					$("#lane_info_time_period_start_offset").val(selected_marker.attributes.laneInfoTimePeriodValue['start_offset']);
 					$("#lane_info_time_period_end_offset").val(selected_marker.attributes.laneInfoTimePeriodValue['end_offset']);
-				} else if (selected_marker.attributes.laneInfoTimePeriodType == "general") {
+				} else if (selected_marker.attributes.laneInfoTimePeriodValue && selected_marker.attributes.laneInfoTimePeriodType == "general") {
 					$('.time_period_range_fields').css('display', 'none');
 					$('.time_period_general_fields').css('display', '');
 					$('input[name="lane_info_time_period_general"][value="' + selected_marker.attributes.laneInfoTimePeriodValue + '"]').prop('checked', true);
@@ -2279,26 +2279,11 @@ $(".btnDone").click(function(){
 	        for(i = 0; i < sharedWith_object.length ; i++){
 	        	sharedWith[i] = sharedWith_object[i]
 			}
-			let laneInfoDaySelection = []
-			let daySelectionOptions = $('#lane_info_day_selection option:selected')?.map(function (a, item) { return item.value; });
-			if (daySelectionOptions) {
-				for (let i = 0; i < daySelectionOptions.length; i++) {
-					laneInfoDaySelection.push(daySelectionOptions[i]);
-				}
-			}	
+			let laneInfoDaySelection = getLaneInfoDaySelection();
 		
-			let laneInfoTimePeriodType = $("input[name='lane_info_time_period']:checked")?.val();
-			laneInfoTimePeriodType = laneInfoTimePeriodType?.trim()?.toLowerCase()
-			let laneInfoTimePeriodValue = null;
-			if (laneInfoTimePeriodType === "range") {
-				laneInfoTimePeriodValue = {};
-				laneInfoTimePeriodValue["start_datetime"] = $('#lane_info_time_period_start_datetime').val();
-				laneInfoTimePeriodValue["start_offset"] = $('#lane_info_time_period_start_offset').val();
-				laneInfoTimePeriodValue["end_datetime"] = $('#lane_info_time_period_end_datetime').val();
-				laneInfoTimePeriodValue["end_offset"] = $('#lane_info_time_period_end_offset').val();
-			} else if (laneInfoTimePeriodType === "general") {
-				laneInfoTimePeriodValue = $('input[name="lane_info_time_period_general"]:checked').val();
-			}
+			let laneInfoTimePeriod = getLaneInfoTimePeriod();
+			let laneInfoTimePeriodType = laneInfoTimePeriod?.type;
+			let laneInfoTimePeriodValue = laneInfoTimePeriod?.value;
 	        
 	        typeAttributeNameSaved = typeAttributeName;
 	        typeAttribute = [];
@@ -2742,3 +2727,33 @@ function onMappedGeomIdChangeCallback(){
 }
 
 function isOdd(num) { return (num % 2) == 1;}
+
+function getLaneInfoDaySelection() {
+	let laneInfoDaySelection = []
+	let daySelectionOptions = $('#lane_info_day_selection option:selected')?.map(function (a, item) { return item.value; });
+	if (daySelectionOptions) {
+		for (let i = 0; i < daySelectionOptions.length; i++) {
+			laneInfoDaySelection.push(daySelectionOptions[i]);
+		}
+	}
+	return laneInfoDaySelection;
+}
+
+function getLaneInfoTimePeriod() {
+	let laneInfoTimePeriodType = $("input[name='lane_info_time_period']:checked")?.val();
+	laneInfoTimePeriodType = laneInfoTimePeriodType?.trim()?.toLowerCase()
+	let laneInfoTimePeriodValue = null;
+	if (laneInfoTimePeriodType === "range") {
+		laneInfoTimePeriodValue = {};
+		laneInfoTimePeriodValue["start_datetime"] = $('#lane_info_time_period_start_datetime').val();
+		laneInfoTimePeriodValue["start_offset"] = $('#lane_info_time_period_start_offset').val();
+		laneInfoTimePeriodValue["end_datetime"] = $('#lane_info_time_period_end_datetime').val();
+		laneInfoTimePeriodValue["end_offset"] = $('#lane_info_time_period_end_offset').val();
+	} else if (laneInfoTimePeriodType === "general") {
+		laneInfoTimePeriodValue = $('input[name="lane_info_time_period_general"]:checked').val();
+	}
+	return {
+		type: laneInfoTimePeriodType,
+		value: laneInfoTimePeriodValue
+	}
+}
