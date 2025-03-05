@@ -398,23 +398,7 @@ var help_notes = [
 		units: "Steps of 0.05 percent",
 		description: "Expand or contract lane along the Y axis."
 	},
-	{
-		value: "major_version",
-		title: "Major Version (RGA Only)",
-		max: "15",
-		min: "0",
-		units: "N/A",
-		description: "It indicates that changes have been made to the content regarding the user of the contents of the dataset such that the new dataset is incompatble with prior versions of the dataset. Integer (0...15)."
-	},
-	{
-		value: "minor_version",
-		title: "Minor Version (RGA Only)",
-		max: "64",
-		min: "0",
-		units: "N/A",
-		description: "It indicates that the dataset has changed but still compatible with prior versions of the dataset."
-	},
-        {
+    {
 		value: "road_authority_id_type",
 		title: "Road Authority Identifier Type",
 		max: "NA",
