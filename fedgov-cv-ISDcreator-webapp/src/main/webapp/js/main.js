@@ -183,7 +183,8 @@ $(document).ready(function() {
             allowInput: true,
             minuteIncrement: 1,
             secondIncrement: 1,
-            dateFormat: "d/m/Y H:i:s"
+            dateFormat: "d/m/Y H:i:s",
+            time_24hr: true
         }
         $(this).flatpickr(config);
     });
@@ -243,15 +244,50 @@ function updateTimeRestrictionsHTML(){
         }
     });
     $('.day_selection_dropdown').multiselect({
-        maxHeight: 200,
-        buttonText: function(options, select) {
+        maxHeight: 200,        
+        onChange: function(option, checked, select) {            
+            if ($(option).val() === '0' && checked) {
+                $('.day_selection').find('input').each(function() {
+                    if ($(this).val() !== '0') {
+                        $(this).prop('disabled', true);
+                        $(this).prop('checked', false).trigger('change');
+                        $(this).parents('a').first().css({ 'color': 'grey' });
+                        $(this).parents('li').first().removeClass('active');
+                    }
+                });
+            } else {
+                let isAllSelected = false;
+                $('.day_selection').find('input').each(function () {
+                    if ($(this).val() === '0' && $(this).prop('checked')) {
+                        isAllSelected = true
+                    }
+                });
+                $('.day_selection').find('input').each(function () {
+                    if (isAllSelected) {
+                        //Disable all options except 0 (All)
+                        if ($(this).val() !== '0') {
+                            $(this).prop('disabled', true);
+                            $(this).parents('a').first().css({ 'color': 'grey' });
+                            $(this).parents('li').first().removeClass('active');
+                        }
+                    }else{
+                        //Reset all options to enabled 
+                        $(this).prop('disabled', false);
+                        $(this).parents('a').first().css({ 'color': 'black' });
+                    }
+                   
+                });
+            }
+        },
+        buttonText: function (options, select) {
+            
             if (options.length === 0) {
                 return 'Select Day Of The Week'
             } else if (options.length > 1) {
                 return options.length + ' selected';
             } else {
                 let labels = [];
-                options.each(function () {
+                options.each(function () {                    
                     if ($(this).attr('label') !== undefined) {
                         labels.push($(this).attr('label'));
                     }

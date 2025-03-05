@@ -520,7 +520,8 @@ async function init() {
 
     laneMarkers = new OpenLayers.Layer.Vector("Lane Marker Layer", {
 		eventListeners:{
-	        'featureselected':function(evt){
+			'featureselected': function (evt) {
+				$('#attributes').parsley().reset();
 	        	selected_marker = evt.feature;
 	        	if(selected_marker.attributes.computed) {
 	        		$(".selection-panel").text('Computed Lane Configuration');
@@ -2171,7 +2172,7 @@ async function populateRefWindow(feature, lat, lon)
  * with issues red, otherwise, it allows the data object to be created and saved to the feature
  */
 
-$(".btnDone").click(function(){
+$(".btnDone").click(function () {
 	//Update Reference Point Configuration fields with parsley attributes
 	let road_authority_id = $('#road_authority_id');
 	let road_authority_id_type = $('#road_authority_id_type');
@@ -2756,6 +2757,14 @@ function updateLaneInfoTimePeriod(laneInfoTimePeriodType, laneInfoTimePeriodValu
 		$('input[name="lane_info_time_period"]').prop('checked', false);
 	}
 
+	$("#lane_info_time_period_start_datetime").val("");
+	$("#lane_info_time_period_end_datetime").val("");
+	$("#lane_info_time_period_start_offset").val("");
+	$("#lane_info_time_period_end_offset").val("");
+	$('input[name="lane_info_time_period_general"]').prop('checked', false);
+	$('.time_period_general_fields').css('display', 'none');
+	$('.time_period_range_fields').css('display', 'none');
+
 	if (laneInfoTimePeriodValue && laneInfoTimePeriodType == "range") {
 		$('.time_period_general_fields').css('display', 'none');
 		$('.time_period_range_fields').css('display', '');
@@ -2767,13 +2776,5 @@ function updateLaneInfoTimePeriod(laneInfoTimePeriodType, laneInfoTimePeriodValu
 		$('.time_period_range_fields').css('display', 'none');
 		$('.time_period_general_fields').css('display', '');
 		$('input[name="lane_info_time_period_general"][value="' + laneInfoTimePeriodValue + '"]').prop('checked', true);
-	} else {
-		$("#lane_info_time_period_start_datetime").val("");
-		$("#lane_info_time_period_end_datetime").val("");
-		$("#lane_info_time_period_start_offset").val("");
-		$("#lane_info_time_period_end_offset").val("");
-		$('input[name="lane_info_time_period_general"]').prop('checked', false);
-		$('.time_period_general_fields').css('display', 'none');
-		$('.time_period_range_fields').css('display', 'none');
 	}
 }
