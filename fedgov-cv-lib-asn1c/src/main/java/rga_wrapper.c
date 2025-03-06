@@ -356,7 +356,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, laneConstructorTypeObj, &(indvMtrVehLaneGeometryInfo->laneConstructorType));
 
-						// check if timeRestrictions exists
+						// Check to see if timeRestrictions in MotorVehicleLaneGeometryInfo exists
 						jmethodID getMtrTimeRestrictionsMethod = (*env)->GetMethodID(env, indvMtrVehLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
 						jobject mtrTimeRestrictionsObj = (*env)->CallObjectMethod(env, indvMtrVehLaneGeometryInfoObj, getMtrTimeRestrictionsMethod);
 
@@ -416,7 +416,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, bikeLaneConstructorTypeObj, &(indvBikeLaneGeometryInfo->laneConstructorType));
 
-						// check if timeRestrictions exists
+						// Check to see if timeRestrictions in BikeLaneGeometryInfo exists
 						jmethodID getBikeTimeRestrictionsMethod = (*env)->GetMethodID(env, indvBikeLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
 						jobject bikeTimeRestrictionsObj = (*env)->CallObjectMethod(env, indvBikeLaneGeometryInfoObj, getBikeTimeRestrictionsMethod);
 
@@ -476,7 +476,7 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						populateLaneConstructorType(env, crosswalkLaneConstructorTypeObj, &indvCrosswalkLaneGeometryInfo->laneConstructorType);
 
-						// check if timeRestrictions exists
+						// Check to see if timeRestrictions in CrosswalkLaneGeometryInfo exists
 						jmethodID getCrosswalkTimeRestrictionsMethod = (*env)->GetMethodID(env, indvCrosswalkLaneGeometryInfoClass, "getTimeRestrictions", "()Lgov/usdot/cv/rgaencoder/RGATimeRestrictions;");
 						jobject crosswalkTimeRestrictionsObj = (*env)->CallObjectMethod(env, indvCrosswalkLaneGeometryInfoObj, getCrosswalkTimeRestrictionsMethod);
 
@@ -845,7 +845,7 @@ void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffs
 	}
 }
 
-// Function to handle Reference Point
+// Function that populates the fields inside the ReferencePointInfo class
 void populateReferencePointInfo(JNIEnv *env, jobject referencePointObj, ReferencePointInfo_t *referencePoint) {
     jclass referencePointClass = (*env)->GetObjectClass(env, referencePointObj);
 
@@ -909,6 +909,7 @@ void populateReferencePointInfo(JNIEnv *env, jobject referencePointObj, Referenc
 	referencePoint->timeOfCalculation = timeOfCalculation;    
 }
 
+// Function that populates the fields inside the RGATimeRestrictions class
 void populateTimeRestrictions(JNIEnv *env, jobject timeRestrictionsObj, RGATimeRestrictions_t *timeRestrictions) {
     jclass timeRestrictionsClass = (*env)->GetObjectClass(env, timeRestrictionsObj);
 	jmethodID getTimeRestrictionsTypeChoiceMethod = (*env)->GetMethodID(env, timeRestrictionsClass, "getChoice", "()I");
