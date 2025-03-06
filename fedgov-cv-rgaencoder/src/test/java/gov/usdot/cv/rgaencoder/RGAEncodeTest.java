@@ -45,6 +45,7 @@ public class RGAEncodeTest {
     ApproachGeometryLayer mockApproachGeometryLayer1;
     IndividualApproachGeometryInfo mockIndividualApproachGeometryInfo1;
     IndividualApproachGeometryInfo mockIndividualApproachGeometryInfo2;
+    ApproachWayTypeIDSet mockApproachWayTypeIDSet1;
     List<IndividualApproachGeometryInfo> mockIndividualApproachGeometryInfoList1;
 
     GeometryContainer mockGeometryContainer2;
@@ -195,6 +196,7 @@ public class RGAEncodeTest {
         mockApproachGeometryLayer1 = mock(ApproachGeometryLayer.class);
         mockIndividualApproachGeometryInfo1 = mock(IndividualApproachGeometryInfo.class);
         mockIndividualApproachGeometryInfo2 = mock(IndividualApproachGeometryInfo.class);
+        mockApproachWayTypeIDSet1 = mock(ApproachWayTypeIDSet.class);
 
         mockGeometryContainer2 = mock(GeometryContainer.class);
         mockApproachGeometryLayer2 = mock(ApproachGeometryLayer.class);
@@ -351,6 +353,7 @@ public class RGAEncodeTest {
 
         // CONTAINER 1
         when(mockGeometryContainer1.getGeometryContainerID()).thenReturn(GeometryContainer.APPROACH_GEOMETRY_LAYER_ID);
+        when(mockIndividualApproachGeometryInfo1.getApproachWayTypeIDSet()).thenReturn(mockApproachWayTypeIDSet1);
         when(mockIndividualApproachGeometryInfo1.getApproachID()).thenReturn(2);
         when(mockIndividualApproachGeometryInfo2.getApproachID()).thenReturn(3);
         mockIndividualApproachGeometryInfoList1 = Arrays.asList(mockIndividualApproachGeometryInfo1,

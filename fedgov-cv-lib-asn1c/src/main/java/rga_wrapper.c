@@ -313,6 +313,19 @@ JNIEXPORT jbyteArray JNICALL Java_gov_usdot_cv_rgaencoder_Encoder_encodeRGA(JNIE
 
 						approachInfo->approachID = approachID;
 
+						jmethodID getWayTypesSetMethod = (*env)->GetMethodID(env, individualApproachGeometryInfoClass, "getApproachWayTypeIDSet", "()Ljava/util/List;");
+						jobject wayTypesSetObj = (*env)->CallObjectMethod(env, individualApproachGeometryInfoObj, getApproachWayTypeIDSetMethod);
+
+						if (wayTypesSetObj != NULL) {
+							ApproachWayTypeIDSet_t *approachWayTypeIDSetValue = calloc(1, sizeof(ApproachWayTypeIDSet_t));
+							populateWayTypeIDSet(env, wayTypesSetObj, approachWayTypeIDSetValue);
+							approachInfo->wayTypesSetObj = approachWayTypeIDSetValue;
+						}
+						else
+						{
+							approachInfo->wayTypesSetObj = NULL;
+						}
+
 						// Adding to approachGeomApproachSet
 						ASN_SEQUENCE_ADD(&approachGeometryLayer->approachGeomApproachSet.list, approachInfo);
 					}
@@ -843,6 +856,29 @@ void populateNodeXYZOffsetValue(JNIEnv *env, jobject offsetValueObj, NodeXYZOffs
 	{
 		offsetValue->present = NodeXYZOffsetValue_PR_NOTHING;
 	}
+}
+
+// Function that populates the fields inside the ApproachWayTypeIDSet class
+void populateApproachWayTypeIDSet(JNI *env, jobject wayTypeIDSetObj, WayTypeIDSet_t *wayTypeIDSet) {
+	jclass wayTypeIDSetClass = (*env)->GetObjectClass(env, wayTypeIDSetObj);
+	jmethodID wayTypeIDSetSizeMethod = (*env)->GetMethodID(env, wayTypeIDSetClass, "size", "()I");
+	jmethodID wayTypeIDSetGetMethod = (*env)->GetMethodID(env, wayTypeIDSetClass, "get", "(I)Ljava/lang/Object;");
+
+	jint wayTypeIDSetSize = (*env)->CallIntMethod(env, timeWindowSetList, timeWindowSetSizeMethod);
+
+		TimeWindowItemControlInfo_t *fixedTimeWindowItemCtrl = calloc(1, sizeof(TimeWindowItemControlInfo_t));
+
+	for (jint tIndex = 0; tIndex < timeWindowSetSize; tIndex++)
+
+	// WayType
+	jmethodID getWayTypeMethod = (*env)->GetMethodID(env, wayTypeIDSetClass, "getWayType", "()Lgov/usdot/cv/rgaencoder/WayType;");
+	jobject wayTypeObj = (*env)->CallObjectMethod(env, wayTypeIDSetObj, getWayTypeMethod);
+	jclass wayTypeClass = (*env)->GetObjectClass(env, wayTypeObj);
+
+
+
+
+	
 }
 
 // Function that populates the fields inside the ReferencePointInfo class
