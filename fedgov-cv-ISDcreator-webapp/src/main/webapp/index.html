@@ -433,7 +433,7 @@
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="content_version"></i></div>
 							</div>
 							<div class="row content_date_time extra_rga_field">
-								<div class="col-sm-4"><label for="content_date_time">Content Date Time:</label></div>
+								<div class="col-sm-4"><label for="content_date_time">Content Date Time (UTC):</label></div>
 								<div class="col-sm-7"><input class="form-control datetimepicker extra_rga_field_input required" id="content_date_time" placeholder="dd/mm/yyyy hh:mm:ss"></div>
 								<div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="content_date_time"></i></div>
 							</div>
@@ -447,6 +447,7 @@
 							  <div class="col-sm-7"><input class="form-control" id="lane_width" placeholder="-512 to 511" data-parsley-pattern="^-?[0-9]+$" data-parsley-range="[-512, 511]" data-parsley-pattern-message="This value must be an integer."></div>
 							  <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="lane_width"></i></div>
 							</div>
+							<div class="lane_info_time_restrictions"></div>
 							<div class="row master_lane_width" data-toggle="tooltip" title="in centimeters">
 							  <div class="col-sm-4"><label for="master_lane_width">Master Lane Width:</label></div>
 							  <div class="col-sm-7"><input class="form-control" id="master_lane_width" placeholder="0 to 32767" data-parsley-pattern="^[0-9]+$" data-parsley-required="true" data-parsley-range="[0, 32767]" data-parsley-pattern-message="This value must be an integer."></div>
