@@ -445,8 +445,6 @@ public class IntersectionInputData {
 		public int minuteOfTheYear;
 		public TimeOfCalculation timeOfCalculation;
 		public ContentDateTime contentDateTime;
-		public int majorVersion;
-		public int minorVersion;
 		public int contentVersion;
 		public String layerType;
 		public IntersectionGeometry intersectionGeometry;
@@ -457,8 +455,6 @@ public class IntersectionInputData {
 			return "MapData [minuteOfTheYear=" + minuteOfTheYear 
 					+ ", timeOfCalculation=" + timeOfCalculation
 					+ ", contentDateTime=" + contentDateTime
-					+ ", majorVersion=" + majorVersion
-					+ ", minorVersion=" + minorVersion
 					+ ", contentVersion=" + contentVersion
 					+ ", layerType=" + layerType 
 					+ ",  intersectionGeometry=" + intersectionGeometry 
