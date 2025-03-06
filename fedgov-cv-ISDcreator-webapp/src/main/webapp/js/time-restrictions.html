@@ -2,7 +2,7 @@
     <div class="row day_selection" data-toggle="tooltip">
         <div class="col-sm-4"><label for="day_selection">Day Selection:</label></div>
         <div class="col-sm-7">
-            <select id="day_selection" name="day_selection" class="day_selection_dropdown" multiple="multiple" class="form-control">
+            <select id="day_selection" name="day_selection" class="day_selection_dropdown form-control" multiple="multiple">
                 <option value="0">All (0)</option>
                 <option value="1">M (1)</option>
                 <option value="2">T (2)</option>
@@ -21,15 +21,15 @@
             <!--Period Type-->
             <div class="form-check form-check-inline" style="display: inline;">
                 <input class="form-check-input time_period" type="radio" name="time_period" id="time_period_none" value="none">
-                <label for="none" style="font-weight: normal; margin-right: 5px">None</label>
+                <label for="time_period_none" style="font-weight: normal; margin-right: 5px">None</label>
             </div>
             <div class="form-check form-check-inline" style="display: inline;">
                 <input class="form-check-input time_period" type="radio" name="time_period" id="time_period_range" value="range">
-                <label for="range" style="font-weight: normal; margin-right: 5px">Range</label>
+                <label for="time_period_range" style="font-weight: normal; margin-right: 5px">Range</label>
             </div>
             <div class="form-check form-check-inline" style="display: inline;">
                 <input class="form-check-input time_period" type="radio" name="time_period" id="time_period_general" value="general">
-                <label for="general" style="font-weight: normal; margin-right: 5px">General</label>
+                <label for="time_period_general" style="font-weight: normal; margin-right: 5px">General</label>
             </div>  
         </div>
         <div class="col-sm-1"><i class="fa fa-question-circle" aria-hidden="true" tag="time_period"></i></div>
@@ -43,7 +43,7 @@
                     <div class="col-sm-12">      
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="startPeriod" style="font-weight: normal; margin-right: 2px">Start (UTC):</label>
+                                <label for="time_period_start_datetime" style="font-weight: normal; margin-right: 2px">Start (UTC):</label>
                             </div>
                         </div>
                         <div class="row">
@@ -60,7 +60,7 @@
                     <div class="col-sm-12">      
                         <div class="row">
                             <div class="col-sm-12">
-                                <label for="endPeriod" style="font-weight: normal; margin-right: 2px">End (UTC):</label>
+                                <label for="time_period_end_datetime" style="font-weight: normal; margin-right: 2px">End (UTC):</label>
                             </div>
                         </div>
                         <div class="row">
@@ -81,9 +81,9 @@
                     <div class="col-sm-11">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="time_period_general" id="time_period_day" value="day" data-parsley-required="true" required>
-                            <label for="day" style="font-weight: normal;">Day</label>
+                            <label for="time_period_day" style="font-weight: normal;">Day</label>
                             <input class="form-check-input" type="radio" name="time_period_general" id="time_period_night" value="night">
-                            <label for="night" style="font-weight: normal;">Night</label>
+                            <label for="time_period_night" style="font-weight: normal;">Night</label>
                         </div>
                     </div>
                 </div>
