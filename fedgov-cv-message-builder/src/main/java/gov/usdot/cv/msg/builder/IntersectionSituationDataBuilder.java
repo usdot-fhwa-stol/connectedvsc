@@ -339,6 +339,9 @@ public class IntersectionSituationDataBuilder {
 
 		ReferencePoint referencePoint = isdInputData.mapData.intersectionGeometry.referencePoint;
 		OffsetEncoding offsetEncoding = new OffsetEncoding(isdInputData.nodeOffsets);
+		if (offsetEncoding.type != OffsetEncodingType.Tight) {
+			offsetEncoding.size = getOffsetEncodingSize(offsetEncoding.type, approaches, referencePoint);
+		}
 
 		GeometryContainer approachGeometryContainer = new GeometryContainer();
 		ApproachGeometryLayer approachGeometryLayer = new ApproachGeometryLayer();
@@ -429,6 +432,8 @@ public class IntersectionSituationDataBuilder {
 			ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
 		IndvMtrVehLaneGeometryInfo indvMtrVehLaneGeometryInfo = new IndvMtrVehLaneGeometryInfo();
 		indvMtrVehLaneGeometryInfo.setLaneID(Integer.valueOf(drivingLane.laneID));
+		indvMtrVehLaneGeometryInfo.setLaneConstructorType(buildLaneConstructorType(drivingLane,
+				referencePoint, offsetEncoding));
 		return indvMtrVehLaneGeometryInfo;
 	}
 
@@ -446,7 +451,30 @@ public class IntersectionSituationDataBuilder {
 		return indvCrosswalkLaneGeometryInfo;
 	}
 
-	public LaneConstructorType buildLaneConstructorType() {
+	public LaneConstructorType buildLaneConstructorType(DrivingLane lane,
+	ReferencePoint referencePoint, OffsetEncoding offsetEncoding) {
+		LaneConstructorType laneConstructorType = new LaneConstructorType();
+		if (!lane.isComputed) {
+			laneConstructorType.setChoice(LaneConstructorType.PHYSICAL_NODE);
+			// Loop through the lane nodes
+
+			GeoPoint refPoint = new GeoPoint(referencePoint.referenceLat, referencePoint.referenceLon);
+
+			for (LaneNode laneNode : lane.laneNodes) {
+				GeoPoint nextPoint = new GeoPoint(laneNode.nodeLat, laneNode.nodeLong);
+
+				System.out.println("offsetEncoding.size before: " + offsetEncoding.size);
+
+				// Get Encoding Size based on given points
+				if (offsetEncoding.type == OffsetEncodingType.Tight) {
+					offsetEncoding.size = offsetEncoding.getOffsetEncodingSize(refPoint, nextPoint);
+				}
+				System.out.println("offsetEncoding.size after: " + offsetEncoding.size);
+			}
+		} else {
+			laneConstructorType.setChoice(LaneConstructorType.COMPUTED_NODE);
+		}
+		return laneConstructorType;
 
 	}
 

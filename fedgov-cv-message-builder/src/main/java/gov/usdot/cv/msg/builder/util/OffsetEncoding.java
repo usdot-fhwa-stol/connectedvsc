@@ -24,6 +24,8 @@ import gov.usdot.cv.mapencoder.NodeXY24b;
 import gov.usdot.cv.mapencoder.NodeXY26b;
 import gov.usdot.cv.mapencoder.NodeXY28b;
 import gov.usdot.cv.mapencoder.NodeXY32b;
+import gov.usdot.cv.rgaencoder.NodeXYZOffsetInfo;
+import gov.usdot.cv.rgaencoder.NodeXYZOffsetValue;
 
 public class OffsetEncoding {
     public OffsetEncodingType type = OffsetEncodingType.Standard;
@@ -144,5 +146,35 @@ public class OffsetEncoding {
                 break;
         }
         return nodeOffsetPointXY;
+    }
+
+    public NodeXYZOffsetInfo encodeRGAOffset(GeoPoint gp1, GeoPoint gp2) {
+        NodeXYZOffsetInfo nodeXYZOffsetInfo = new NodeXYZOffsetInfo();
+        switch (size) { 
+            case Offset20Bit:
+                NodeXYZOffsetValue nodeXOffsetValue = new NodeXYZOffsetValue();
+                NodeXYZOffsetValue nodeYOffsetValue = new NodeXYZOffsetValue();
+                NodeXYZOffsetValue nodeZOffsetValue = new NodeXYZOffsetValue();
+                nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B10);
+                nodeXOffsetValue.setOffsetB10(gp2.getLonOffsetInCentimeters(gp1));
+                nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B10);
+                nodeXOffsetValue.setOffsetB10(gp2.getLatOffsetInCentimeters(gp1));
+                nodeXYZOffsetInfo.setNodeXOffsetValue(nodeXOffsetValue);
+                nodeXYZOffsetInfo.setNodeYOffsetValue(nodeYOffsetValue);
+                break;
+            case Offset22Bit:
+                break;
+            case Offset24Bit:
+                break;
+            case Offset26Bit:
+                break;
+            case Offset28Bit:
+                break;
+            case Offset32Bit:
+                break;
+            default:
+                break;
+        }
+        return nodeXYZOffsetInfo;
     }
 }
