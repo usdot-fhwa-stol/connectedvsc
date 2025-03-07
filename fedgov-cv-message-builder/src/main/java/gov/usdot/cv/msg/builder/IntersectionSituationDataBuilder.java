@@ -66,12 +66,16 @@ import gov.usdot.cv.rgaencoder.DDate;
 import gov.usdot.cv.rgaencoder.DDateTime;
 import gov.usdot.cv.rgaencoder.GeometryContainer;
 import gov.usdot.cv.rgaencoder.IndividualApproachGeometryInfo;
+import gov.usdot.cv.rgaencoder.IndividualXYZNodeGeometryInfo;
 import gov.usdot.cv.rgaencoder.IndvBikeLaneGeometryInfo;
 import gov.usdot.cv.rgaencoder.IndvCrosswalkLaneGeometryInfo;
 import gov.usdot.cv.rgaencoder.IndvMtrVehLaneGeometryInfo;
 import gov.usdot.cv.rgaencoder.LaneConstructorType;
 import gov.usdot.cv.rgaencoder.MotorVehicleLaneGeometryLayer;
+import gov.usdot.cv.rgaencoder.NodeXYZOffsetInfo;
+import gov.usdot.cv.rgaencoder.PhysicalXYZNodeInfo;
 import gov.usdot.cv.rgaencoder.RGAData;
+import gov.usdot.cv.rgaencoder.WayPlanarGeometryInfo;
 import gov.usdot.cv.mapencoder.AllowedManeuvers;
 import gov.usdot.cv.mapencoder.ComputedLane;
 import gov.usdot.cv.mapencoder.ConnectingLane;
@@ -456,12 +460,15 @@ public class IntersectionSituationDataBuilder {
 		LaneConstructorType laneConstructorType = new LaneConstructorType();
 		if (!lane.isComputed) {
 			laneConstructorType.setChoice(LaneConstructorType.PHYSICAL_NODE);
+			PhysicalXYZNodeInfo physicalXYZNodeInfo = new PhysicalXYZNodeInfo();
+
+			GeoPoint refPoint = new GeoPoint(referencePoint.referenceLat, referencePoint.referenceLon, referencePoint.referenceElevation);
+
 			// Loop through the lane nodes
-
-			GeoPoint refPoint = new GeoPoint(referencePoint.referenceLat, referencePoint.referenceLon);
-
 			for (LaneNode laneNode : lane.laneNodes) {
-				GeoPoint nextPoint = new GeoPoint(laneNode.nodeLat, laneNode.nodeLong);
+				IndividualXYZNodeGeometryInfo individualXYZNodeGeometryInfo = new IndividualXYZNodeGeometryInfo();
+				WayPlanarGeometryInfo wayPlanarGeometryInfo = new WayPlanarGeometryInfo();
+				GeoPoint nextPoint = new GeoPoint(laneNode.nodeLat, laneNode.nodeLong, laneNode.nodeElev);
 
 				System.out.println("offsetEncoding.size before: " + offsetEncoding.size);
 
@@ -469,8 +476,13 @@ public class IntersectionSituationDataBuilder {
 				if (offsetEncoding.type == OffsetEncodingType.Tight) {
 					offsetEncoding.size = offsetEncoding.getOffsetEncodingSize(refPoint, nextPoint);
 				}
-				System.out.println("offsetEncoding.size after: " + offsetEncoding.size);
+
+				NodeXYZOffsetInfo nodeXYZOffsetInfo = offsetEncoding.encodeRGAOffset(refPoint, nextPoint);
+				individualXYZNodeGeometryInfo.setNodeXYZOffsetInfo(nodeXYZOffsetInfo);
+				individualXYZNodeGeometryInfo.setNodeLocPlanarGeomInfo(wayPlanarGeometryInfo);
+				physicalXYZNodeInfo.addIndividualXYZNodeGeometryInfo(individualXYZNodeGeometryInfo);
 			}
+			laneConstructorType.setPhysicalXYZNodeInfo(physicalXYZNodeInfo);
 		} else {
 			laneConstructorType.setChoice(LaneConstructorType.COMPUTED_NODE);
 		}

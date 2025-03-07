@@ -150,31 +150,64 @@ public class OffsetEncoding {
 
     public NodeXYZOffsetInfo encodeRGAOffset(GeoPoint gp1, GeoPoint gp2) {
         NodeXYZOffsetInfo nodeXYZOffsetInfo = new NodeXYZOffsetInfo();
-        switch (size) { 
+        NodeXYZOffsetValue nodeXOffsetValue = new NodeXYZOffsetValue();
+        NodeXYZOffsetValue nodeYOffsetValue = new NodeXYZOffsetValue();
+        NodeXYZOffsetValue nodeZOffsetValue = new NodeXYZOffsetValue();
+        switch (size) {
             case Offset20Bit:
-                NodeXYZOffsetValue nodeXOffsetValue = new NodeXYZOffsetValue();
-                NodeXYZOffsetValue nodeYOffsetValue = new NodeXYZOffsetValue();
-                NodeXYZOffsetValue nodeZOffsetValue = new NodeXYZOffsetValue();
                 nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B10);
                 nodeXOffsetValue.setOffsetB10(gp2.getLonOffsetInCentimeters(gp1));
                 nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B10);
-                nodeXOffsetValue.setOffsetB10(gp2.getLatOffsetInCentimeters(gp1));
-                nodeXYZOffsetInfo.setNodeXOffsetValue(nodeXOffsetValue);
-                nodeXYZOffsetInfo.setNodeYOffsetValue(nodeYOffsetValue);
+                nodeYOffsetValue.setOffsetB10(gp2.getLatOffsetInCentimeters(gp1));
+                nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B10);
+                nodeZOffsetValue.setOffsetB10(gp2.getElevationOffsetInCentimeters(gp1));
                 break;
             case Offset22Bit:
+                nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B11);
+                nodeXOffsetValue.setOffsetB11(gp2.getLonOffsetInCentimeters(gp1));
+                nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B11);
+                nodeYOffsetValue.setOffsetB11(gp2.getLatOffsetInCentimeters(gp1));
+                nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B11);
+                nodeZOffsetValue.setOffsetB11(gp2.getElevationOffsetInCentimeters(gp1));
                 break;
             case Offset24Bit:
+                nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B12);
+                nodeXOffsetValue.setOffsetB12(gp2.getLonOffsetInCentimeters(gp1));
+                nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B12);
+                nodeYOffsetValue.setOffsetB12(gp2.getLatOffsetInCentimeters(gp1));
+                nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B12);
+                nodeZOffsetValue.setOffsetB12(gp2.getElevationOffsetInCentimeters(gp1));
                 break;
             case Offset26Bit:
+                nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B13);
+                nodeXOffsetValue.setOffsetB13(gp2.getLonOffsetInCentimeters(gp1));
+                nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B13);
+                nodeYOffsetValue.setOffsetB13(gp2.getLatOffsetInCentimeters(gp1));
+                nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B13);
+                nodeZOffsetValue.setOffsetB13(gp2.getElevationOffsetInCentimeters(gp1));
                 break;
             case Offset28Bit:
+                nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B14);
+                nodeXOffsetValue.setOffsetB14(gp2.getLonOffsetInCentimeters(gp1));
+                nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B14);
+                nodeYOffsetValue.setOffsetB14(gp2.getLatOffsetInCentimeters(gp1));
+                nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B14);
+                nodeZOffsetValue.setOffsetB14(gp2.getElevationOffsetInCentimeters(gp1));
                 break;
             case Offset32Bit:
+                nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B16);
+                nodeXOffsetValue.setOffsetB16(gp2.getLonOffsetInCentimeters(gp1));
+                nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B16);
+                nodeYOffsetValue.setOffsetB16(gp2.getLatOffsetInCentimeters(gp1));
+                nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B16);
+                nodeZOffsetValue.setOffsetB16(gp2.getElevationOffsetInCentimeters(gp1));
                 break;
             default:
                 break;
         }
+        nodeXYZOffsetInfo.setNodeXOffsetValue(nodeXOffsetValue);
+        nodeXYZOffsetInfo.setNodeYOffsetValue(nodeYOffsetValue);
+        nodeXYZOffsetInfo.setNodeZOffsetValue(nodeZOffsetValue);
         return nodeXYZOffsetInfo;
     }
 }
