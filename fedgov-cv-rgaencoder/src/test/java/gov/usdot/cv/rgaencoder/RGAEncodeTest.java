@@ -45,8 +45,11 @@ public class RGAEncodeTest {
     ApproachGeometryLayer mockApproachGeometryLayer1;
     IndividualApproachGeometryInfo mockIndividualApproachGeometryInfo1;
     IndividualApproachGeometryInfo mockIndividualApproachGeometryInfo2;
-    ApproachWayTypeIDSet mockApproachWayTypeIDSet1;
-    List<IndividualApproachGeometryInfo> mockIndividualApproachGeometryInfoList1;
+    List<ApproachWayTypeIDSet> mockApproachWayTypeIDSet1;
+    ApproachWayTypeIDSet mockIndividualApproachWayTypeID1;
+    List<LaneID> mockLaneIDSet1;
+    WayType mockWayTypeID1;
+    LaneID mockLaneID1;
 
     GeometryContainer mockGeometryContainer2;
     ApproachGeometryLayer mockApproachGeometryLayer2;
@@ -196,7 +199,10 @@ public class RGAEncodeTest {
         mockApproachGeometryLayer1 = mock(ApproachGeometryLayer.class);
         mockIndividualApproachGeometryInfo1 = mock(IndividualApproachGeometryInfo.class);
         mockIndividualApproachGeometryInfo2 = mock(IndividualApproachGeometryInfo.class);
-        mockApproachWayTypeIDSet1 = mock(ApproachWayTypeIDSet.class);
+        mockIndividualApproachWayTypeID1 = mock(ApproachWayTypeIDSet.class);
+        mockWayTypeID1 = mock(WayType.class);
+        mockLaneID1 = mock(LaneID.class);
+
 
         mockGeometryContainer2 = mock(GeometryContainer.class);
         mockApproachGeometryLayer2 = mock(ApproachGeometryLayer.class);
@@ -353,13 +359,15 @@ public class RGAEncodeTest {
 
         // CONTAINER 1
         when(mockGeometryContainer1.getGeometryContainerID()).thenReturn(GeometryContainer.APPROACH_GEOMETRY_LAYER_ID);
+        when(mockWayTypeID1.getWayType()).thenReturn((long)1);
+        when(mockLaneID1.getLaneIDValue()).thenReturn((long)1);
+        mockLaneIDSet1 = Arrays.asList(mockLaneID1);
+        when(mockIndividualApproachWayTypeID1.getWayType()).thenReturn(mockWayTypeID1);
+        when(mockIndividualApproachWayTypeID1.getWayIDSet()).thenReturn(mockLaneIDSet1);
+        mockApproachWayTypeIDSet1 = Arrays.asList(mockIndividualApproachWayTypeID1);
         when(mockIndividualApproachGeometryInfo1.getApproachWayTypeIDSet()).thenReturn(mockApproachWayTypeIDSet1);
         when(mockIndividualApproachGeometryInfo1.getApproachID()).thenReturn(2);
         when(mockIndividualApproachGeometryInfo2.getApproachID()).thenReturn(3);
-        mockIndividualApproachGeometryInfoList1 = Arrays.asList(mockIndividualApproachGeometryInfo1,
-                mockIndividualApproachGeometryInfo2);
-        when(mockApproachGeometryLayer1.getApproachGeomApproachSet())
-                .thenReturn(mockIndividualApproachGeometryInfoList1);
         when(mockGeometryContainer1.getApproachGeometryLayer()).thenReturn(mockApproachGeometryLayer1);
 
         // CONTAINER 2
