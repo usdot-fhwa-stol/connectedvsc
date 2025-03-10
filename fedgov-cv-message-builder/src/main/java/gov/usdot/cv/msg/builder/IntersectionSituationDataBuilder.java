@@ -61,6 +61,7 @@ import gov.usdot.cv.msg.builder.util.OffsetEncoding.OffsetEncodingType;
 import gov.usdot.cv.rgaencoder.ApproachGeometryLayer;
 import gov.usdot.cv.rgaencoder.BaseLayer;
 import gov.usdot.cv.rgaencoder.BicycleLaneGeometryLayer;
+import gov.usdot.cv.rgaencoder.ComputedXYZNodeInfo;
 import gov.usdot.cv.rgaencoder.CrosswalkLaneGeometryLayer;
 import gov.usdot.cv.rgaencoder.DDate;
 import gov.usdot.cv.rgaencoder.DDateTime;
@@ -73,6 +74,7 @@ import gov.usdot.cv.rgaencoder.IndvMtrVehLaneGeometryInfo;
 import gov.usdot.cv.rgaencoder.LaneConstructorType;
 import gov.usdot.cv.rgaencoder.MotorVehicleLaneGeometryLayer;
 import gov.usdot.cv.rgaencoder.NodeXYZOffsetInfo;
+import gov.usdot.cv.rgaencoder.NodeXYZOffsetValue;
 import gov.usdot.cv.rgaencoder.PhysicalXYZNodeInfo;
 import gov.usdot.cv.rgaencoder.RGAData;
 import gov.usdot.cv.rgaencoder.WayPlanarGeometryInfo;
@@ -467,7 +469,6 @@ public class IntersectionSituationDataBuilder {
 			// Loop through the lane nodes
 			for (LaneNode laneNode : lane.laneNodes) {
 				IndividualXYZNodeGeometryInfo individualXYZNodeGeometryInfo = new IndividualXYZNodeGeometryInfo();
-				WayPlanarGeometryInfo wayPlanarGeometryInfo = new WayPlanarGeometryInfo();
 				GeoPoint nextPoint = new GeoPoint(laneNode.nodeLat, laneNode.nodeLong, laneNode.nodeElev);
 
 				System.out.println("offsetEncoding.size before: " + offsetEncoding.size);
@@ -479,12 +480,35 @@ public class IntersectionSituationDataBuilder {
 
 				NodeXYZOffsetInfo nodeXYZOffsetInfo = offsetEncoding.encodeRGAOffset(refPoint, nextPoint);
 				individualXYZNodeGeometryInfo.setNodeXYZOffsetInfo(nodeXYZOffsetInfo);
-				individualXYZNodeGeometryInfo.setNodeLocPlanarGeomInfo(wayPlanarGeometryInfo);
 				physicalXYZNodeInfo.addIndividualXYZNodeGeometryInfo(individualXYZNodeGeometryInfo);
 			}
 			laneConstructorType.setPhysicalXYZNodeInfo(physicalXYZNodeInfo);
 		} else {
 			laneConstructorType.setChoice(LaneConstructorType.COMPUTED_NODE);
+			ComputedXYZNodeInfo computedXYZNodeInfo = new ComputedXYZNodeInfo();
+			NodeXYZOffsetInfo laneCenterLineXYZOffset = new NodeXYZOffsetInfo();
+
+			NodeXYZOffsetValue nodeXOffsetValue = new NodeXYZOffsetValue();
+			nodeXOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B12);
+			nodeXOffsetValue.setOffsetB12((long)lane.computedLane.offsetX);
+			laneCenterLineXYZOffset.setNodeXOffsetValue(nodeXOffsetValue);
+
+			NodeXYZOffsetValue nodeYOffsetValue = new NodeXYZOffsetValue();
+			nodeYOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B12);
+			nodeYOffsetValue.setOffsetB12((long)lane.computedLane.offsetY);
+			laneCenterLineXYZOffset.setNodeYOffsetValue(nodeYOffsetValue);
+
+			NodeXYZOffsetValue nodeZOffsetValue = new NodeXYZOffsetValue();
+			nodeZOffsetValue.setChoice(NodeXYZOffsetValue.OFFSET_B12);
+			nodeZOffsetValue.setOffsetB12((long)0);
+			laneCenterLineXYZOffset.setNodeZOffsetValue(nodeZOffsetValue);
+
+			WayPlanarGeometryInfo lanePlanarGeomInfo = new WayPlanarGeometryInfo(); 
+
+			computedXYZNodeInfo.setRefLaneID(Integer.valueOf(lane.computedLane.referenceLaneID));
+			computedXYZNodeInfo.setLaneCenterLineXYZOffset(laneCenterLineXYZOffset);
+			computedXYZNodeInfo.setLanePlanarGeomInfo(lanePlanarGeomInfo);
+
 		}
 		return laneConstructorType;
 
