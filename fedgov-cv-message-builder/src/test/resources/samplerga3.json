@@ -90,9 +90,6 @@
                   "laneType": "Vehicle",
                   "typeAttributes": [],
                   "sharedWith": [],
-                  "timeRestrictions": {
-
-                  },
                   "connections": [
                     {
                       "connectionId": "",
